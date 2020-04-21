@@ -3,6 +3,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.*;
 
+@SuppressWarnings("unused")
 public class Config {
 
     public String BOT_TOKEN;

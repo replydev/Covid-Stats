@@ -1,3 +1,5 @@
+package me.reply.covidstats;
+
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;

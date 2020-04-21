@@ -1,3 +1,5 @@
+package me.reply.covidstats;
+
 import java.time.LocalDate;
 
 public class DayData {

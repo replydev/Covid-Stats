@@ -1,10 +1,10 @@
+package me.reply.covidstats;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.XYSeries;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

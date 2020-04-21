@@ -1,3 +1,5 @@
+package me.reply.covidstats;
+
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 

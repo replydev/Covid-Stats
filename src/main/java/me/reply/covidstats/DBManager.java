@@ -1,3 +1,5 @@
+package me.reply.covidstats;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;

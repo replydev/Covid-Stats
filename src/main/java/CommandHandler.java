@@ -1,3 +1,4 @@
+import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -6,14 +7,16 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class CommandHandler {
 
     private final ExecutorService threads;
+    private final ScheduledExecutorService canceller;
 
     private DBManager dbManager;
 
@@ -38,7 +41,7 @@ public class CommandHandler {
                         Integer.parseInt(args.get(1)),
                         Integer.parseInt(args.get(2)),
                         Integer.parseInt(args.get(3)),
-                        args.get(4)
+                        invertDate(args.get(4))
                 );
                 try {
                     dbManager.addData(dayData);
@@ -48,19 +51,69 @@ public class CommandHandler {
                 }
                 break;
             case "/infected":
-                threads.submit(() -> infectedJob(chatId));
+                Future<?> f = threads.submit(() -> {
+                    infectedJob(chatId);
+                    sendMessage("Backup completed",chatId);
+                });
+                canceller.schedule(() -> {
+                    f.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
                 break;
             case "/recovered":
-                threads.submit(() -> recoveredJob(chatId));
+                Future<?> f1 = threads.submit(() -> {
+                    recoveredJob(chatId);
+                    sendMessage("Backup completed",chatId);
+                });
+                canceller.schedule(() -> {
+                    f1.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
                 break;
             case "/deaths":
-                threads.submit(() -> deathsJob(chatId));
+                Future<?> f2 = threads.submit(() -> {
+                    deathsJob(chatId);
+                    sendMessage("Backup completed",chatId);
+                });
+                canceller.schedule(() -> {
+                    f2.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
                 break;
             case "/cases":
-                threads.submit(() -> casesJob(chatId));
+                Future<?> f3 = threads.submit(() -> {
+                    casesJob(chatId);
+                    sendMessage("Backup completed",chatId);
+                });
+                canceller.schedule(() -> {
+                    f3.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
                 break;
             case "/tampons":
-                threads.submit(() -> tamponsJob(chatId));
+                Future<?> f4 = threads.submit(() -> {
+                    tamponsJob(chatId);
+                    sendMessage("Backup completed",chatId);
+                });
+                canceller.schedule(() -> {
+                    f4.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
+                break;
+            case "/backup":
+                Future<?> f5 = threads.submit(() -> {
+                    try {
+                        backupJob();
+                        sendMessage("Backup completed",chatId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        sendMessage("An error occurred: " + e.getMessage(),chatId);
+                    }
+                });
+                canceller.schedule(() -> {
+                    f5.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
                 break;
             default:
         }
@@ -68,6 +121,7 @@ public class CommandHandler {
 
     public CommandHandler(int threadsNum){
         threads = Executors.newFixedThreadPool(threadsNum);
+        canceller = Executors.newSingleThreadScheduledExecutor();
         try {
             dbManager = new DBManager("database.db");
         } catch (SQLException | ClassNotFoundException throwable) {
@@ -109,6 +163,7 @@ public class CommandHandler {
             throwable.printStackTrace();
         }
     }
+
     private void recoveredJob(long chatId){
         try {
             CovidData covidData = dbManager.getData();
@@ -163,5 +218,19 @@ public class CommandHandler {
         } catch (SQLException | IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
+    }
+    private void backupJob() throws IOException {
+        File srcFile = new File("database.db");
+        String date =  LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        File tempFile = new File("database-backup-" + date + ".db");
+        FileUtils.copyFile(srcFile,tempFile);
+        FileUtils.moveFileToDirectory(tempFile, new File("backups/"),true);
+    }
+
+    private String invertDate(String incorrectDate){
+        String[] args = incorrectDate.split("-");
+        if(args.length != 3)
+            return null;
+        return args[2] + "-" + args[1] + "-" + args[0];
     }
 }

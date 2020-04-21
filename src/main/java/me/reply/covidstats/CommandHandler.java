@@ -1,5 +1,6 @@
 package me.reply.covidstats;
 
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -113,8 +114,12 @@ public class CommandHandler {
                 }
                 Future<?> f5 = threads.submit(() -> {
                     try {
-                        backupJob();
-                        sendMessage("Backup completed",chatId);
+                        try{
+                            backupJob();
+                            sendMessage("Backup completed",chatId);
+                        }catch (FileExistsException e){
+                            sendMessage("You have already backup your data today",chatId);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                         sendMessage("An error occurred: " + e.getMessage(),chatId);
@@ -235,7 +240,12 @@ public class CommandHandler {
         String date =  LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         File tempFile = new File("database-backup-" + date + ".db");
         FileUtils.copyFile(srcFile,tempFile);
-        FileUtils.moveFileToDirectory(tempFile, new File("backups/"),true);
+        try{
+            FileUtils.moveFileToDirectory(tempFile, new File("backups/"),true);
+        }catch (FileExistsException e){
+            FileUtils.forceDelete(tempFile);
+            throw new FileExistsException();
+        }
     }
 
     private String invertDate(String incorrectDate){

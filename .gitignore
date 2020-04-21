@@ -1,4 +1,6 @@
 *.db
 *.png
 .idea/**
+target/**
 *.iml
+*.yml

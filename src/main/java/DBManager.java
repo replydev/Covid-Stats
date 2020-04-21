@@ -1,14 +1,15 @@
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DBManager {
-    private Connection c;
+    private final Connection c;
 
     private int rows;
 
     public DBManager(String filename) throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
-        c = DriverManager.getConnection("jdbc:sqlite:test.db");
+        c = DriverManager.getConnection("jdbc:sqlite:" + filename);
         createDatabase();
         rows = getCount();
     }
@@ -42,7 +43,7 @@ public class DBManager {
     }
 
     public void addData(DayData dayData) throws SQLException {
-        PreparedStatement preparedStatement = c.prepareStatement("INSERT INTO covidData (id,currently_infected,recovered,death,tampons,date) VALUES (?,?,?,?,?,?)");
+        PreparedStatement preparedStatement = c.prepareStatement("INSERT INTO covidData (id,currently_infected,recovered,deaths,tampons,date) VALUES (?,?,?,?,?,?)");
         rows++;
         preparedStatement.setInt(1,rows);
         preparedStatement.setInt(2,dayData.getCurrently_infected());
@@ -58,11 +59,17 @@ public class DBManager {
         CovidData covidData = new CovidData();
         Statement statement = c.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM covidData");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         while(resultSet.next()){
-            DayData dayData = new DayData(resultSet.getInt("currently_infected"),resultSet.getInt("recovered"),resultSet.getInt("deaths"),resultSet.getInt("tampons"),resultSet.getObject("date",LocalDate.class));
+            int currently_infected = resultSet.getInt("currently_infected");
+            int recovered = resultSet.getInt("recovered");
+            int deaths = resultSet.getInt("deaths");
+            int tampons = resultSet.getInt("tampons");
+            String date = resultSet.getString("date");
+            LocalDate dt = LocalDate.parse(date,dtf);
+            DayData dayData = new DayData(currently_infected,recovered,deaths,tampons,dt);
             covidData.add(dayData);
         }
         return covidData;
     }
-
 }

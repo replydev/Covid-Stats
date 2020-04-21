@@ -31,7 +31,12 @@
             <artifactId>jfreechart</artifactId>
             <version>1.5.0</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.26</version>
+        </dependency>
     </dependencies>
 
 

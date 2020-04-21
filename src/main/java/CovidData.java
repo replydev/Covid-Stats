@@ -12,7 +12,7 @@ import java.util.Vector;
 
 public class CovidData {
 
-    private Vector<DayData> covidData;
+    private final Vector<DayData> covidData;
 
     public CovidData(){
         covidData = new Vector<>();
@@ -25,37 +25,96 @@ public class CovidData {
     public File currentlyInfectedGraph() throws IOException {
         String plotTitle = "Currently Infected";
         XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 1;
+        int count = 0;
         for(DayData d: covidData){
             xySeries.add(count ,d.getCurrently_infected());
             count++;
         }
         return generateImage(xySeries,plotTitle,"Day","Number");
     }
+
+    public File newCurrentlyInfectedGraph() throws IOException {
+        String plotTitle = "Currently Infected per day";
+        XYSeries xySeries = new XYSeries(plotTitle);
+        xySeries.add(0,0);  //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getCurrently_infected() - covidData.get(i - 1).getCurrently_infected();
+            xySeries.add(i,difference);
+        }
+        return generateImage(xySeries,plotTitle,"Day","Number");
+    }
+
     public File recoveredGraph() throws IOException {
         String plotTitle = "Recovered";
         XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 1;
+        int count = 0;
         for(DayData d: covidData){
             xySeries.add(count ,d.getRecovered());
             count++;
         }
         return generateImage(xySeries,plotTitle,"Day","Number");
     }
+
+    public File newRecoveredGraph() throws IOException {
+        String plotTitle = "Recovered per day";
+        XYSeries xySeries = new XYSeries(plotTitle);
+        xySeries.add(0,0);  //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getRecovered() - covidData.get(i - 1).getRecovered();
+            xySeries.add(i,difference);
+        }
+        return generateImage(xySeries,plotTitle,"Day","Number");
+    }
+
     public File deathGraph() throws IOException {
         String plotTitle = "Deaths";
         XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 1;
+        int count = 0;
         for(DayData d: covidData){
             xySeries.add(count ,d.getDeath());
             count++;
         }
         return generateImage(xySeries,plotTitle,"Day","Number");
     }
+
+    public File newDeathGraph() throws IOException {
+        String plotTitle = "Deaths per day";
+        XYSeries xySeries = new XYSeries(plotTitle);
+        xySeries.add(0,0);  //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getDeath() - covidData.get(i - 1).getDeath();
+            xySeries.add(i,difference);
+        }
+        return generateImage(xySeries,plotTitle,"Day","Number");
+    }
+
+    public File totalCasesGraph() throws IOException {
+        String plotTitle = "Total cases";
+        XYSeries xySeries = new XYSeries(plotTitle);
+        for(int i = 0; i < covidData.size(); i++){
+            int totalCases = covidData.get(i).getCurrently_infected() + covidData.get(i).getRecovered() + covidData.get(i).getDeath();
+            xySeries.add(i,totalCases);
+        }
+        return generateImage(xySeries,plotTitle,"Day","Number");
+    }
+
+    public File newTotalCasesGraph() throws IOException {
+        String plotTitle = "New cases";
+        XYSeries xySeries = new XYSeries(plotTitle);
+        xySeries.add(0,0);  //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int totalCasesToday = covidData.get(i).getCurrently_infected() + covidData.get(i).getRecovered() + covidData.get(i).getDeath();
+            int totalCasesYesterday = covidData.get(i - 1).getCurrently_infected() + covidData.get(i - 1).getRecovered() + covidData.get(i - 1).getDeath();
+            int difference = totalCasesToday - totalCasesYesterday;
+            xySeries.add(i,difference);
+        }
+        return generateImage(xySeries,plotTitle,"Day","Number");
+    }
+
     public File tamponsGraph() throws IOException {
         String plotTitle = "Tampons";
         XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 1;
+        int count = 0;
         for(DayData d: covidData){
             xySeries.add(count ,d.getTampons());
             count++;
@@ -63,6 +122,16 @@ public class CovidData {
         return generateImage(xySeries,plotTitle,"Day","Number");
     }
 
+    public File newTamponsGraph() throws IOException {
+        String plotTitle = "Tampons per day";
+        XYSeries xySeries = new XYSeries(plotTitle);
+        xySeries.add(0,0);  //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getTampons() - covidData.get(i - 1).getTampons();
+            xySeries.add(i,difference);
+        }
+        return generateImage(xySeries,plotTitle,"Day","Number");
+    }
 
     private File generateImage(XYSeries xySeries,String title,String xLabel,String yLabel) throws IOException {
         XYSeriesCollection data = new XYSeriesCollection(xySeries);

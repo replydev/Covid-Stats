@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,43 +19,50 @@ public class CommandHandler {
 
     public void handle(String command,long chatId){
 
-        String[] commandSplitted = command.split(" ");
-        String commandName = commandSplitted[0];
-        String[] args = getArgs(commandSplitted);
+        Vector<String> commandSplitted = new Vector<>(Arrays.asList(command.split(" ")));
+        String commandName = commandSplitted.firstElement();
+        Vector<String> args = new Vector<>(commandSplitted);
+        args.remove(0);
 
         switch(commandName){
             case "/start":
                 threads.submit(() -> sendMessage("Welcome to CovidBot",chatId));
                 break;
             case "/add":
-                if(args.length != 4){
+                if(args.size() != 4){
                     sendMessage("Please provide correct args",chatId);
                     return;
                 }
                 DayData dayData = new DayData(
-                        Integer.parseInt(args[0]),
-                        Integer.parseInt(args[1]),
-                        Integer.parseInt(args[2]),
-                        Integer.parseInt(args[3]),
+                        Integer.parseInt(args.get(0)),
+                        Integer.parseInt(args.get(1)),
+                        Integer.parseInt(args.get(2)),
+                        Integer.parseInt(args.get(3)),
                         LocalDate.now()
                 );
                 try {
                     dbManager.addData(dayData);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
+                } catch (SQLException throwable) {
+                    System.out.println(throwable.getSQLState());
+                    throwable.printStackTrace();
                 }
                 break;
             case "/infected":
-                try {
-                    CovidData covidData = dbManager.getData();
-                    File f = covidData.currentlyInfectedGraph();
-                    sendPhoto(f,chatId);
-                    f.delete();
-                } catch (SQLException | IOException throwables) {
-                    throwables.printStackTrace();
-                }
+                threads.submit(() -> infectedJob(chatId));
+                break;
+            case "/recovered":
+                threads.submit(() -> recoveredJob(chatId));
+                break;
+            case "/deaths":
+                threads.submit(() -> deathsJob(chatId));
+                break;
+            case "/cases":
+                threads.submit(() -> casesJob(chatId));
+                break;
+            case "/tampons":
+                threads.submit(() -> tamponsJob(chatId));
+                break;
             default:
-
         }
     }
 
@@ -63,17 +70,9 @@ public class CommandHandler {
         threads = Executors.newFixedThreadPool(threadsNum);
         try {
             dbManager = new DBManager("database.db");
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | ClassNotFoundException throwable) {
+            throwable.printStackTrace();
         }
-    }
-
-    private String[] getArgs(String[] commandSplitted){
-        if(commandSplitted.length <= 1)
-            return new String[0];
-        List<String> temp = Arrays.asList(commandSplitted);
-        temp.remove(0);
-        return (String[]) temp.toArray();
     }
 
     private void sendMessage(String text, long chatId){
@@ -94,6 +93,75 @@ public class CommandHandler {
             Bot.getInstance().execute(photo);
         } catch (TelegramApiException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void infectedJob(long chatId){
+        try {
+            CovidData covidData = dbManager.getData();
+            File f = covidData.currentlyInfectedGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+            f = covidData.newCurrentlyInfectedGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+        } catch (SQLException | IOException throwable) {
+            throwable.printStackTrace();
+        }
+    }
+    private void recoveredJob(long chatId){
+        try {
+            CovidData covidData = dbManager.getData();
+            File f = covidData.recoveredGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+            f = covidData.newRecoveredGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+        } catch (SQLException | IOException throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void deathsJob(long chatId){
+        try {
+            CovidData covidData = dbManager.getData();
+            File f = covidData.deathGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+            f = covidData.newDeathGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+        } catch (SQLException | IOException throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void casesJob(long chatId){
+        try {
+            CovidData covidData = dbManager.getData();
+            File f = covidData.totalCasesGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+            f = covidData.newTotalCasesGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+        } catch (SQLException | IOException throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private void tamponsJob(long chatId){
+        try {
+            CovidData covidData = dbManager.getData();
+            File f = covidData.tamponsGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+            f = covidData.newTamponsGraph();
+            sendPhoto(f,chatId);
+            f.delete();
+        } catch (SQLException | IOException throwable) {
+            throwable.printStackTrace();
         }
     }
 }

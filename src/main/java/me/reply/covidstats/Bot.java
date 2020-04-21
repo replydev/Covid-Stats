@@ -28,12 +28,11 @@ public class Bot extends TelegramLongPollingBot {
         if(update.getMessage().isCommand())
             commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId());
     }
-
+    //heroku support
     public String getBotUsername() {
-        return config.BOT_USERNAME;
+        return config.BOT_USERNAME.equals("username_here") ? System.getenv("USERNAME") : config.BOT_USERNAME;
     }
-
     public String getBotToken() {
-        return config.BOT_TOKEN;
+        return config.BOT_TOKEN.equals("token_here") ? System.getenv("TOKEN") : config.BOT_TOKEN;
     }
 }

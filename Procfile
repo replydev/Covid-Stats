@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp build/staging:build/staging/* me.reply.covidstats.Main
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* me.reply.covidstats.Main

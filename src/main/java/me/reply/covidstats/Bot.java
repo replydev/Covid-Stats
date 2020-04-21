@@ -9,9 +9,12 @@ public class Bot extends TelegramLongPollingBot {
 
     private static Bot instance;
     private final CommandHandler commandHandler;
-    private Config config;
+    private static Config config;
     public static Bot getInstance(){
         return instance;
+    }
+    public static Config getConfig(){
+        return config;
     }
 
     public Bot(){
@@ -19,6 +22,7 @@ public class Bot extends TelegramLongPollingBot {
         commandHandler = new CommandHandler(50);
         try {
             config = Config.load("config.yml");
+            config.loadAdminsFromFile("admins.list");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,7 +30,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         if(update.getMessage().isCommand())
-            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId());
+            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),update.getMessage().getFrom().getId());
     }
     //heroku support
     public String getBotUsername() {

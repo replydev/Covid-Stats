@@ -22,8 +22,7 @@ public class CommandHandler {
 
     private DBManager dbManager;
 
-    public void handle(String command,long chatId){
-
+    public void handle(String command,long chatId,Integer userId){
         Vector<String> commandSplitted = new Vector<>(Arrays.asList(command.split(" ")));
         String commandName = commandSplitted.firstElement();
         Vector<String> args = new Vector<>(commandSplitted);
@@ -34,6 +33,10 @@ public class CommandHandler {
                 threads.submit(() -> sendMessage("Welcome to CovidBot",chatId));
                 break;
             case "/add":
+                if(isNotAdmin(userId)){
+                    sendMessage("You must be an admin to use this command!",chatId);
+                    break;
+                }
                 Future<?> addFuture = threads.submit(() -> {
                     if(args.size() != 5){
                         sendMessage("Please provide correct args",chatId);
@@ -104,6 +107,10 @@ public class CommandHandler {
                 },60, TimeUnit.SECONDS);
                 break;
             case "/backup":
+                if(isNotAdmin(userId)){
+                    sendMessage("You must be an admin to use this command!",chatId);
+                    break;
+                }
                 Future<?> f5 = threads.submit(() -> {
                     try {
                         backupJob();
@@ -236,5 +243,8 @@ public class CommandHandler {
         if(args.length != 3)
             return null;
         return args[2] + "-" + args[1] + "-" + args[0];
+    }
+    private boolean isNotAdmin(Integer id){
+        return !Bot.getConfig().isInUserlist(id);
     }
 }

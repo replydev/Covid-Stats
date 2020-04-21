@@ -1,15 +1,19 @@
 package me.reply.covidstats;
 
+import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.*;
+import java.util.List;
+import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Config {
-
     public String BOT_TOKEN;
     public String BOT_USERNAME;
+
+    public List<Integer> admins;
 
     public static void saveDefaultConfig(String filename) throws IOException {
         File f = new File(filename);
@@ -26,6 +30,18 @@ public class Config {
         String defaultConfig = "BOT_TOKEN: 'token_here'\n" +
                 "BOT_USERNAME: 'username_here'";
         writeFile("config.yml",defaultConfig);
+    }
+
+    public void loadAdminsFromFile(String filename) throws IOException {
+        this.admins = new Vector<>();
+        try{
+            List<String> lines = FileUtils.readLines(new File(filename),"UTF-8");
+            for(String s : lines){
+                admins.add(Integer.parseInt(s));
+            }
+        }catch (FileNotFoundException ignored){
+
+        }
     }
 
     public static Config load(String filename) throws IOException {
@@ -53,5 +69,13 @@ public class Config {
         writer.write(s);
         writer.flush();
         writer.close();
+    }
+
+    public boolean isInUserlist(Integer id){
+        for(Integer i : admins){
+            if(i.equals(id))
+                return true;
+        }
+        return false;
     }
 }

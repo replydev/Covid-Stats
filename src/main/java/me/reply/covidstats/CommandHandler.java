@@ -131,6 +131,8 @@ public class CommandHandler {
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;
+            case "/sourcecode":
+                threads.submit(() -> sendMessage("This bot is open and wants to make easier the data sharing all around the world! - https://github.com/replydev/Covid-Stats",chatId));
             default:
         }
     }

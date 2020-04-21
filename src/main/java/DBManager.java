@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -50,12 +51,12 @@ public class DBManager {
         preparedStatement.setInt(3,dayData.getRecovered());
         preparedStatement.setInt(4,dayData.getDeath());
         preparedStatement.setInt(5,dayData.getTampons());
-        preparedStatement.setObject(6, dayData.getDay());
+        preparedStatement.setObject(6, dayData.getDayDate());
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }
 
-    public CovidData getData() throws SQLException {
+    public CovidData getData() throws SQLException, ParseException {
         CovidData covidData = new CovidData();
         Statement statement = c.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM covidData");
@@ -66,8 +67,7 @@ public class DBManager {
             int deaths = resultSet.getInt("deaths");
             int tampons = resultSet.getInt("tampons");
             String date = resultSet.getString("date");
-            LocalDate dt = LocalDate.parse(date,dtf);
-            DayData dayData = new DayData(currently_infected,recovered,deaths,tampons,dt);
+            DayData dayData = new DayData(currently_infected,recovered,deaths,tampons,date);
             covidData.add(dayData);
         }
         return covidData;

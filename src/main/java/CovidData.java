@@ -1,12 +1,17 @@
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
@@ -14,135 +19,140 @@ public class CovidData {
 
     private final Vector<DayData> covidData;
 
-    public CovidData(){
+    private Date startDate;
+
+    public CovidData() throws ParseException {
         covidData = new Vector<>();
+        startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-02-24");
     }
 
     public void add(DayData dayData){
         covidData.add(dayData);
     }
 
-    public File currentlyInfectedGraph() throws IOException {
+    public File currentlyInfectedGraph() throws IOException, ParseException {
         String plotTitle = "Currently Infected";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 0;
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            xySeries.add(count ,d.getCurrently_infected());
-            count++;
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            TimeSeries.add(new Day(date) ,d.getCurrently_infected());
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File newCurrentlyInfectedGraph() throws IOException {
+    public File newCurrentlyInfectedGraph() throws IOException, ParseException {
         String plotTitle = "Currently Infected per day";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        xySeries.add(0,0);  //first element of graph
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getCurrently_infected() - covidData.get(i - 1).getCurrently_infected();
-            xySeries.add(i,difference);
+            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File recoveredGraph() throws IOException {
+    public File recoveredGraph() throws IOException, ParseException {
         String plotTitle = "Recovered";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 0;
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            xySeries.add(count ,d.getRecovered());
-            count++;
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            TimeSeries.add(new Day(date) ,d.getRecovered());
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File newRecoveredGraph() throws IOException {
+    public File newRecoveredGraph() throws IOException, ParseException {
         String plotTitle = "Recovered per day";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        xySeries.add(0,0);  //first element of graph
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getRecovered() - covidData.get(i - 1).getRecovered();
-            xySeries.add(i,difference);
+            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File deathGraph() throws IOException {
+    public File deathGraph() throws IOException, ParseException {
         String plotTitle = "Deaths";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 0;
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            xySeries.add(count ,d.getDeath());
-            count++;
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            TimeSeries.add(new Day(date) ,d.getDeath());
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File newDeathGraph() throws IOException {
+    public File newDeathGraph() throws IOException, ParseException {
         String plotTitle = "Deaths per day";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        xySeries.add(0,0);  //first element of graph
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getDeath() - covidData.get(i - 1).getDeath();
-            xySeries.add(i,difference);
+            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File totalCasesGraph() throws IOException {
+    public File totalCasesGraph() throws IOException, ParseException {
         String plotTitle = "Total cases";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        for(int i = 0; i < covidData.size(); i++){
-            int totalCases = covidData.get(i).getCurrently_infected() + covidData.get(i).getRecovered() + covidData.get(i).getDeath();
-            xySeries.add(i,totalCases);
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        for (DayData covidDatum : covidData) {
+            int totalCases = covidDatum.getCurrently_infected() + covidDatum.getRecovered() + covidDatum.getDeath();
+            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidDatum.getDayDate());
+            TimeSeries.add(new Day(d), totalCases);
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File newTotalCasesGraph() throws IOException {
+    public File newTotalCasesGraph() throws IOException, ParseException {
         String plotTitle = "New cases";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        xySeries.add(0,0);  //first element of graph
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int totalCasesToday = covidData.get(i).getCurrently_infected() + covidData.get(i).getRecovered() + covidData.get(i).getDeath();
             int totalCasesYesterday = covidData.get(i - 1).getCurrently_infected() + covidData.get(i - 1).getRecovered() + covidData.get(i - 1).getDeath();
             int difference = totalCasesToday - totalCasesYesterday;
-            xySeries.add(i,difference);
+            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File tamponsGraph() throws IOException {
+    public File tamponsGraph() throws IOException, ParseException {
         String plotTitle = "Tampons";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        int count = 0;
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            xySeries.add(count ,d.getTampons());
-            count++;
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            TimeSeries.add(new Day(date) ,d.getTampons());
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    public File newTamponsGraph() throws IOException {
+    public File newTamponsGraph() throws IOException, ParseException {
         String plotTitle = "Tampons per day";
-        XYSeries xySeries = new XYSeries(plotTitle);
-        xySeries.add(0,0);  //first element of graph
+        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getTampons() - covidData.get(i - 1).getTampons();
-            xySeries.add(i,difference);
+            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(xySeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle,"Day","Number");
     }
 
-    private File generateImage(XYSeries xySeries,String title,String xLabel,String yLabel) throws IOException {
-        XYSeriesCollection data = new XYSeriesCollection(xySeries);
-        JFreeChart chart = ChartFactory.createXYLineChart(
+    private File generateImage(TimeSeries timeSeries, String title, String xLabel, String yLabel) throws IOException {
+        TimeSeriesCollection data = new TimeSeriesCollection();
+        data.addSeries(timeSeries);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 title,
                 xLabel,
                 yLabel,
                 data,
-                PlotOrientation.VERTICAL,
-                true,
-                true,
+                false,
+                false,
                 false
         );
 

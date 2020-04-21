@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +29,7 @@ public class CommandHandler {
                 threads.submit(() -> sendMessage("Welcome to CovidBot",chatId));
                 break;
             case "/add":
-                if(args.size() != 4){
+                if(args.size() != 5){
                     sendMessage("Please provide correct args",chatId);
                     return;
                 }
@@ -38,7 +38,7 @@ public class CommandHandler {
                         Integer.parseInt(args.get(1)),
                         Integer.parseInt(args.get(2)),
                         Integer.parseInt(args.get(3)),
-                        LocalDate.now()
+                        args.get(4)
                 );
                 try {
                     dbManager.addData(dayData);
@@ -101,11 +101,11 @@ public class CommandHandler {
             CovidData covidData = dbManager.getData();
             File f = covidData.currentlyInfectedGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) System.out.println("Error during file removal");
             f = covidData.newCurrentlyInfectedGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
-        } catch (SQLException | IOException throwable) {
+            if(!f.delete()) System.out.println("Error during file removal");
+        } catch (SQLException | IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
     }
@@ -114,11 +114,11 @@ public class CommandHandler {
             CovidData covidData = dbManager.getData();
             File f = covidData.recoveredGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) System.out.println("Error during file removal");
             f = covidData.newRecoveredGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
-        } catch (SQLException | IOException throwable) {
+            if(!f.delete()) System.out.println("Error during file removal");
+        } catch (SQLException | IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
     }
@@ -128,11 +128,11 @@ public class CommandHandler {
             CovidData covidData = dbManager.getData();
             File f = covidData.deathGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) System.out.println("Error during file removal");
             f = covidData.newDeathGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
-        } catch (SQLException | IOException throwable) {
+            if(!f.delete()) System.out.println("Error during file removal");
+        } catch (SQLException | IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
     }
@@ -142,11 +142,11 @@ public class CommandHandler {
             CovidData covidData = dbManager.getData();
             File f = covidData.totalCasesGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) System.out.println("Error during file removal");
             f = covidData.newTotalCasesGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
-        } catch (SQLException | IOException throwable) {
+            if(!f.delete()) System.out.println("Error during file removal");
+        } catch (SQLException | IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
     }
@@ -156,11 +156,11 @@ public class CommandHandler {
             CovidData covidData = dbManager.getData();
             File f = covidData.tamponsGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) System.out.println("Error during file removal");
             f = covidData.newTamponsGraph();
             sendPhoto(f,chatId);
-            if(f.delete()) System.out.println("Error during file removal");
-        } catch (SQLException | IOException throwable) {
+            if(!f.delete()) System.out.println("Error during file removal");
+        } catch (SQLException | IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
     }

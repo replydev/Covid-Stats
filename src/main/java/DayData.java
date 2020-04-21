@@ -6,14 +6,14 @@ public class DayData {
     private final int recovered;
     private final int death;
     private final int tampons;
-    private final LocalDate day;
+    private final String dayDate;
 
-    public DayData(int currently_infected, int recovered, int death, int tampons, LocalDate day) {
+    public DayData(int currently_infected, int recovered, int death, int tampons, String dayDate) {
         this.currently_infected = currently_infected;
         this.recovered = recovered;
         this.death = death;
         this.tampons = tampons;
-        this.day = day;
+        this.dayDate = dayDate;
     }
 
     public int getCurrently_infected() {
@@ -32,7 +32,7 @@ public class DayData {
         return tampons;
     }
 
-    public LocalDate getDay() {
-        return day;
+    public String getDayDate() {
+        return dayDate;
     }
 }

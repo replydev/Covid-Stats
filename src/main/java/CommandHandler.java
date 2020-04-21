@@ -32,61 +32,61 @@ public class CommandHandler {
                 threads.submit(() -> sendMessage("Welcome to CovidBot",chatId));
                 break;
             case "/add":
-                if(args.size() != 5){
-                    sendMessage("Please provide correct args",chatId);
-                    return;
-                }
-                DayData dayData = new DayData(
-                        Integer.parseInt(args.get(0)),
-                        Integer.parseInt(args.get(1)),
-                        Integer.parseInt(args.get(2)),
-                        Integer.parseInt(args.get(3)),
-                        invertDate(args.get(4))
-                );
-                try {
-                    dbManager.addData(dayData);
-                } catch (SQLException throwable) {
-                    System.out.println(throwable.getSQLState());
-                    throwable.printStackTrace();
-                }
-                break;
-            case "/infected":
-                Future<?> f = threads.submit(() -> {
-                    infectedJob(chatId);
-                    sendMessage("Backup completed",chatId);
+                Future<?> addFuture = threads.submit(() -> {
+                    if(args.size() != 5){
+                        sendMessage("Please provide correct args",chatId);
+                        return;
+                    }
+                    DayData dayData = new DayData(
+                            Integer.parseInt(args.get(0)),
+                            Integer.parseInt(args.get(1)),
+                            Integer.parseInt(args.get(2)),
+                            Integer.parseInt(args.get(3)),
+                            invertDate(args.get(4))
+                    );
+                    try {
+                        dbManager.addData(dayData);
+                        sendMessage("Operation completed successfully",chatId);
+                    } catch (SQLException throwable) {
+                        System.out.println(throwable.getSQLState());
+                        throwable.printStackTrace();
+                    }
                 });
                 canceller.schedule(() -> {
-                    f.cancel(true);
+                    if(!addFuture.isDone())
+                        addFuture.cancel(true);
+                    System.out.println("A task as been terminated due to timeout");
+                },60, TimeUnit.SECONDS);
+                break;
+            case "/infected":
+                Future<?> f = threads.submit(() -> infectedJob(chatId));
+                canceller.schedule(() -> {
+                    if(!f.isDone())
+                        f.cancel(true);
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;
             case "/recovered":
-                Future<?> f1 = threads.submit(() -> {
-                    recoveredJob(chatId);
-                    sendMessage("Backup completed",chatId);
-                });
+                Future<?> f1 = threads.submit(() -> recoveredJob(chatId));
                 canceller.schedule(() -> {
-                    f1.cancel(true);
+                    if(!f1.isDone())
+                        f1.cancel(true);
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;
             case "/deaths":
-                Future<?> f2 = threads.submit(() -> {
-                    deathsJob(chatId);
-                    sendMessage("Backup completed",chatId);
-                });
+                Future<?> f2 = threads.submit(() -> deathsJob(chatId));
                 canceller.schedule(() -> {
-                    f2.cancel(true);
+                    if(!f2.isDone())
+                        f2.cancel(true);
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;
             case "/cases":
-                Future<?> f3 = threads.submit(() -> {
-                    casesJob(chatId);
-                    sendMessage("Backup completed",chatId);
-                });
+                Future<?> f3 = threads.submit(() -> casesJob(chatId));
                 canceller.schedule(() -> {
-                    f3.cancel(true);
+                    if(!f3.isDone())
+                        f3.cancel(true);
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;
@@ -96,7 +96,8 @@ public class CommandHandler {
                     sendMessage("Backup completed",chatId);
                 });
                 canceller.schedule(() -> {
-                    f4.cancel(true);
+                    if(!f4.isDone())
+                        f4.cancel(true);
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;
@@ -111,7 +112,8 @@ public class CommandHandler {
                     }
                 });
                 canceller.schedule(() -> {
-                    f5.cancel(true);
+                    if(!f5.isDone())
+                        f5.cancel(true);
                     System.out.println("A task as been terminated due to timeout");
                 },60, TimeUnit.SECONDS);
                 break;

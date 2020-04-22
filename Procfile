@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* me.reply.covidstats.Main
+worker: java $JAVA_OPTS -cp target/classes:target/dependency/* me.reply.covidstats.Main

@@ -2,6 +2,7 @@ package me.reply.covidstats;
 
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -59,7 +60,7 @@ public class CommandHandler {
                     }
                     try {
                         try{
-                            backupJob();
+                            backupJob(chatId);
                             sendMessage("Backup completed",chatId);
                         }catch (FileExistsException e){
                             sendMessage("You have already backup your data today",chatId);
@@ -101,6 +102,17 @@ public class CommandHandler {
                 .setChatId(chatId);
         try {
             Bot.getInstance().execute(photo);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendFile(File f, long chatId){
+        SendDocument sendDocument = new SendDocument()
+                .setDocument(f)
+                .setChatId(chatId);
+        try {
+            Bot.getInstance().execute(sendDocument);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -175,11 +187,13 @@ public class CommandHandler {
             throwable.printStackTrace();
         }
     }
-    private void backupJob() throws IOException {
+
+    private void backupJob(long chatId) throws IOException {
         File srcFile = new File("database.db");
         String date =  LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         File tempFile = new File("database-backup-" + date + ".db");
         FileUtils.copyFile(srcFile,tempFile);
+        sendFile(tempFile,chatId);
         try{
             FileUtils.moveFileToDirectory(tempFile, new File("backups/"),true);
         }catch (FileExistsException e){

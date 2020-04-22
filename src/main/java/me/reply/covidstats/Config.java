@@ -39,9 +39,14 @@ public class Config {
         try{
             List<String> lines = FileUtils.readLines(new File(filename),"UTF-8");
             admins.addAll(lines);
-        }catch (FileNotFoundException ignored){
-
+        }catch (FileNotFoundException e){
+            //maybe this is heroku
+            admins.add(System.getenv("ADMIN"));
         }
+    }
+
+    public void addAdmin(String admin){
+        admins.add(admin);
     }
 
     public static Config load(String filename) throws IOException {

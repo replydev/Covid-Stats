@@ -12,8 +12,9 @@ import java.util.Vector;
 public class Config {
     public String BOT_TOKEN;
     public String BOT_USERNAME;
+    public String START_DATE;
 
-    public List<Integer> admins;
+    public List<String> admins;
 
     public static void saveDefaultConfig(String filename) throws IOException {
         File f = new File(filename);
@@ -28,7 +29,8 @@ public class Config {
             System.exit(-1);
         }
         String defaultConfig = "BOT_TOKEN: 'token_here'\n" +
-                "BOT_USERNAME: 'username_here'";
+                "BOT_USERNAME: 'username_here'\n" +
+                "START_DATE: '01-01-2000'";
         writeFile("config.yml",defaultConfig);
     }
 
@@ -36,9 +38,7 @@ public class Config {
         this.admins = new Vector<>();
         try{
             List<String> lines = FileUtils.readLines(new File(filename),"UTF-8");
-            for(String s : lines){
-                admins.add(Integer.parseInt(s));
-            }
+            admins.addAll(lines);
         }catch (FileNotFoundException ignored){
 
         }
@@ -71,8 +71,8 @@ public class Config {
         writer.close();
     }
 
-    public boolean isInUserlist(Integer id){
-        for(Integer i : admins){
+    public boolean isInUserlist(String id){
+        for(String i : admins){
             if(i.equals(id))
                 return true;
         }

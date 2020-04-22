@@ -18,19 +18,19 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public Bot(){
-        instance = this;
-        commandHandler = new CommandHandler(50);
         try {
             config = Config.load("config.yml");
             config.loadAdminsFromFile("admins.list");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        instance = this;
+        commandHandler = new CommandHandler(50,config);
     }
 
     public void onUpdateReceived(Update update) {
         if(update.getMessage().isCommand())
-            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),update.getMessage().getFrom().getId());
+            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),update.getMessage().getFrom().getId().toString());
     }
     //heroku support
     public String getBotUsername() {

@@ -2,32 +2,41 @@ package me.reply.covidstats;
 
 import java.sql.*;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class DBManager {
     private final Connection c;
 
     private int rows;
+    private String currentDate;
 
-    public DBManager(String filename) throws SQLException, ClassNotFoundException {
+    public String getCurrentDate(){
+        return currentDate;
+    }
+
+    public DBManager(String filename,String startDate) throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
         c = DriverManager.getConnection("jdbc:sqlite:" + filename);
         createDatabase();
-        rows = getCount();
+        getCount(startDate);
     }
 
     public void close() throws SQLException {
         c.close();
     }
 
-    private int getCount() throws SQLException {
+    private void getCount(String startDate) throws SQLException {
         Statement statement = c.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM covidData");
-        int c = 0;
-        while(resultSet.next())
-            c++;
+        rows = 0;
+        currentDate = startDate;
+        while(resultSet.next()){
+            rows++;
+            currentDate = Utils.invertDate(resultSet.getString("date"));
+            currentDate = incDate(currentDate);
+        }
         statement.close();
-        return c;
     }
 
     public void createDatabase() throws SQLException {
@@ -43,25 +52,30 @@ public class DBManager {
         stmt.executeUpdate(sql);
         stmt.close();
     }
+    public String incDate(String date){
+        LocalDate date1 = LocalDate.parse(date,DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        date1 = date1.plusDays(1);
+        return date1.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
 
     public void addData(DayData dayData) throws SQLException {
         PreparedStatement preparedStatement = c.prepareStatement("INSERT INTO covidData (id,currently_infected,recovered,deaths,tampons,date) VALUES (?,?,?,?,?,?)");
-        rows++;
         preparedStatement.setInt(1,rows);
         preparedStatement.setInt(2,dayData.getCurrently_infected());
         preparedStatement.setInt(3,dayData.getRecovered());
         preparedStatement.setInt(4,dayData.getDeath());
         preparedStatement.setInt(5,dayData.getTampons());
-        preparedStatement.setObject(6, dayData.getDayDate());
+        preparedStatement.setObject(6, Utils.invertDate(currentDate));
         preparedStatement.executeUpdate();
         preparedStatement.close();
+        rows++;
+        currentDate = incDate(currentDate);
     }
 
     public CovidData getData() throws SQLException, ParseException {
         CovidData covidData = new CovidData();
         Statement statement = c.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM covidData");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         while(resultSet.next()){
             int currently_infected = resultSet.getInt("currently_infected");
             int recovered = resultSet.getInt("recovered");

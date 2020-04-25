@@ -4,7 +4,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -52,7 +51,8 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
         instance = this;
-        commandHandler = new CommandHandler(50,config);
+        commandHandler = new CommandHandler(50);
+        startDailyTask();
     }
 
     public void onUpdateReceived(Update update) {
@@ -82,6 +82,7 @@ public class Bot extends TelegramLongPollingBot {
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 covidData = DataFetcher.fetchData();
+                System.out.println("Scheduler service is updating data...");
             } catch (IOException e) {
                 e.printStackTrace();
             }

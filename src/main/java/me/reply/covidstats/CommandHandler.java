@@ -1,6 +1,5 @@
 package me.reply.covidstats;
 
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -58,7 +57,7 @@ public class CommandHandler {
         }
     }
 
-    public CommandHandler(int threadsNum, Config config){
+    public CommandHandler(int threadsNum){
         threads = Executors.newFixedThreadPool(threadsNum);
     }
 

@@ -42,7 +42,7 @@ public class CovidData {
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getCurrently_infected());
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File newCurrentlyInfectedGraph() throws IOException, ParseException {
@@ -54,7 +54,7 @@ public class CovidData {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File recoveredGraph() throws IOException, ParseException {
@@ -64,7 +64,7 @@ public class CovidData {
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getRecovered());
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File newRecoveredGraph() throws IOException, ParseException {
@@ -76,7 +76,7 @@ public class CovidData {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File deathGraph() throws IOException, ParseException {
@@ -86,7 +86,7 @@ public class CovidData {
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getDeath());
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File newDeathGraph() throws IOException, ParseException {
@@ -98,7 +98,7 @@ public class CovidData {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File totalCasesGraph() throws IOException, ParseException {
@@ -109,7 +109,7 @@ public class CovidData {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidDatum.getDayDate());
             TimeSeries.add(new Day(d), totalCases);
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File newTotalCasesGraph() throws IOException, ParseException {
@@ -123,7 +123,7 @@ public class CovidData {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File tamponsGraph() throws IOException, ParseException {
@@ -133,7 +133,7 @@ public class CovidData {
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getTampons());
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
     public File newTamponsGraph() throws IOException, ParseException {
@@ -145,16 +145,16 @@ public class CovidData {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
-        return generateImage(TimeSeries,plotTitle,"Day","Number");
+        return generateImage(TimeSeries,plotTitle);
     }
 
-    private File generateImage(TimeSeries timeSeries, String title, String xLabel, String yLabel) throws IOException {
+    private File generateImage(TimeSeries timeSeries, String title) throws IOException {
         TimeSeriesCollection data = new TimeSeriesCollection();
         data.addSeries(timeSeries);
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 title,
-                xLabel,
-                yLabel,
+                "Day",
+                "Number",
                 data,
                 false,
                 false,

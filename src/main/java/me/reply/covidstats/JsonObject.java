@@ -1,7 +1,5 @@
 package me.reply.covidstats;
 
-import java.time.ZonedDateTime;
-
 public class JsonObject{
     /*
         "data": "2020-02-24T18:00:00",

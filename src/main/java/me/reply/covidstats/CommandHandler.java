@@ -31,6 +31,7 @@ public class CommandHandler {
                         sendMessage("You must be an admin to run this command!",chatId);
                     try {
                         Bot.updateCovidData(DataFetcher.fetchData());
+                        sendMessage("Done",chatId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

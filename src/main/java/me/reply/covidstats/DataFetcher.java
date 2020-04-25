@@ -15,13 +15,7 @@ public class DataFetcher {
         FileUtils.copyURLToFile(new URL(GIT_URL),dataFile);
 
         Gson g = new Gson();
-
-        JsonObject[] object = new JsonObject[100];
-        try{
-             object = g.fromJson(FileUtils.readFileToString(dataFile,"UTF-8"),JsonObject[].class);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        JsonObject[] object = g.fromJson(FileUtils.readFileToString(dataFile,"UTF-8"),JsonObject[].class);
 
         CovidData covidData = new CovidData();
         for(JsonObject jsonObject : object){

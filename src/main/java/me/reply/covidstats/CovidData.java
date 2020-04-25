@@ -18,15 +18,20 @@ import java.util.Vector;
 public class CovidData {
 
     private final Vector<DayData> covidData;
-
     private Date startDate;
 
-    public CovidData() throws ParseException {
+    public CovidData() {
         covidData = new Vector<>();
-        startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-02-24");
     }
 
     public void add(DayData dayData){
+        if(covidData.size() == 0) {
+            try {
+                startDate = new SimpleDateFormat("dd-MM-yyyy").parse(dayData.getDayDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         covidData.add(dayData);
     }
 
@@ -34,7 +39,7 @@ public class CovidData {
         String plotTitle = "Currently Infected";
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getCurrently_infected());
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -46,7 +51,7 @@ public class CovidData {
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getCurrently_infected() - covidData.get(i - 1).getCurrently_infected();
-            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -56,7 +61,7 @@ public class CovidData {
         String plotTitle = "Recovered";
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getRecovered());
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -68,7 +73,7 @@ public class CovidData {
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getRecovered() - covidData.get(i - 1).getRecovered();
-            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -78,7 +83,7 @@ public class CovidData {
         String plotTitle = "Deaths";
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getDeath());
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -90,7 +95,7 @@ public class CovidData {
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getDeath() - covidData.get(i - 1).getDeath();
-            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -101,7 +106,7 @@ public class CovidData {
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for (DayData covidDatum : covidData) {
             int totalCases = covidDatum.getCurrently_infected() + covidDatum.getRecovered() + covidDatum.getDeath();
-            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidDatum.getDayDate());
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidDatum.getDayDate());
             TimeSeries.add(new Day(d), totalCases);
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -115,7 +120,7 @@ public class CovidData {
             int totalCasesToday = covidData.get(i).getCurrently_infected() + covidData.get(i).getRecovered() + covidData.get(i).getDeath();
             int totalCasesYesterday = covidData.get(i - 1).getCurrently_infected() + covidData.get(i - 1).getRecovered() + covidData.get(i - 1).getDeath();
             int difference = totalCasesToday - totalCasesYesterday;
-            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -125,7 +130,7 @@ public class CovidData {
         String plotTitle = "Tampons";
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d.getDayDate());
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             TimeSeries.add(new Day(date) ,d.getTampons());
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");
@@ -137,7 +142,7 @@ public class CovidData {
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getTampons() - covidData.get(i - 1).getTampons();
-            Date d = new SimpleDateFormat("yyyy-MM-dd").parse(covidData.get(i).getDayDate());
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
             TimeSeries.add(new Day(d),difference);
         }
         return generateImage(TimeSeries,plotTitle,"Day","Number");

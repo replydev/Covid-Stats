@@ -12,7 +12,6 @@ import java.util.Vector;
 public class Config {
     public String BOT_TOKEN;
     public String BOT_USERNAME;
-    public String START_DATE;
 
     public List<String> admins;
 
@@ -29,8 +28,7 @@ public class Config {
             System.exit(-1);
         }
         String defaultConfig = "BOT_TOKEN: 'token_here'\n" +
-                "BOT_USERNAME: 'username_here'\n" +
-                "START_DATE: '01-01-2000'";
+                "BOT_USERNAME: 'username_here'";
         writeFile("config.yml",defaultConfig);
     }
 

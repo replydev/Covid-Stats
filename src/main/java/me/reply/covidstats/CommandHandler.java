@@ -85,11 +85,10 @@ public class CommandHandler {
 
     private void infectedJob(long chatId){
         try {
-            CovidData covidData = Bot.getCovidData();
-            File f = covidData.currentlyInfectedGraph();
+            File f = Bot.getCovidData().currentlyInfectedGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = covidData.newCurrentlyInfectedGraph();
+            f = Bot.getCovidData().newCurrentlyInfectedGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch ( IOException | ParseException throwable) {
@@ -99,11 +98,10 @@ public class CommandHandler {
 
     private void recoveredJob(long chatId){
         try {
-            CovidData covidData = Bot.getCovidData();
-            File f = covidData.recoveredGraph();
+            File f = Bot.getCovidData().recoveredGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = covidData.newRecoveredGraph();
+            f = Bot.getCovidData().newRecoveredGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -113,11 +111,10 @@ public class CommandHandler {
 
     private void deathsJob(long chatId){
         try {
-            CovidData covidData = Bot.getCovidData();
-            File f = covidData.deathGraph();
+            File f = Bot.getCovidData().deathGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = covidData.newDeathGraph();
+            f = Bot.getCovidData().newDeathGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -127,11 +124,10 @@ public class CommandHandler {
 
     private void casesJob(long chatId){
         try {
-            CovidData covidData = Bot.getCovidData();
-            File f = covidData.totalCasesGraph();
+            File f = Bot.getCovidData().totalCasesGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = covidData.newTotalCasesGraph();
+            f = Bot.getCovidData().newTotalCasesGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -141,17 +137,17 @@ public class CommandHandler {
 
     private void tamponsJob(long chatId){
         try {
-            CovidData covidData = Bot.getCovidData();
-            File f = covidData.tamponsGraph();
+            File f = Bot.getCovidData().tamponsGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = covidData.newTamponsGraph();
+            f = Bot.getCovidData().newTamponsGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
     }
+
     private boolean isNotAdmin(String id){
         return !Bot.getConfig().isInUserlist(id);
     }

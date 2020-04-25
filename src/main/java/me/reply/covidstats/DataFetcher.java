@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 
 public class DataFetcher {
 
@@ -17,22 +16,32 @@ public class DataFetcher {
 
         Gson g = new Gson();
 
-
-        JsonFile data = g.fromJson(FileUtils.readFileToString(dataFile,"UTF-8"),JsonFile.class);
-
+        JsonObject[] object = new JsonObject[100];
+        try{
+             object = g.fromJson(FileUtils.readFileToString(dataFile,"UTF-8"),JsonObject[].class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         CovidData covidData = new CovidData();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        for(JsonObject jsonObject : data.getData()){
+        for(JsonObject jsonObject : object){
             DayData dayData = new DayData(
                     jsonObject.getTotale_positivi(),
                     jsonObject.getDimessi_guariti(),
                     jsonObject.getDeceduti(),
                     jsonObject.getTamponi(),
-                    dateTimeFormatter.format(jsonObject.getData())
+                    //dateTimeFormatter.format(jsonObject.getData())
+                    getGoodDate(jsonObject.getData())
             );
             covidData.add(dayData);
         }
         return covidData;
+    }
+
+    private static String getGoodDate(String jsonDate){
+        jsonDate = jsonDate.substring(0,10); //2020-02-24
+        String [] split = jsonDate.split("-");
+        assert split.length == 3;
+        return split[2] + "-" + split[1] + "-" + split[0];
     }
 }

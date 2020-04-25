@@ -32,6 +32,7 @@ public class Bot extends TelegramLongPollingBot {
         if(covidData == null) {
             try {
                 covidData = DataFetcher.fetchData();
+                System.out.println("Covid data loaded to memory");
             } catch (IOException e) {
                 e.printStackTrace();
             }

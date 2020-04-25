@@ -2,15 +2,7 @@ package me.reply.covidstats;
 
 import java.time.ZonedDateTime;
 
-public class JsonFile {
-    private JsonObject[] data;
-
-    public JsonObject[] getData() {
-        return data;
-    }
-}
-
-class JsonObject{
+public class JsonObject{
     /*
         "data": "2020-02-24T18:00:00",
         "stato": "ITA",
@@ -29,7 +21,7 @@ class JsonObject{
         "note_it": "",
         "note_en": ""
         */
-    private ZonedDateTime data;
+    private String data;
     private String stato;
     private int ricoverati_con_sintomi;
     private int terapia_intensiva;
@@ -45,7 +37,7 @@ class JsonObject{
     private String note_it;
     private String note_end;
 
-    public ZonedDateTime getData() {
+    public String getData() {
         return data;
     }
 

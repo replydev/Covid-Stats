@@ -30,7 +30,7 @@ public class CommandHandler {
                     if(isNotAdmin(userId))
                         sendMessage("You must be an admin to run this command!",chatId);
                     try {
-                        Bot.updateCovidData(DataFetcher.fetchData());
+                        DataFetcher.downloadFiles();
                         sendMessage("Done",chatId);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -38,19 +38,30 @@ public class CommandHandler {
                 });
                 break;
             case "/infected":
-                threads.submit(() -> infectedJob(chatId));
+                threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case "/recovered":
-                threads.submit(() -> recoveredJob(chatId));
+                threads.submit(() -> recoveredJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case "/deaths":
-                threads.submit(() -> deathsJob(chatId));
+                threads.submit(() -> deathsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case "/cases":
-                threads.submit(() -> casesJob(chatId));
+                threads.submit(() -> casesJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case "/tampons":
-                threads.submit(() -> tamponsJob(chatId));
+                threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
+                break;
+            case "/setregion":
+                if(args.size() != 1){
+                    sendMessage("Correct usage: /setregion regionName (/setregion Lombardia)",chatId);
+                    break;
+                }
+                threads.submit(() -> {
+                    if(!Bot.getInstance().setRegion(userId,argsAsString(args))){
+                        sendMessage("\"" + args.firstElement() + "\" is not a valid region!\nChoose a valid region: \n" + Bot.getInstance().getRegions(),chatId);
+                    }
+                });
                 break;
             case "/sourcecode":
                 threads.submit(() -> sendMessage("This bot is open and wants to make easier the data sharing all around the world! - https://github.com/replydev/Covid-Stats",chatId));
@@ -83,12 +94,13 @@ public class CommandHandler {
         }
     }
 
-    private void infectedJob(long chatId){
+    private void infectedJob(String region,long chatId){
         try {
-            File f = Bot.getCovidData().currentlyInfectedGraph();
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.currentlyInfectedGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = Bot.getCovidData().newCurrentlyInfectedGraph();
+            f = data.newCurrentlyInfectedGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch ( IOException | ParseException throwable) {
@@ -96,12 +108,13 @@ public class CommandHandler {
         }
     }
 
-    private void recoveredJob(long chatId){
+    private void recoveredJob(String region,long chatId){
         try {
-            File f = Bot.getCovidData().recoveredGraph();
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.recoveredGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = Bot.getCovidData().newRecoveredGraph();
+            f = data.newRecoveredGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -109,12 +122,13 @@ public class CommandHandler {
         }
     }
 
-    private void deathsJob(long chatId){
+    private void deathsJob(String region,long chatId){
         try {
-            File f = Bot.getCovidData().deathGraph();
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.deathGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = Bot.getCovidData().newDeathGraph();
+            f = data.newDeathGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -122,12 +136,13 @@ public class CommandHandler {
         }
     }
 
-    private void casesJob(long chatId){
+    private void casesJob(String region,long chatId){
         try {
-            File f = Bot.getCovidData().totalCasesGraph();
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.totalCasesGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = Bot.getCovidData().newTotalCasesGraph();
+            f = data.newTotalCasesGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -135,12 +150,13 @@ public class CommandHandler {
         }
     }
 
-    private void tamponsJob(long chatId){
+    private void tamponsJob(String region,long chatId){
         try {
-            File f = Bot.getCovidData().tamponsGraph();
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.tamponsGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
-            f = Bot.getCovidData().newTamponsGraph();
+            f = data.newTamponsGraph();
             sendPhoto(f,chatId);
             if(!f.delete()) System.out.println("Error during file removal");
         } catch (IOException | ParseException throwable) {
@@ -149,6 +165,15 @@ public class CommandHandler {
     }
 
     private boolean isNotAdmin(String id){
-        return !Bot.getConfig().isInUserlist(id);
+        return !Bot.getInstance().getConfig().isInUserlist(id);
+    }
+
+    private String argsAsString(Vector<String> args){
+        StringBuilder builder = new StringBuilder();
+        for(String s : args){
+            builder.append(s).append(" ");
+        }
+        builder.deleteCharAt(builder.length() - 1); //remove last space
+        return builder.toString();
     }
 }

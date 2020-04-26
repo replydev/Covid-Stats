@@ -30,12 +30,14 @@ public class Bot extends TelegramLongPollingBot {
         return users.get(userid);
     }
 
-    private final static List<String> regions = Arrays.asList("Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto");
+    private final static List<String> regions = Arrays.asList("Italy","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto");
 
     public boolean setRegion(String userid,String region){
         if(!regions.contains(region)){
             return false;
         }
+        if(region.equalsIgnoreCase("Italy"))
+            region = null;
         for(String user : users.keySet()){
             if(user.equals(userid)){
                 users.put(user,region); //overwrite the user if he already exists

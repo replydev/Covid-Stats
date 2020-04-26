@@ -1,9 +1,12 @@
 package me.reply.covidstats;
 
+import com.vdurmont.emoji.EmojiParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -77,6 +80,7 @@ public class Bot extends TelegramLongPollingBot {
         commandHandler = new CommandHandler(50);
         users = new HashMap<>();
         startDailyUpdateTask();
+        startDailyMessagesTask();
     }
 
     public void onUpdateReceived(Update update) {
@@ -97,7 +101,6 @@ public class Bot extends TelegramLongPollingBot {
         return config.BOT_TOKEN.equals("botToken") ? System.getenv("TOKEN") : config.BOT_TOKEN;
     }
 
-
     private void startDailyUpdateTask(){
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
         ZonedDateTime nextRun = now.withHour(18).withMinute(30).withSecond(0);  //at 18:30 it will update data
@@ -116,6 +119,37 @@ public class Bot extends TelegramLongPollingBot {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+                },
+                initalDelay,
+                TimeUnit.DAYS.toSeconds(1),
+                TimeUnit.SECONDS);
+    }
+
+    private void startDailyMessagesTask(){
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
+        ZonedDateTime nextRun = now.withHour(18).withMinute(35).withSecond(0);  //at 18:35 it will send messages to all users
+        if(now.compareTo(nextRun) > 0)
+            nextRun = nextRun.plusDays(1);
+
+        Duration duration = Duration.between(now, nextRun);
+        long initalDelay = duration.getSeconds();
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+                    logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
+                    int count = 0;
+                    for(String userid : users.keySet()){
+                        SendMessage message = new SendMessage()
+                                .setText(EmojiParser.parseToUnicode("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:"))
+                                .setChatId(userid);
+                        try {
+                            execute(message);
+                            count++;
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    logger.info("Ho inviato " + count + " messaggi");
                 },
                 initalDelay,
                 TimeUnit.DAYS.toSeconds(1),

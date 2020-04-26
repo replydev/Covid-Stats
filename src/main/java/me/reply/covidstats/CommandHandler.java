@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Vector;
 import java.util.concurrent.*;
 
 public class CommandHandler {
@@ -57,7 +56,7 @@ public class CommandHandler {
                 threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case ":mount_fuji: Set region":
-                switchToRegionsKeyboard(chatId);
+                switchToRegionsKeyboard(userId,chatId);
                 break;
             case ":page_facing_up: Source code":
                 threads.submit(() -> sendMessage("This bot is open and wants to make easier the data sharing all around the world! - https://github.com/replydev/Covid-Stats",chatId));
@@ -84,8 +83,11 @@ public class CommandHandler {
             case "Valle d'Aosta":
             case "Veneto":
                 threads.submit(() -> {
-                    if(!Bot.getInstance().setRegion(userId,command)){
+                    if(!Bot.getInstance().setRegion(userId,command))
                         sendMessage("\"" + command + "\" is not a valid region!\nChoose a valid region: \n" + Bot.getInstance().getRegions(),chatId);
+                    else{
+                        sendMessage("Current region set to: " + command,chatId);
+                        sendMainKeyboard(chatId);
                     }
                 });
                 break;
@@ -117,7 +119,7 @@ public class CommandHandler {
         // "Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto"
         regionsKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
-                .addText("Abbruzzo")
+                .addText("Abruzzo")
                 .addText("Basilicata")
                 .addText("P.A Bolzano")
                 .row()
@@ -162,11 +164,17 @@ public class CommandHandler {
         }
     }
 
-    private void switchToRegionsKeyboard(long chatId){
+    private void switchToRegionsKeyboard(String userid,long chatId){
         SendMessage keyboard = new SendMessage()
-                .setText("Select a region:")
                 .setReplyMarkup(regionsKeyboard)
                 .setChatId(chatId);
+
+        String region = Bot.getInstance().getRegionFromUser(userid);
+        if(region == null)
+            keyboard.setText("You have no region selected");
+        else
+            keyboard.setText("Your current region is \"" + Bot.getInstance().getRegionFromUser(userid) + "\", select a new one:");
+
         try {
             Bot.getInstance().execute(keyboard);
         } catch (TelegramApiException e) {
@@ -268,14 +276,5 @@ public class CommandHandler {
 
     private boolean isNotAdmin(String id){
         return !Bot.getInstance().getConfig().isInUserlist(id);
-    }
-
-    private String argsAsString(Vector<String> args){
-        StringBuilder builder = new StringBuilder();
-        for(String s : args){
-            builder.append(s).append(" ");
-        }
-        builder.deleteCharAt(builder.length() - 1); //remove last space
-        return builder.toString();
     }
 }

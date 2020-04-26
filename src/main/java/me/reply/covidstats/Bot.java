@@ -85,8 +85,7 @@ public class Bot extends TelegramLongPollingBot {
             logger.info("Adding new user to memory");
             users.put(userid,null);
         }
-        if(update.getMessage().isCommand())
-            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
+        commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
     }
 
     //heroku support

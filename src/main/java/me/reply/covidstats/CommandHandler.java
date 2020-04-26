@@ -1,5 +1,7 @@
 package me.reply.covidstats;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -14,6 +16,8 @@ import java.util.concurrent.*;
 public class CommandHandler {
 
     private final ExecutorService threads;
+
+    private final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
     public void handle(String command, long chatId, String userId){
         Vector<String> commandSplitted = new Vector<>(Arrays.asList(command.split(" ")));
@@ -95,10 +99,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.currentlyInfectedGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
             f = data.newCurrentlyInfectedGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
         } catch ( IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -109,10 +113,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.recoveredGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
             f = data.newRecoveredGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -123,10 +127,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.deathGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
             f = data.newDeathGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -137,10 +141,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.totalCasesGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
             f = data.newTotalCasesGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -151,10 +155,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.tamponsGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
             f = data.newTamponsGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) System.out.println("Error during file removal");
+            if(!f.delete()) logger.error("Error during file removal");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }

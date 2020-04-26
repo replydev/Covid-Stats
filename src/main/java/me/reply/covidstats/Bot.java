@@ -1,5 +1,7 @@
 package me.reply.covidstats;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -19,18 +21,17 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
     private final CommandHandler commandHandler;
     private Config config;
-
     private HashMap<String,String> users;  //userid,region
+    private final Logger logger = LoggerFactory.getLogger(Bot.class);
+    private final static List<String> regions = Arrays.asList("Italy","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto");
 
     public boolean isInUserList(String userid){
         return users.containsKey(userid);
     }
-
     public String getRegionFromUser(String userid){
         return users.get(userid);
     }
 
-    private final static List<String> regions = Arrays.asList("Italy","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto");
 
     public boolean setRegion(String userid,String region){
         if(!regions.contains(region)){
@@ -81,7 +82,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         String userid = update.getMessage().getFrom().getId().toString();
         if(!isInUserList(userid)){
-            System.out.println("Adding new user to memory");
+            logger.info("Adding new user to memory");
             users.put(userid,null);
         }
         if(update.getMessage().isCommand())
@@ -109,9 +110,9 @@ public class Bot extends TelegramLongPollingBot {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             try {
-                System.out.print("Scheduler service is updating data...");
+                logger.info("Scheduler service is updating data...");
                 DataFetcher.downloadFiles();
-                System.out.println(" ...done");
+                logger.info("Done");
             } catch (IOException e) {
                 e.printStackTrace();
             }

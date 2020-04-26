@@ -2,6 +2,8 @@ package me.reply.covidstats;
 
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,18 +14,20 @@ public class DataFetcher {
     private static File dataFile;
     private static File regionFile;
 
+    private final static Logger logger = LoggerFactory.getLogger(DataFetcher.class);
+
     public static void downloadFiles() throws IOException {
         if(dataFile == null)
             dataFile = new File("data.json");
         else if(dataFile.exists())
             if(dataFile.delete())
-                System.out.println("Error during file removal");
+                logger.error("Error during file removal");
 
         if(regionFile == null)
             regionFile = new File("region.json");
         else if(regionFile.exists())
             if(regionFile.delete())
-                System.out.println("Error during file removal");
+                logger.error("Error during file removal");
 
         final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
         FileUtils.copyURLToFile(new URL(ITALY_URL),dataFile);

@@ -1,6 +1,8 @@
 package me.reply.covidstats;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -13,18 +15,19 @@ public class Config {
     public String BOT_TOKEN;
     public String BOT_USERNAME;
 
+    private final static Logger logger = LoggerFactory.getLogger(Config.class);
     public List<String> admins;
 
     public static void saveDefaultConfig(String filename) throws IOException {
         File f = new File(filename);
         if(f.exists()) {
             if (!f.delete()) {
-                System.out.println("Error while deleting corrupted config file, delete() has returned false. System directory?");
+                logger.error("Error while deleting corrupted config file, delete() has returned false. System directory?");
                 System.exit(-1);
             }
         }
         if(!f.createNewFile()){
-            System.out.println("Error while creating default config file, createNewFile() has returned false. System directory?");
+            logger.error("Error while creating default config file, createNewFile() has returned false. System directory?");
             System.exit(-1);
         }
         String defaultConfig = "BOT_TOKEN: 'token_here'\n" +

@@ -24,7 +24,8 @@ public class CommandHandler {
 
     public void handle(String command, long chatId, String userId){
 
-        switch(EmojiParser.parseToAliases(command)){
+        String commandAliases = EmojiParser.parseToAliases(command);
+        switch(commandAliases){
             case "/start":
                 threads.submit(() -> sendMainKeyboard(chatId));
                 break;
@@ -49,7 +50,7 @@ public class CommandHandler {
             case ":angel: Deaths":
                 threads.submit(() -> deathsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
-            case ":heavy_exclamation_mark: Cases":
+            case ":bangbang: Cases":
                 threads.submit(() -> casesJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case ":syringe: Tampons":
@@ -107,7 +108,7 @@ public class CommandHandler {
                 .addText(EmojiParser.parseToUnicode(":diamond_shape_with_a_dot_inside: Recovered"))
                 .addText(EmojiParser.parseToUnicode(":angel: Deaths"))
                 .row()
-                .addText(EmojiParser.parseToUnicode(":heavy_exclamation_mark: Cases"))
+                .addText(EmojiParser.parseToUnicode(":bangbang: Cases"))
                 .addText(EmojiParser.parseToUnicode(":syringe: Tampons"))
                 .addText(EmojiParser.parseToUnicode(":mount_fuji: Set region"))
                 .row()

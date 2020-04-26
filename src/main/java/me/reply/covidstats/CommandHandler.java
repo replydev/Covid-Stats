@@ -53,10 +53,6 @@ public class CommandHandler {
                 threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
             case "/setregion":
-                if(args.size() != 1){
-                    sendMessage("Correct usage: /setregion regionName (/setregion Lombardia)",chatId);
-                    break;
-                }
                 threads.submit(() -> {
                     if(!Bot.getInstance().setRegion(userId,argsAsString(args))){
                         sendMessage("\"" + args.firstElement() + "\" is not a valid region!\nChoose a valid region: \n" + Bot.getInstance().getRegions(),chatId);

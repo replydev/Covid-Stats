@@ -21,7 +21,7 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
     private final CommandHandler commandHandler;
     private Config config;
-    private HashMap<String,String> users;  //userid,region
+    private final HashMap<String,String> users;  //userid,region
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final static List<String> regions = Arrays.asList("Italia","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto");
 
@@ -81,8 +81,9 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         String userid = update.getMessage().getFrom().getId().toString();
+        String username = update.getMessage().getFrom().getUserName();
         if(!isInUserList(userid)){
-            logger.info("Adding new user to memory");
+            logger.info("Aggiungo un nuovo utente: " + userid + " - @" + username);
             users.put(userid,null);
         }
         commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
@@ -90,16 +91,16 @@ public class Bot extends TelegramLongPollingBot {
 
     //heroku support
     public String getBotUsername() {
-        return config.BOT_USERNAME.equals("username_here") ? System.getenv("USERNAME") : config.BOT_USERNAME;
+        return config.BOT_USERNAME.equals("botUsername") ? System.getenv("USERNAME") : config.BOT_USERNAME;
     }
     public String getBotToken() {
-        return config.BOT_TOKEN.equals("token_here") ? System.getenv("TOKEN") : config.BOT_TOKEN;
+        return config.BOT_TOKEN.equals("botToken") ? System.getenv("TOKEN") : config.BOT_TOKEN;
     }
 
 
     private void startDailyUpdateTask(){
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
-        ZonedDateTime nextRun = now.withHour(18).withMinute(10).withSecond(0);  //at 18:10 it will update data
+        ZonedDateTime nextRun = now.withHour(18).withMinute(30).withSecond(0);  //at 18:30 it will update data
         if(now.compareTo(nextRun) > 0)
             nextRun = nextRun.plusDays(1);
 
@@ -109,9 +110,9 @@ public class Bot extends TelegramLongPollingBot {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             try {
-                logger.info("Scheduler service is updating data...");
+                logger.info("Il servizio di aggiornamento sta scaricando i nuovi dati...");
                 DataFetcher.downloadFiles();
-                logger.info("Done");
+                logger.info("Fatto");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -30,8 +30,8 @@ public class Config {
             logger.error("Error while creating default config file, createNewFile() has returned false. System directory?");
             System.exit(-1);
         }
-        String defaultConfig = "BOT_TOKEN: 'token_here'\n" +
-                "BOT_USERNAME: 'username_here'";
+        String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
+                "BOT_USERNAME: 'botToken'";
         writeFile("config.yml",defaultConfig);
     }
 

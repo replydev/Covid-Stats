@@ -32,35 +32,35 @@ public class CommandHandler {
             case "/update":
                 threads.submit(() -> {
                     if(isNotAdmin(userId))
-                        sendMessage("You must be an admin to run this command!",chatId);
+                        sendMessage("Comando riservato agli admin!",chatId);
                     try {
                         DataFetcher.downloadFiles();
-                        sendMessage("Done",chatId);
+                        sendMessage("Operazione eseguita con successo",chatId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
                 break;
-            case ":warning: Infected":
+            case ":warning: Attualmente contagiati":
                 threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
-            case ":diamond_shape_with_a_dot_inside: Recovered":
+            case ":diamond_shape_with_a_dot_inside: Guariti":
                 threads.submit(() -> recoveredJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
-            case ":angel: Deaths":
+            case ":angel: Decessi":
                 threads.submit(() -> deathsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
-            case ":bangbang: Cases":
+            case ":bangbang: Casi":
                 threads.submit(() -> casesJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
-            case ":syringe: Tampons":
+            case ":syringe: Tamponi":
                 threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
-            case ":mount_fuji: Set region":
+            case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
                 break;
-            case ":page_facing_up: Source code":
-                threads.submit(() -> sendMessage("This bot is open and wants to make easier the data sharing all around the world! - https://github.com/replydev/Covid-Stats",chatId));
+            case ":page_facing_up: Codice sorgente":
+                threads.submit(() -> sendMessage("Il codice sorgente di questo bot è open source, qualsiasi modifica utile ed appropriata è la benvenuta! - https://github.com/replydev/Covid-Stats",chatId));
                 break;
             case "Abruzzo":
             case "Basilicata":
@@ -85,14 +85,14 @@ public class CommandHandler {
             case "Veneto":
                 threads.submit(() -> {
                     if(!Bot.getInstance().setRegion(userId,command))
-                        sendMessage("\"" + command + "\" is not a valid region!\nChoose a valid region: \n" + Bot.getInstance().getRegions(),chatId);
+                        sendMessage("\"" + command + "\" non è una regione valida!\nInserisci una tra queste: \n" + Bot.getInstance().getRegions(),chatId);
                     else{
-                        sendMessage("Current region set to: " + command,chatId);
+                        sendMessage("Hai selezionato una nuova regione: " + command,chatId);
                         sendMainKeyboard(chatId);
                     }
                 });
                 break;
-            case "Go back":
+            case ":back: Indietro":
                 sendMainKeyboard(chatId);
                 break;
             default:
@@ -104,15 +104,15 @@ public class CommandHandler {
 
         mainKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
-                .addText(EmojiParser.parseToUnicode(":warning: Infected"))
-                .addText(EmojiParser.parseToUnicode(":diamond_shape_with_a_dot_inside: Recovered"))
-                .addText(EmojiParser.parseToUnicode(":angel: Deaths"))
+                .addText(EmojiParser.parseToUnicode(":warning: Attualmente contagiati"))
+                .addText(EmojiParser.parseToUnicode(":diamond_shape_with_a_dot_inside: Guariti"))
+                .addText(EmojiParser.parseToUnicode(":angel: Decessi"))
                 .row()
-                .addText(EmojiParser.parseToUnicode(":bangbang: Cases"))
-                .addText(EmojiParser.parseToUnicode(":syringe: Tampons"))
-                .addText(EmojiParser.parseToUnicode(":mount_fuji: Set region"))
+                .addText(EmojiParser.parseToUnicode(":bangbang: Casi"))
+                .addText(EmojiParser.parseToUnicode(":syringe: Tamponi"))
+                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona regione"))
                 .row()
-                .addText(EmojiParser.parseToUnicode(":page_facing_up: Source code"))
+                .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
                 .build();
 
         // "Italia","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio",
@@ -149,13 +149,13 @@ public class CommandHandler {
                 .addText("Valle d'Aosta")
                 .row()
                 .addText("Veneto")
-                .addText("Go back")
+                .addText(":back: Indietro")
                 .build();
     }
 
     private void sendMainKeyboard(long chatId){
         SendMessage keyboard = new SendMessage()
-                .setText("Welcome to Covid Stats Bot, tell me what to do.")
+                .setText("Benvenuto su Covid Italy Charts, dimmi cosa fare.")
                 .setReplyMarkup(mainKeyboard)
                 .setChatId(chatId);
         try {
@@ -172,9 +172,9 @@ public class CommandHandler {
 
         String region = Bot.getInstance().getRegionFromUser(userid);
         if(region == null)
-            keyboard.setText("You have no region selected");
+            keyboard.setText("Non hai alcuna regione selezionata");
         else
-            keyboard.setText("Your current region is \"" + Bot.getInstance().getRegionFromUser(userid) + "\", select a new one:");
+            keyboard.setText("Attualmente hai selezionato la regione \"" + Bot.getInstance().getRegionFromUser(userid) + "\", selezionane un'altra:");
 
         try {
             Bot.getInstance().execute(keyboard);
@@ -210,10 +210,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.currentlyInfectedGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
             f = data.newCurrentlyInfectedGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch ( IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -224,10 +224,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.recoveredGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
             f = data.newRecoveredGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -238,10 +238,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.deathGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
             f = data.newDeathGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -252,10 +252,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.totalCasesGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
             f = data.newTotalCasesGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -266,10 +266,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.tamponsGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
             f = data.newTamponsGraph();
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Error during file removal");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }

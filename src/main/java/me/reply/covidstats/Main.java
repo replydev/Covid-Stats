@@ -14,9 +14,9 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            logger.info("Downloading files...");
+            logger.info("Scarico i file contenenti i dati...");
             DataFetcher.downloadFiles();
-            logger.info(" ...done");
+            logger.info(" ...fatto");
         } catch (IOException e) {
             e.printStackTrace();
         }

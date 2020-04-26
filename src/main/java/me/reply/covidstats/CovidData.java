@@ -35,8 +35,8 @@ public class CovidData {
         covidData.add(dayData);
     }
 
-    public File currentlyInfectedGraph() throws IOException, ParseException {
-        String plotTitle = "Currently Infected";
+    public File currentlyInfectedGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Attualmente contagiati - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
@@ -45,8 +45,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File newCurrentlyInfectedGraph() throws IOException, ParseException {
-        String plotTitle = "Currently Infected per day";
+    public File newCurrentlyInfectedGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Differenza attualmente contagiati - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -57,8 +57,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File recoveredGraph() throws IOException, ParseException {
-        String plotTitle = "Recovered";
+    public File recoveredGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Guariti - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
@@ -67,8 +67,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File newRecoveredGraph() throws IOException, ParseException {
-        String plotTitle = "Recovered per day";
+    public File newRecoveredGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Guariti per giorno - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -79,8 +79,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File deathGraph() throws IOException, ParseException {
-        String plotTitle = "Deaths";
+    public File deathGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Decessi - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
@@ -89,8 +89,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File newDeathGraph() throws IOException, ParseException {
-        String plotTitle = "Deaths per day";
+    public File newDeathGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Decessi per giorno - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -101,8 +101,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File totalCasesGraph() throws IOException, ParseException {
-        String plotTitle = "Total cases";
+    public File totalCasesGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Casi totali - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for (DayData covidDatum : covidData) {
             int totalCases = covidDatum.getCurrently_infected() + covidDatum.getRecovered() + covidDatum.getDeath();
@@ -112,8 +112,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File newTotalCasesGraph() throws IOException, ParseException {
-        String plotTitle = "New cases";
+    public File newTotalCasesGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Nuovi contagi - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -126,8 +126,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File tamponsGraph() throws IOException, ParseException {
-        String plotTitle = "Tampons";
+    public File tamponsGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Tamponi - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
@@ -136,8 +136,8 @@ public class CovidData {
         return generateImage(TimeSeries,plotTitle);
     }
 
-    public File newTamponsGraph() throws IOException, ParseException {
-        String plotTitle = "Tampons per day";
+    public File newTamponsGraph(String regionName) throws IOException, ParseException {
+        String plotTitle = "Tamponi giornalieri - " + regionName;
         TimeSeries TimeSeries = new TimeSeries(plotTitle);
         TimeSeries.add(new Day(startDate),0);  //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -153,8 +153,8 @@ public class CovidData {
         data.addSeries(timeSeries);
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 title,
-                "Day",
-                "Number",
+                "Giorno",
+                "Valore",
                 data,
                 false,
                 false,

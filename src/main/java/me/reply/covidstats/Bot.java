@@ -71,7 +71,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private void startDailyTask(){
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
-        ZonedDateTime nextRun = now.withHour(18).withMinute(0).withSecond(0);  //at 18:00 it will update data
+        ZonedDateTime nextRun = now.withHour(18).withMinute(10).withSecond(0);  //at 18:10 it will update data
         if(now.compareTo(nextRun) > 0)
             nextRun = nextRun.plusDays(1);
 

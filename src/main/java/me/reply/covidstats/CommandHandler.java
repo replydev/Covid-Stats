@@ -208,10 +208,10 @@ public class CommandHandler {
     private void infectedJob(String region,long chatId){
         try {
             CovidData data = DataFetcher.fetchData(region);
-            File f = data.currentlyInfectedGraph();
+            File f = data.currentlyInfectedGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
-            f = data.newCurrentlyInfectedGraph();
+            f = data.newCurrentlyInfectedGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch ( IOException | ParseException throwable) {
@@ -222,10 +222,10 @@ public class CommandHandler {
     private void recoveredJob(String region,long chatId){
         try {
             CovidData data = DataFetcher.fetchData(region);
-            File f = data.recoveredGraph();
+            File f = data.recoveredGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
-            f = data.newRecoveredGraph();
+            f = data.newRecoveredGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
@@ -236,10 +236,10 @@ public class CommandHandler {
     private void deathsJob(String region,long chatId){
         try {
             CovidData data = DataFetcher.fetchData(region);
-            File f = data.deathGraph();
+            File f = data.deathGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
-            f = data.newDeathGraph();
+            f = data.newDeathGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
@@ -250,10 +250,10 @@ public class CommandHandler {
     private void casesJob(String region,long chatId){
         try {
             CovidData data = DataFetcher.fetchData(region);
-            File f = data.totalCasesGraph();
+            File f = data.totalCasesGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
-            f = data.newTotalCasesGraph();
+            f = data.newTotalCasesGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {
@@ -264,10 +264,10 @@ public class CommandHandler {
     private void tamponsJob(String region,long chatId){
         try {
             CovidData data = DataFetcher.fetchData(region);
-            File f = data.tamponsGraph();
+            File f = data.tamponsGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
-            f = data.newTamponsGraph();
+            f = data.newTamponsGraph(region);
             sendPhoto(f,chatId);
             if(!f.delete()) logger.error("Errore durante la rimozione del file");
         } catch (IOException | ParseException throwable) {

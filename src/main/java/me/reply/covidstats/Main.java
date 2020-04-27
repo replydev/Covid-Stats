@@ -1,5 +1,6 @@
 package me.reply.covidstats;
 
+import me.reply.covidstats.data.DataFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.ApiContextInitializer;

@@ -32,7 +32,7 @@ public class Config {
         }
         String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
                 "BOT_USERNAME: 'botToken'";
-        writeFile("config.yml",defaultConfig);
+        writeFile(defaultConfig);
     }
 
     public void loadAdminsFromFile(String filename) throws IOException {
@@ -70,8 +70,8 @@ public class Config {
         return builder.toString();
     }
 
-    private static void writeFile(String filename,String s) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
+    private static void writeFile(String s) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config.yml")));
         writer.write(s);
         writer.flush();
         writer.close();

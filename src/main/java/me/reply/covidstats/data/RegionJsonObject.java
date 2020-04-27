@@ -1,8 +1,9 @@
-package me.reply.covidstats;
+package me.reply.covidstats.data;
 
 import com.google.gson.annotations.SerializedName;
+import me.reply.covidstats.data.JsonObject;
 
-public class RegionJsonObject extends JsonObject{
+public class RegionJsonObject extends JsonObject {
 
     /*
         "codice_regione": 5,

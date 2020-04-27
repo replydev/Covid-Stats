@@ -1,4 +1,4 @@
-package me.reply.covidstats;
+package me.reply.covidstats.data;
 
 public class JsonObject{
     /*

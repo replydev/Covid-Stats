@@ -1,6 +1,7 @@
 package me.reply.covidstats;
 
 import com.vdurmont.emoji.EmojiParser;
+import me.reply.covidstats.data.DataFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;

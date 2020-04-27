@@ -1,4 +1,4 @@
-package me.reply.covidstats;
+package me.reply.covidstats.data;
 
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;

@@ -27,7 +27,7 @@ public class ReplyKeyboardBuilder {
 
     public static class ReplyKeyboardMarkupBuilder {
 
-        private List<KeyboardRow> keyboard = new ArrayList<>();
+        private final List<KeyboardRow> keyboard = new ArrayList<>();
         private KeyboardRow row = null;
 
         ReplyKeyboardMarkupBuilder() {
@@ -68,7 +68,7 @@ public class ReplyKeyboardBuilder {
 
     public static class InlineKeyboardMarkupBuilder {
 
-        private List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        private final List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         private List<InlineKeyboardButton> row;
 
         InlineKeyboardMarkupBuilder() {

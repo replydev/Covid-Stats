@@ -14,6 +14,7 @@ import java.util.Vector;
 public class Config {
     public String BOT_TOKEN;
     public String BOT_USERNAME;
+    public String UPDATE_TIME;
 
     private final static Logger logger = LoggerFactory.getLogger(Config.class);
     public List<String> admins;
@@ -31,7 +32,8 @@ public class Config {
             System.exit(-1);
         }
         String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
-                "BOT_USERNAME: 'botToken'";
+                "BOT_USERNAME: 'botToken'\n" +
+                "UPDATE_TIME: 'time'";
         writeFile(defaultConfig);
     }
 
@@ -56,7 +58,16 @@ public class Config {
             saveDefaultConfig(filename);
         }
         Yaml yaml = new Yaml(new Constructor(Config.class));
-        return yaml.load(readFile(filename));
+        Config c = yaml.load(readFile(filename));
+
+        //heroku support
+        if(c.BOT_TOKEN.equals("botToken"))
+            c.BOT_TOKEN = System.getenv("TOKEN");
+        if(c.BOT_USERNAME.equals("botUsername"))
+            c.BOT_USERNAME = System.getenv("USERNAME");
+        if(c.UPDATE_TIME.equals("time"))
+            c.UPDATE_TIME = System.getenv("UPDATE_TIME");
+        return c;
     }
 
     private static String readFile(String filename) throws IOException {
@@ -68,6 +79,18 @@ public class Config {
         }
         reader.close();
         return builder.toString();
+    }
+
+    public int getUpdateHour(){
+        String[] split = UPDATE_TIME.split(":");
+        assert split.length == 2;
+        return Integer.parseInt(split[0]);
+    }
+
+    public int getUpdateMinute(){
+        String[] split = UPDATE_TIME.split(":");
+        assert split.length == 2;
+        return Integer.parseInt(split[1]);
     }
 
     private static void writeFile(String s) throws IOException {

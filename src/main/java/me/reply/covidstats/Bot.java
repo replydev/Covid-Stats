@@ -128,17 +128,16 @@ public class Bot extends TelegramLongPollingBot {
         commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
     }
 
-    //heroku support
     public String getBotUsername() {
-        return config.BOT_USERNAME.equals("botUsername") ? System.getenv("USERNAME") : config.BOT_USERNAME;
+        return config.BOT_USERNAME;
     }
     public String getBotToken() {
-        return config.BOT_TOKEN.equals("botToken") ? System.getenv("TOKEN") : config.BOT_TOKEN;
+        return config.BOT_TOKEN;
     }
 
     private void startDailyUpdateTask(){
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
-        ZonedDateTime nextRun = now.withHour(18).withMinute(30).withSecond(0);  //at 18:30 it will update data
+        ZonedDateTime nextRun = now.withHour(config.getUpdateHour()).withMinute(config.getUpdateMinute()).withSecond(0);  //download updated json at hour written in config file
         if(now.compareTo(nextRun) > 0)
             nextRun = nextRun.plusDays(1);
 
@@ -162,7 +161,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private void startDailyMessagesTask(){
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
-        ZonedDateTime nextRun = now.withHour(18).withMinute(35).withSecond(0);  //at 18:35 it will send messages to all users
+        ZonedDateTime nextRun = now.withHour(config.getUpdateHour()).withMinute(config.getUpdateMinute() + 3).withSecond(0); //send notification to users at hour written in config file plus 3 minutes
         if(now.compareTo(nextRun) > 0)
             nextRun = nextRun.plusDays(1);
 

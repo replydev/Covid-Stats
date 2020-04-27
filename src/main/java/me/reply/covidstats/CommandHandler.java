@@ -72,6 +72,7 @@ public class CommandHandler {
             case "Italia":
             case "Lazio":
             case "Liguria":
+            case "Lombardia":
             case "Marche":
             case "Molise":
             case "Piemonte":
@@ -92,7 +93,7 @@ public class CommandHandler {
                     }
                 });
                 break;
-            case ":back: Indietro":
+            case "Torna indietro":
                 sendMainKeyboard(chatId);
                 break;
             default:
@@ -149,7 +150,7 @@ public class CommandHandler {
                 .addText("Valle d'Aosta")
                 .row()
                 .addText("Veneto")
-                .addText(":back: Indietro")
+                .addText("Torna indietro")
                 .build();
     }
 

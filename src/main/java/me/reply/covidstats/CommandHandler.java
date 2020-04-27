@@ -194,7 +194,7 @@ public class CommandHandler {
 
     private void sendMainKeyboard(long chatId){
         SendMessage keyboard = new SendMessage()
-                .setText("Benvenuto su Covid Italy Charts, dimmi cosa fare.")
+                .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
                 .setReplyMarkup(mainKeyboard)
                 .setChatId(chatId);
         try {

@@ -170,6 +170,8 @@ public class CommandHandler {
                 .row()
                 .addText(":bell: Notifiche abilitate")
                 .addText(":bell: Notifiche disabilitate")
+                .row()
+                .addText("Torna indietro")
                 .build();
     }
 

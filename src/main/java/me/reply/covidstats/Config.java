@@ -33,7 +33,7 @@ public class Config {
         String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
                 "BOT_USERNAME: 'botUsername'\n" +
                 "UPDATE_TIME: 'time'";
-        writeFile(defaultConfig);
+        FileUtils.write(new File("config.yml"),defaultConfig,"UTF-8");
     }
 
     public void loadAdminsFromFile(String filename) throws IOException {
@@ -106,13 +106,6 @@ public class Config {
 
     public void setUpdateMinutes(int minutes){
         this.minutes = minutes;
-    }
-
-    private static void writeFile(String s) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config.yml")));
-        writer.write(s);
-        writer.flush();
-        writer.close();
     }
 
     public boolean isInUserlist(String id){

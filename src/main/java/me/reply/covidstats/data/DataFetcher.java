@@ -21,13 +21,13 @@ public class DataFetcher {
             dataFile = new File("data.json");
         else if(dataFile.exists())
             if(dataFile.delete())
-                logger.error("Errore durante la rimozione del file");
+                logger.error("Errore durante la rimozione del file: " + dataFile.getName());
 
         if(regionFile == null)
             regionFile = new File("region.json");
         else if(regionFile.exists())
             if(regionFile.delete())
-                logger.error("Errore durante la rimozione del file");
+                logger.error("Errore durante la rimozione del file: " + regionFile.getName());
 
         final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
         FileUtils.copyURLToFile(new URL(ITALY_URL),dataFile);

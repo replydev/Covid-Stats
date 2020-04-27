@@ -1,5 +1,6 @@
 package me.reply.covidstats.data;
 
+import me.reply.covidstats.Utils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.Day;
@@ -180,21 +181,11 @@ public class CovidData {
         }
         byte[] byteArray=bas.toByteArray();
 
-        String filename = randomFilename();
+        String filename = Utils.randomFilename(".png");
         InputStream in = new ByteArrayInputStream(byteArray);
         BufferedImage image = ImageIO.read(in);
         File outputfile = new File(filename);
         ImageIO.write(image, "png", outputfile);
         return outputfile;
-    }
-
-    private String randomFilename(){
-        char[] alphabet = "abcdefghijklmnopqrstuvxyz1234567890".toCharArray();
-        StringBuilder builder = new StringBuilder();
-        Random r = new Random();
-        for(int i = 0; i < 10; i++){
-            builder.append(alphabet[r.nextInt(alphabet.length)]);
-        }
-        return builder.append(".png").toString();
     }
 }

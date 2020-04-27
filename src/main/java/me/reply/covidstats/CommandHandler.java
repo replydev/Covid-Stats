@@ -32,18 +32,6 @@ public class CommandHandler {
             case "/start":
                 threads.submit(() -> sendMainKeyboard(chatId));
                 break;
-            case "/update":
-                threads.submit(() -> {
-                    if(isNotAdmin(userId))
-                        sendMessage("Comando riservato agli admin!",chatId);
-                    try {
-                        DataFetcher.downloadFiles();
-                        sendMessage("Operazione eseguita con successo",chatId);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                break;
             case ":warning: Attualmente contagiati":
                 threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),chatId));
                 break;
@@ -109,6 +97,29 @@ public class CommandHandler {
                 threads.submit(() -> {
                     Bot.getInstance().setNotification(userId,false);
                     sendMessage(":x: Hai disabilitato nel notifiche giornaliere",chatId);
+                });
+                break;
+            case "/update":
+                threads.submit(() -> {
+                    if(isNotAdmin(userId))
+                        sendMessage("Comando riservato agli admin!",chatId);
+                    try {
+                        DataFetcher.downloadFiles();
+                        sendMessage("Operazione eseguita con successo",chatId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "/stop":
+                threads.submit(() -> {
+                    if(isNotAdmin(userId))
+                        sendMessage("Comando riservato agli admin!",chatId);
+                    try {
+                        Bot.getInstance().backupUserList(chatId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 });
                 break;
             default:
@@ -232,10 +243,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.currentlyInfectedGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
             f = data.newCurrentlyInfectedGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
         } catch ( IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -246,10 +257,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.recoveredGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
             f = data.newRecoveredGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -260,10 +271,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.deathGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
             f = data.newDeathGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -274,10 +285,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.totalCasesGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
             f = data.newTotalCasesGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -288,10 +299,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.tamponsGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
             f = data.newTamponsGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file");
+            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }

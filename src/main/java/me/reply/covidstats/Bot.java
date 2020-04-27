@@ -1,14 +1,18 @@
 package me.reply.covidstats;
 
+import com.google.gson.Gson;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.DataFetcher;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.ZoneId;
@@ -41,6 +45,23 @@ public class Bot extends TelegramLongPollingBot {
                 return u.getRegion();
         }
         return null;
+    }
+
+    public void backupUserList(long chatId) throws IOException {
+        Gson g = new Gson();
+        String json = g.toJson(users);
+        File f = new File(Utils.randomFilename(".json"));
+        FileUtils.write(f,json,"UTF-8");
+        SendDocument document = new SendDocument()
+                .setDocument(f)
+                .setChatId(chatId);
+        try {
+            execute(document);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        if(f.delete())
+            logger.error("Errore durante la rimozione del file: " + f.getName());
     }
 
     public void setNotification(String userid,boolean value){

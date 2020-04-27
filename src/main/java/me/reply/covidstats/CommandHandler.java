@@ -52,7 +52,7 @@ public class CommandHandler {
                 switchToRegionsKeyboard(userId,chatId);
                 break;
             case ":page_facing_up: Codice sorgente":
-                threads.submit(() -> sendMessage("Sviluppato da @zreply. Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta! - https://github.com/replydev/Covid-Stats",chatId));
+                threads.submit(() -> sendMessage(EmojiParser.parseToUnicode(":smile_cat: Sviluppato da @zreply.\n:page_facing_up: Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta!\n:link: https://github.com/replydev/Covid-Stats"),chatId));
                 break;
             case "Abruzzo":
             case "Basilicata":

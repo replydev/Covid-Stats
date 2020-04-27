@@ -23,6 +23,7 @@ public class CommandHandler {
 
     private final ReplyKeyboardMarkup mainKeyboard;
     private final ReplyKeyboardMarkup regionsKeyboard;
+    private final ReplyKeyboardMarkup settingsKeyboard;
 
     public void handle(String command, long chatId, String userId){
 
@@ -98,6 +99,18 @@ public class CommandHandler {
             case "Torna indietro":
                 sendMainKeyboard(chatId);
                 break;
+            case ":bell: Notifiche abilitate":
+                threads.submit(() -> {
+                    Bot.getInstance().setNotification(userId,true);
+                    sendMessage(":white_check_mark: Hai abilitato nel notifiche giornaliere",chatId);
+                });
+                break;
+            case ":bell: Notifiche disabilitate":
+                threads.submit(() -> {
+                    Bot.getInstance().setNotification(userId,false);
+                    sendMessage(":x: Hai disabilitato nel notifiche giornaliere",chatId);
+                });
+                break;
             default:
         }
     }
@@ -115,6 +128,7 @@ public class CommandHandler {
                 .addText(EmojiParser.parseToUnicode(":syringe: Tamponi"))
                 .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona regione"))
                 .row()
+                .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
                 .build();
 
@@ -150,6 +164,12 @@ public class CommandHandler {
                 .row()
                 .addText("Veneto")
                 .addText("Torna indietro")
+                .build();
+
+        settingsKeyboard = ReplyKeyboardBuilder.createReply()
+                .row()
+                .addText(":bell: Notifiche abilitate")
+                .addText(":bell: Notifiche disabilitate")
                 .build();
     }
 

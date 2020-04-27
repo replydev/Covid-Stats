@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -25,17 +23,32 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
     private final CommandHandler commandHandler;
     private Config config;
-    private final HashMap<String,String> users;  //userid,region
+    private final Vector<User> users;
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final static List<String> regions = Arrays.asList("Italia","Abruzzo","Basilicata","P.A. Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A. Trento","Umbria","Valle d'Aosta","Veneto");
 
     public boolean isInUserList(String userid){
-        return users.containsKey(userid);
-    }
-    public String getRegionFromUser(String userid){
-        return users.get(userid);
+        for(User u : users){
+            if(u.getUserid().equals(userid))
+                return true;
+        }
+        return false;
     }
 
+    public String getRegionFromUser(String userid){
+        for(User u : users){
+            if(u.getUserid().equals(userid))
+                return u.getRegion();
+        }
+        return null;
+    }
+
+    public void setNotification(String userid,boolean value){
+        for(User u : users){
+            if(u.getUserid().equals(userid))
+                u.setShowNotification(value);
+        }
+    }
 
     public boolean setRegion(String userid,String region){
         if(!regions.contains(region)){
@@ -43,9 +56,9 @@ public class Bot extends TelegramLongPollingBot {
         }
         if(region.equalsIgnoreCase("Italia"))
             region = null;
-        for(String user : users.keySet()){
-            if(user.equals(userid)){
-                users.put(user,region); //overwrite the user if he already exists
+        for(User user : users){
+            if(user.getUserid().equals(userid)){
+                user.setRegion(region);
                 return true;
             }
         }
@@ -79,7 +92,7 @@ public class Bot extends TelegramLongPollingBot {
         }
         instance = this;
         commandHandler = new CommandHandler(50);
-        users = new HashMap<>();
+        users = new Vector<>();
         startDailyUpdateTask();
         startDailyMessagesTask();
     }
@@ -89,7 +102,7 @@ public class Bot extends TelegramLongPollingBot {
         String username = update.getMessage().getFrom().getUserName();
         if(!isInUserList(userid)){
             logger.info("Aggiungo un nuovo utente: " + userid + " - @" + username);
-            users.put(userid,null);
+            users.add(new User(userid,true));
         }
         commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
     }
@@ -139,10 +152,12 @@ public class Bot extends TelegramLongPollingBot {
         scheduler.scheduleAtFixedRate(() -> {
                     logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
                     int count = 0;
-                    for(String userid : users.keySet()){
+                    for(User user : users){
+                        if(!user.isShowNotification())
+                            continue;
                         SendMessage message = new SendMessage()
                                 .setText(EmojiParser.parseToUnicode("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:"))
-                                .setChatId(userid);
+                                .setChatId(user.getUserid());
                         try {
                             execute(message);
                             count++;

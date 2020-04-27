@@ -105,8 +105,10 @@ public class CommandHandler {
                 break;
             case "/update":
                 threads.submit(() -> {
-                    if(isNotAdmin(userId))
+                    if(isNotAdmin(userId)){
                         sendMessage("Comando riservato agli admin!",chatId);
+                        return;
+                    }
                     try {
                         DataFetcher.downloadFiles();
                         sendMessage("Operazione eseguita con successo",chatId);
@@ -117,8 +119,10 @@ public class CommandHandler {
                 break;
             case "/stop":
                 threads.submit(() -> {
-                    if(isNotAdmin(userId))
+                    if(isNotAdmin(userId)){
                         sendMessage("Comando riservato agli admin!",chatId);
+                        return;
+                    }
                     try {
                         logger.info("Called /stop command by admin, exiting...");
                         Bot.getInstance().backupUserList(chatId);

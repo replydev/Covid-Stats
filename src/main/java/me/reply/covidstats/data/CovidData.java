@@ -1,6 +1,5 @@
 package me.reply.covidstats.data;
 
-import me.reply.covidstats.data.DayData;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.Day;

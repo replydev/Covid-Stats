@@ -1,24 +1,7 @@
 package me.reply.covidstats.data;
 
+@SuppressWarnings("unused")
 public class JsonObject{
-    /*
-        "data": "2020-02-24T18:00:00",
-        "stato": "ITA",
-        "ricoverati_con_sintomi": 101,
-        "terapia_intensiva": 26,
-        "totale_ospedalizzati": 127,
-        "isolamento_domiciliare": 94,
-        "totale_positivi": 221,
-        "variazione_totale_positivi": 0,
-        "nuovi_positivi": 221,
-        "dimessi_guariti": 1,
-        "deceduti": 7,
-        "totale_casi": 229,
-        "tamponi": 4324,
-        "casi_testati": null,
-        "note_it": "",
-        "note_en": ""
-        */
     private String data;
     private String stato;
     private int ricoverati_con_sintomi;

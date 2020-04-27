@@ -1,17 +1,9 @@
 package me.reply.covidstats.data;
 
 import com.google.gson.annotations.SerializedName;
-import me.reply.covidstats.data.JsonObject;
 
+@SuppressWarnings("unused")
 public class RegionJsonObject extends JsonObject {
-
-    /*
-        "codice_regione": 5,
-        "denominazione_regione": "Veneto",
-        "lat": 45.43490485,
-        "long": 12.33845213
-        */
-
     private int codice_regione;
     private String denominazione_regione;
     private double lat;

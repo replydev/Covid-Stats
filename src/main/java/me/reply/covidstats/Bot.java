@@ -1,6 +1,7 @@
 package me.reply.covidstats;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.DataFetcher;
 import org.apache.commons.io.FileUtils;
@@ -50,7 +51,7 @@ public class Bot extends TelegramLongPollingBot {
     public void backupUserList(long chatId) throws IOException {
         Gson g = new Gson();
         String json = g.toJson(users);
-        File f = new File(Utils.randomFilename(".json"));
+        File f = new File("users_backup.json");
         FileUtils.write(f,json,"UTF-8");
         SendDocument document = new SendDocument()
                 .setDocument(f)
@@ -185,7 +186,7 @@ public class Bot extends TelegramLongPollingBot {
                             e.printStackTrace();
                         }
                     }
-                    logger.info("Ho inviato " + count + " messaggi");
+                    logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
                 },
                 initalDelay,
                 TimeUnit.DAYS.toSeconds(1),

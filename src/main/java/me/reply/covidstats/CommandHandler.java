@@ -120,7 +120,9 @@ public class CommandHandler {
                     if(isNotAdmin(userId))
                         sendMessage("Comando riservato agli admin!",chatId);
                     try {
+                        logger.info("Called /stop command by admin, exiting...");
                         Bot.getInstance().backupUserList(chatId);
+                        System.exit(0);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -3,6 +3,7 @@ package me.reply.covidstats;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.CovidData;
 import me.reply.covidstats.data.DataFetcher;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -87,16 +88,19 @@ public class CommandHandler {
             case "Torna indietro":
                 sendMainKeyboard(chatId);
                 break;
+            case ":wrench: Impostazioni":
+                switchToSettingsKeyboard(chatId);
+                break;
             case ":bell: Notifiche abilitate":
                 threads.submit(() -> {
                     Bot.getInstance().setNotification(userId,true);
-                    sendMessage(":white_check_mark: Hai abilitato nel notifiche giornaliere",chatId);
+                    sendMessage(EmojiParser.parseToUnicode(":white_check_mark: Hai abilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
             case ":bell: Notifiche disabilitate":
                 threads.submit(() -> {
                     Bot.getInstance().setNotification(userId,false);
-                    sendMessage(":x: Hai disabilitato nel notifiche giornaliere",chatId);
+                    sendMessage(EmojiParser.parseToUnicode(":x: Hai disabilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
             case "/update":
@@ -179,8 +183,8 @@ public class CommandHandler {
 
         settingsKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
-                .addText(":bell: Notifiche abilitate")
-                .addText(":bell: Notifiche disabilitate")
+                .addText(EmojiParser.parseToUnicode(":bell: Notifiche abilitate"))
+                .addText(EmojiParser.parseToUnicode(":bell: Notifiche disabilitate"))
                 .row()
                 .addText("Torna indietro")
                 .build();
@@ -216,6 +220,18 @@ public class CommandHandler {
         }
     }
 
+    private void switchToSettingsKeyboard(long chatid){
+        SendMessage keyboard = new SendMessage()
+                .setText("Impostazioni:")
+                .setReplyMarkup(settingsKeyboard)
+                .setChatId(chatid);
+        try {
+            Bot.getInstance().execute(keyboard);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendMessage(String text, long chatId){
         SendMessage message = new SendMessage()
@@ -243,10 +259,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.currentlyInfectedGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
             f = data.newCurrentlyInfectedGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
         } catch ( IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -257,10 +273,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.recoveredGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
             f = data.newRecoveredGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -271,10 +287,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.deathGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
             f = data.newDeathGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -285,10 +301,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.totalCasesGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
             f = data.newTotalCasesGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }
@@ -299,10 +315,10 @@ public class CommandHandler {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.tamponsGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
             f = data.newTamponsGraph(region);
             sendPhoto(f,chatId);
-            if(!f.delete()) logger.error("Errore durante la rimozione del file: " + f.getName());
+            FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
         }

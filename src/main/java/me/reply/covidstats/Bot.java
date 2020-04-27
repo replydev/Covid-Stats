@@ -60,8 +60,7 @@ public class Bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-        if(f.delete())
-            logger.error("Errore durante la rimozione del file: " + f.getName());
+        FileUtils.forceDelete(f);
     }
 
     public void setNotification(String userid,boolean value){
@@ -161,7 +160,8 @@ public class Bot extends TelegramLongPollingBot {
 
     private void startDailyMessagesTask(){
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
-        ZonedDateTime nextRun = now.withHour(config.getUpdateHour()).withMinute(config.getUpdateMinute() + 3).withSecond(0); //send notification to users at hour written in config file plus 3 minutes
+        config.addMinutes(3);
+        ZonedDateTime nextRun = now.withHour(config.getUpdateHour()).withMinute(config.getUpdateMinute()).withSecond(0); //send notification to users at hour written in config file plus 3 minutes
         if(now.compareTo(nextRun) > 0)
             nextRun = nextRun.plusDays(1);
 

@@ -18,14 +18,13 @@ public class Config {
 
     private final static Logger logger = LoggerFactory.getLogger(Config.class);
     public List<String> admins;
+    private int hour;
+    private int minutes;
 
     public static void saveDefaultConfig(String filename) throws IOException {
         File f = new File(filename);
         if(f.exists()) {
-            if (!f.delete()) {
-                logger.error("Error while deleting corrupted config file, delete() has returned false. System directory?");
-                System.exit(-1);
-            }
+            FileUtils.forceDelete(f);
         }
         if(!f.createNewFile()){
             logger.error("Error while creating default config file, createNewFile() has returned false. System directory?");
@@ -67,6 +66,12 @@ public class Config {
             c.BOT_USERNAME = System.getenv("USERNAME");
         if(c.UPDATE_TIME.equals("time"))
             c.UPDATE_TIME = System.getenv("UPDATE_TIME");
+
+        String[] split = c.UPDATE_TIME.split(":");
+        assert split.length == 2;
+        c.setUpdateHour(Integer.parseInt(split[0]));
+        c.setUpdateMinutes(Integer.parseInt(split[1]));
+
         return c;
     }
 
@@ -82,15 +87,30 @@ public class Config {
     }
 
     public int getUpdateHour(){
-        String[] split = UPDATE_TIME.split(":");
-        assert split.length == 2;
-        return Integer.parseInt(split[0]);
+        return hour;
     }
 
     public int getUpdateMinute(){
-        String[] split = UPDATE_TIME.split(":");
-        assert split.length == 2;
-        return Integer.parseInt(split[1]);
+        return minutes;
+    }
+
+    public void setUpdateHour(int hour){
+        this.hour = hour;
+    }
+
+    public void setUpdateMinutes(int minutes){
+        this.minutes = minutes;
+    }
+
+    public void addMinutes(int minutes){
+        this.minutes += minutes;
+        while(this.minutes >= 60){
+            this.minutes -= 60;
+            this.hour++;
+            if(this.hour >= 24){
+                this.hour = 0;
+            }
+        }
     }
 
     private static void writeFile(String s) throws IOException {

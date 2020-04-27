@@ -102,17 +102,6 @@ public class Config {
         this.minutes = minutes;
     }
 
-    public void addMinutes(int minutes){
-        this.minutes += minutes;
-        while(this.minutes >= 60){
-            this.minutes -= 60;
-            this.hour++;
-            if(this.hour >= 24){
-                this.hour = 0;
-            }
-        }
-    }
-
     private static void writeFile(String s) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(new File("config.yml")));
         writer.write(s);

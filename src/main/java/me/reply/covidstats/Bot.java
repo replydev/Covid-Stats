@@ -115,7 +115,6 @@ public class Bot extends TelegramLongPollingBot {
         commandHandler = new CommandHandler(50);
         users = new Vector<>();
         startDailyUpdateTask();
-        startDailyMessagesTask();
     }
 
     public void onUpdateReceived(Update update) {
@@ -148,45 +147,30 @@ public class Bot extends TelegramLongPollingBot {
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 logger.info("Il servizio di aggiornamento sta scaricando i nuovi dati...");
-                DataFetcher.downloadFiles();
+                while(!DataFetcher.updateFiles()){
+                    logger.info("Non ho ancora trovato aggiornamenti, attendo 5 minuti...");
+                    Thread.sleep(5 * 60 * 1000);
+                }
                 logger.info("Fatto");
-            } catch (IOException e) {
+                logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
+                int count = 0;
+                for(User user : users){
+                    if(!user.isShowNotification())
+                        continue;
+                    SendMessage message = new SendMessage()
+                            .setText(EmojiParser.parseToUnicode("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:"))
+                            .setChatId(user.getUserid());
+                    try {
+                        execute(message);
+                        count++;
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                }
+                logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-                },
-                initalDelay,
-                TimeUnit.DAYS.toSeconds(1),
-                TimeUnit.SECONDS);
-    }
-
-    private void startDailyMessagesTask(){
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Rome"));
-        config.addMinutes(3);
-        ZonedDateTime nextRun = now.withHour(config.getUpdateHour()).withMinute(config.getUpdateMinute()).withSecond(0); //send notification to users at hour written in config file plus 3 minutes
-        if(now.compareTo(nextRun) > 0)
-            nextRun = nextRun.plusDays(1);
-
-        Duration duration = Duration.between(now, nextRun);
-        long initalDelay = duration.getSeconds();
-
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
-                    logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
-                    int count = 0;
-                    for(User user : users){
-                        if(!user.isShowNotification())
-                            continue;
-                        SendMessage message = new SendMessage()
-                                .setText(EmojiParser.parseToUnicode("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:"))
-                                .setChatId(user.getUserid());
-                        try {
-                            execute(message);
-                            count++;
-                        } catch (TelegramApiException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
                 },
                 initalDelay,
                 TimeUnit.DAYS.toSeconds(1),

@@ -52,7 +52,7 @@ public class CommandHandler {
                 switchToRegionsKeyboard(userId,chatId);
                 break;
             case ":page_facing_up: Codice sorgente":
-                threads.submit(() -> sendMessage("Il codice sorgente di questo bot è open source, qualsiasi modifica utile ed appropriata è la benvenuta! - https://github.com/replydev/Covid-Stats",chatId));
+                threads.submit(() -> sendMessage("Sviluppato da @zreply. Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta! - https://github.com/replydev/Covid-Stats",chatId));
                 break;
             case "Abruzzo":
             case "Basilicata":
@@ -110,8 +110,10 @@ public class CommandHandler {
                         return;
                     }
                     try {
-                        DataFetcher.downloadFiles();
-                        sendMessage("Operazione eseguita con successo",chatId);
+                        if(DataFetcher.updateFiles())
+                            sendMessage("Operazione completata con successo.", chatId);
+                        else
+                            sendMessage("Non ho trovato aggiornamenti.", chatId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

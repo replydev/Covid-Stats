@@ -34,6 +34,49 @@ public class DataFetcher {
         FileUtils.copyURLToFile(new URL(REGIONS_URL),regionFile);
     }
 
+    public static boolean updateFiles() throws IOException {
+        if(dataFile == null){
+            downloadFiles();
+            return true;
+        }
+        else if(!dataFile.exists()){
+            downloadFiles();
+            return true;
+        }
+
+        if(regionFile == null){
+            downloadFiles();
+            return true;
+        }
+        else if(!regionFile.exists()){
+            downloadFiles();
+            return true;
+        }
+
+        File tempDataFile = new File("tempDataFile.json");
+        File tempRegionFile = new File("tempRegionFile.json");
+
+        final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
+        FileUtils.copyURLToFile(new URL(ITALY_URL),tempDataFile);
+
+        final String REGIONS_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json";
+        FileUtils.copyURLToFile(new URL(REGIONS_URL),tempRegionFile);
+
+        long datafileCRC32 = FileUtils.checksumCRC32(dataFile);
+        long regionFileCRC32 = FileUtils.checksumCRC32(regionFile);
+        long tempDataFileCRC32 = FileUtils.checksumCRC32(tempDataFile);
+        long tempRegionFileCRC32 = FileUtils.checksumCRC32(tempRegionFile);
+
+        if(datafileCRC32 != tempDataFileCRC32 || regionFileCRC32 != tempRegionFileCRC32){  //files are different, ministero della sanità has updated the data
+            FileUtils.moveFile(tempDataFile,dataFile);
+            FileUtils.moveFile(tempRegionFile,regionFile);
+            return true;
+        }
+        FileUtils.forceDelete(tempDataFile);
+        FileUtils.forceDelete(tempRegionFile);
+        return false;
+    }
+
     public static CovidData fetchData() throws IOException {
         Gson g = new Gson();
         JsonObject[] object = g.fromJson(FileUtils.readFileToString(dataFile,"UTF-8"),JsonObject[].class);

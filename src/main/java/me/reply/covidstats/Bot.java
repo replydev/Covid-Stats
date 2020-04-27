@@ -26,7 +26,7 @@ public class Bot extends TelegramLongPollingBot {
     private Config config;
     private final HashMap<String,String> users;  //userid,region
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
-    private final static List<String> regions = Arrays.asList("Italia","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto");
+    private final static List<String> regions = Arrays.asList("Italia","Abruzzo","Basilicata","P.A. Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A. Trento","Umbria","Valle d'Aosta","Veneto");
 
     public boolean isInUserList(String userid){
         return users.containsKey(userid);

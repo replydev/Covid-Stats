@@ -64,7 +64,7 @@ public class CommandHandler {
                 break;
             case "Abruzzo":
             case "Basilicata":
-            case "P.A Bolzano":
+            case "P.A. Bolzano":
             case "Calabria":
             case "Campania":
             case "Emilia-Romagna":
@@ -80,7 +80,7 @@ public class CommandHandler {
             case "Sardegna":
             case "Sicilia":
             case "Toscana":
-            case "P.A Trento":
+            case "P.A. Trento":
             case "Umbria":
             case "Valle d'Aosta":
             case "Veneto":
@@ -116,14 +116,14 @@ public class CommandHandler {
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
                 .build();
 
-        // "Italia","Abruzzo","Basilicata","P.A Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio",
+        // "Italia","Abruzzo","Basilicata","P.A. Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio",
         // "Liguria","Lombardia","Marche","Molise","Piemonte",
-        // "Puglia","Sardegna","Sicilia","Toscana","P.A Trento","Umbria","Valle d'Aosta","Veneto"
+        // "Puglia","Sardegna","Sicilia","Toscana","P.A. Trento","Umbria","Valle d'Aosta","Veneto"
         regionsKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
                 .addText("Abruzzo")
                 .addText("Basilicata")
-                .addText("P.A Bolzano")
+                .addText("P.A. Bolzano")
                 .row()
                 .addText("Calabria")
                 .addText("Campania")
@@ -145,7 +145,7 @@ public class CommandHandler {
                 .addText("Sicilia")
                 .addText("Toscana")
                 .row()
-                .addText("P.A Trento")
+                .addText("P.A. Trento")
                 .addText("Umbria")
                 .addText("Valle d'Aosta")
                 .row()

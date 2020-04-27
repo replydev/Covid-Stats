@@ -1,7 +1,6 @@
 package me.reply.covidstats;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.DataFetcher;
 import org.apache.commons.io.FileUtils;
@@ -119,9 +118,8 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         String userid = update.getMessage().getFrom().getId().toString();
-        String username = update.getMessage().getFrom().getUserName();
         if(!isInUserList(userid)){
-            logger.info("Aggiungo un nuovo utente: " + userid + " - @" + username);
+            logger.info("Aggiungo un nuovo utente: " + userid);
             users.add(new User(userid,true));
         }
         commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);

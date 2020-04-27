@@ -192,7 +192,7 @@ public class CommandHandler {
         settingsKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
                 .addText(EmojiParser.parseToUnicode(":bell: Notifiche abilitate"))
-                .addText(EmojiParser.parseToUnicode(":bell: Notifiche disabilitate"))
+                .addText(EmojiParser.parseToUnicode(":no_bell: Notifiche disabilitate"))
                 .row()
                 .addText("Torna indietro")
                 .build();

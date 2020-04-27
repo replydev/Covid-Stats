@@ -38,12 +38,18 @@ public class Config {
 
     public void loadAdminsFromFile(String filename) throws IOException {
         this.admins = new Vector<>();
+        String envAdmin = System.getenv("ADMIN");
+        if(envAdmin != null)
+            this.admins.add(envAdmin);
+        File f = new File(filename);
+        if(!f.exists())
+            if(!f.createNewFile())
+                logger.error("Errore durante la creazione del file per la lista degli admin");
         try{
             List<String> lines = FileUtils.readLines(new File(filename),"UTF-8");
             admins.addAll(lines);
         }catch (FileNotFoundException e){
-            //maybe this is heroku
-            admins.add(System.getenv("ADMIN"));
+            logger.error("File \"admins.list\" non trovato...");
         }
     }
 

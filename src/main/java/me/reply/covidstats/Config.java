@@ -31,7 +31,7 @@ public class Config {
             System.exit(-1);
         }
         String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
-                "BOT_USERNAME: 'botToken'\n" +
+                "BOT_USERNAME: 'botUsername'\n" +
                 "UPDATE_TIME: 'time'";
         writeFile(defaultConfig);
     }

@@ -68,6 +68,8 @@ public class DataFetcher {
         long tempRegionFileCRC32 = FileUtils.checksumCRC32(tempRegionFile);
 
         if(datafileCRC32 != tempDataFileCRC32 || regionFileCRC32 != tempRegionFileCRC32){  //files are different, ministero della sanità has updated the data
+            FileUtils.forceDelete(dataFile);
+            FileUtils.forceDelete(regionFile);
             FileUtils.moveFile(tempDataFile,dataFile);
             FileUtils.moveFile(tempRegionFile,regionFile);
             return true;

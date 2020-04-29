@@ -27,7 +27,7 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
     private final CommandHandler commandHandler;
     private Config config;
-    private final Vector<User> users;
+    private List<User> users;
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final static List<String> regions = Arrays.asList("Italia","Abruzzo","Basilicata","P.A. Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A. Trento","Umbria","Valle d'Aosta","Veneto");
 
@@ -104,15 +104,23 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public Bot(){
+        users = new Vector<>();
         try {
+            Gson g = new Gson();
             config = Config.load("config.yml");
             config.loadAdminsFromFile("admins.list");
+            File backupFile = new File("backup.json");
+            if(backupFile.exists()){
+                logger.info("Carico gli utenti dal backup");
+                User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);
+                users = Arrays.asList(temp);
+                logger.info("Fatto");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         instance = this;
         commandHandler = new CommandHandler(50);
-        users = new Vector<>();
         startDailyUpdateTask();
     }
 

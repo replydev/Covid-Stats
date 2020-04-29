@@ -39,6 +39,14 @@ public class Bot extends TelegramLongPollingBot {
         return false;
     }
 
+    public String getProvinceFromUser(String userid){
+        for(User u : users){
+            if(u.getUserid().equalsIgnoreCase(userid))
+                return u.getProvince();
+        }
+        return null;
+    }
+
     public String getRegionFromUser(String userid){
         for(User u : users){
             if(u.getUserid().equals(userid))
@@ -83,6 +91,17 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
         return true;
+    }
+
+    public void setProvince(String userId,String province){
+        if(province.equalsIgnoreCase("Nessuna provincia"))
+            province = null;
+        for(User user : users){
+            if(user.getUserid().equals(userId)){
+                user.setProvince(province);
+                return;
+            }
+        }
     }
 
     public String getRegions(){

@@ -172,7 +172,7 @@ public class CovidData {
                 false
         );
 
-        BufferedImage bufferedImage = chart.createBufferedImage(1500,900);
+        BufferedImage bufferedImage = chart.createBufferedImage(1536 	,	864); //TODO take this in the config
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         try {
             ImageIO.write(bufferedImage, "png", bas);

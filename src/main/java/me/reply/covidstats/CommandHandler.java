@@ -3,6 +3,7 @@ package me.reply.covidstats;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.CovidData;
 import me.reply.covidstats.data.DataFetcher;
+import me.reply.covidstats.data.ProvinceCovidData;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class CommandHandler {
     private final ReplyKeyboardMarkup mainKeyboard;
     private final ReplyKeyboardMarkup regionsKeyboard;
     private final ReplyKeyboardMarkup settingsKeyboard;
+    private final ReplyKeyboardMarkup provinceKeyboard;
 
     public void handle(String command, long chatId, String userId){
 
@@ -34,19 +36,19 @@ public class CommandHandler {
                 threads.submit(() -> sendMainKeyboard(chatId));
                 break;
             case ":warning: Attualmente contagiati":
-                threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),chatId));
+                threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
                 break;
             case ":diamond_shape_with_a_dot_inside: Guariti":
-                threads.submit(() -> recoveredJob(Bot.getInstance().getRegionFromUser(userId),chatId));
+                threads.submit(() -> recoveredJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
                 break;
             case ":angel: Decessi":
-                threads.submit(() -> deathsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
+                threads.submit(() -> deathsJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
                 break;
             case ":bangbang: Casi":
-                threads.submit(() -> casesJob(Bot.getInstance().getRegionFromUser(userId),chatId));
+                threads.submit(() -> casesJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
                 break;
             case ":syringe: Tamponi":
-                threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),chatId));
+                threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
                 break;
             case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
@@ -83,6 +85,123 @@ public class CommandHandler {
                         sendMessage("Hai selezionato una nuova regione: " + command,chatId);
                         sendMainKeyboard(chatId);
                     }
+                });
+                break;
+            case "Agrigento":
+            case "Alessandria":
+            case "Ancona":
+            case "Aosta":
+            case "Arezzo":
+            case "Ascoli Piceno":
+            case "Asti":
+            case "Avellino":
+            case "Bari":
+            case "Barletta-Andria-Trani":
+            case "Belluno":
+            case "Benevento":
+            case "Bergamo":
+            case "Biella":
+            case "Bologna":
+            case "Bolzano":
+            case "Brescia":
+            case "Brindisi":
+            case "Cagliari":
+            case "Caltanissetta":
+            case "Campobasso":
+            case "Carbonia-Iglesias":
+            case "Caserta":
+            case "Catania":
+            case "Catanzaro":
+            case "Chieti":
+            case "Como":
+            case "Cosenza":
+            case "Cremona":
+            case "Crotone":
+            case "Cuneo":
+            case "Enna":
+            case "Fermo":
+            case "Ferrara":
+            case "Firenze":
+            case "Foggia":
+            case "Forlì-Cesena":
+            case "Frosinone":
+            case "Genova":
+            case "Gorizia":
+            case "Grosseto":
+            case "Imperia":
+            case "Isernia":
+            case "L'Aquila":
+            case "La Spezia":
+            case "Latina":
+            case "Lecce":
+            case "Lecco":
+            case "Livorno":
+            case "Lodi":
+            case "Lucca":
+            case "Macerata":
+            case "Mantova":
+            case "Massa-Carrara":
+            case "Matera":
+            case "Medio Campidano":
+            case "Messina":
+            case "Milano":
+            case "Modena":
+            case "Monza e della Brianza":
+            case "Napoli":
+            case "Novara":
+            case "Nuoro":
+            case "Ogliastra":
+            case "Olbia-Tempio":
+            case "Oristano":
+            case "Padova":
+            case "Palermo":
+            case "Parma":
+            case "Pavia":
+            case "Perugia":
+            case "Pesaro e Urbino":
+            case "Pescara":
+            case "Piacenza":
+            case "Pisa":
+            case "Pistoia":
+            case "Pordenone":
+            case "Potenza":
+            case "Prato":
+            case "Ragusa":
+            case "Ravenna":
+            case "Reggio di Calabria":
+            case "Reggio nell'Emilia":
+            case "Rieti":
+            case "Rimini":
+            case "Roma":
+            case "Rovigo":
+            case "Salerno":
+            case "Sassari":
+            case "Savona":
+            case "Siena":
+            case "Siracusa":
+            case "Sondrio":
+            case "Taranto":
+            case "Teramo":
+            case "Terni":
+            case "Torino":
+            case "Trapani":
+            case "Trento":
+            case "Treviso":
+            case "Trieste":
+            case "Udine":
+            case "Varese":
+            case "Venezia":
+            case "Verbano-Cusio-Ossola":
+            case "Vercelli":
+            case "Verona":
+            case "Vibo Valentia":
+            case "Vicenza":
+            case "Viterbo":
+                threads.submit(() -> {
+                    Bot.getInstance().setProvince(userId,command);
+                    sendMessage("Hai selezionato una nuova provincia: " + command,chatId);
+                    sendMainKeyboard(chatId);
+
                 });
                 break;
             case "Torna indietro":
@@ -189,6 +308,149 @@ public class CommandHandler {
                 .addText("Torna indietro")
                 .build();
 
+        provinceKeyboard = ReplyKeyboardBuilder.createReply()
+                .row()
+                .addText("Agrigento")
+                .addText("Alessandria")
+                .addText("Ancona")
+                .addText("Aosta")
+                .row()
+                .addText("Arezzo")
+                .addText("Ascoli Piceno")
+                .addText("Asti")
+                .addText("Avellino")
+                .row()
+                .addText("Bari")
+                .addText("Barletta-Andria-Trani")
+                .addText("Belluno")
+                .addText("Benevento")
+                .row()
+                .addText("Bergamo")
+                .addText("Biella")
+                .addText("Bologna")
+                .addText("Bolzano")
+                .row()
+                .addText("Brescia")
+                .addText("Brindisi")
+                .addText("Cagliari")
+                .addText("Caltanissetta")
+                .row()
+                .addText("Campobasso")
+                .addText("Carbonia-Iglesias")
+                .addText("Caserta")
+                .addText("Catania")
+                .row()
+                .addText("Catanzaro")
+                .addText("Chieti")
+                .addText("Como")
+                .addText("Cosenza")
+                .row()
+                .addText("Cremona")
+                .addText("Crotone")
+                .addText("Cuneo")
+                .addText("Enna")
+                .row()
+                .addText("Fermo")
+                .addText("Ferrara")
+                .addText("Firenze")
+                .addText("Foggia")
+                .row()
+                .addText("Forlì-Cesena")
+                .addText("Friuli Venezia Giulia")
+                .addText("Frosinone")
+                .addText("Genova")
+                .row()
+                .addText("Gorizia")
+                .addText("Grosseto")
+                .addText("Imperia")
+                .addText("Isernia")
+                .row()
+                .addText("L'Aquila")
+                .addText("La Spezia")
+                .addText("Latina")
+                .addText("Lecce")
+                .row()
+                .addText("Lecco")
+                .addText("Livorno")
+                .addText("Lodi")
+                .addText("Lucca")
+                .row()
+                .addText("Macerata")
+                .addText("Mantova")
+                .addText("Massa-Carrara")
+                .addText("Matera")
+                .row()
+                .addText("Medio Campidano")
+                .addText("Messina")
+                .addText("Milano")
+                .addText("Modena")
+                .row()
+                .addText("Monza e della Brianza")
+                .addText("Napoli")
+                .addText("Novara")
+                .addText("Nuoro")
+                .row()
+                .addText("Ogliastra")
+                .addText("Olbia-Tempio")
+                .addText("Oristano")
+                .addText("Padova")
+                .row()
+                .addText("Palermo")
+                .addText("Parma")
+                .addText("Pavia")
+                .addText("Perugia")
+                .row()
+                .addText("Pesaro e Urbino")
+                .addText("Pescara")
+                .addText("Piacenza")
+                .addText("Pisa")
+                .row()
+                .addText("Pistoia")
+                .addText("Pordenone")
+                .addText("Potenza")
+                .addText("Prato")
+                .row()
+                .addText("Ragusa")
+                .addText("Ravenna")
+                .addText("Reggio di Calabria")
+                .addText("Reggio nell'Emilia")
+                .row()
+                .addText("Rieti")
+                .addText("Rimini")
+                .addText("Roma")
+                .addText("Rovigo")
+                .row()
+                .addText("Salerno")
+                .addText("Sassari")
+                .addText("Savona")
+                .addText("Siena")
+                .row()
+                .addText("Siracusa")
+                .addText("Sondrio")
+                .addText("Taranto")
+                .addText("Teramo")
+                .row()
+                .addText("Terni")
+                .addText("Torino")
+                .addText("Trapani")
+                .addText("Trento")
+                .row()
+                .addText("Treviso")
+                .addText("Trieste")
+                .addText("Udine")
+                .addText("Varese")
+                .row()
+                .addText("Venezia")
+                .addText("Verbano-Cusio-Ossola")
+                .addText("Vercelli")
+                .addText("Verona")
+                .row()
+                .addText("Vibo Valentia")
+                .addText("Vicenza")
+                .addText("Viterbo")
+                .addText("Torna indietro")
+                .build();
+
         settingsKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
                 .addText(EmojiParser.parseToUnicode(":bell: Notifiche abilitate"))
@@ -262,7 +524,11 @@ public class CommandHandler {
         }
     }
 
-    private void infectedJob(String region,long chatId){
+    private void infectedJob(String region,String province,long chatId){
+        if(province != null) {
+            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            return;
+        }
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.currentlyInfectedGraph(region);
@@ -276,7 +542,11 @@ public class CommandHandler {
         }
     }
 
-    private void recoveredJob(String region,long chatId){
+    private void recoveredJob(String region,String province,long chatId){
+        if(province != null) {
+            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            return;
+        }
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.recoveredGraph(region);
@@ -290,7 +560,11 @@ public class CommandHandler {
         }
     }
 
-    private void deathsJob(String region,long chatId){
+    private void deathsJob(String region,String province,long chatId){
+        if(province != null) {
+            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            return;
+        }
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.deathGraph(region);
@@ -304,21 +578,40 @@ public class CommandHandler {
         }
     }
 
-    private void casesJob(String region,long chatId){
-        try {
-            CovidData data = DataFetcher.fetchData(region);
-            File f = data.totalCasesGraph(region);
-            sendPhoto(f,chatId);
-            FileUtils.forceDelete(f);
-            f = data.newTotalCasesGraph(region);
-            sendPhoto(f,chatId);
-            FileUtils.forceDelete(f);
-        } catch (IOException | ParseException throwable) {
-            throwable.printStackTrace();
+    private void casesJob(String region,String province,long chatId){
+        if(province != null){
+            try{
+                ProvinceCovidData data = DataFetcher.fetchProvinceData(province);
+                File f = data.totalCasesGraph(region);
+                sendPhoto(f,chatId);
+                FileUtils.forceDelete(f);
+                f = data.newTotalCasesGraph(region);
+                sendPhoto(f,chatId);
+                FileUtils.forceDelete(f);
+            }catch (IOException | ParseException e){
+                e.printStackTrace();
+            }
+        }
+        else{
+            try {
+                CovidData data = DataFetcher.fetchData(region);
+                File f = data.totalCasesGraph(region);
+                sendPhoto(f,chatId);
+                FileUtils.forceDelete(f);
+                f = data.newTotalCasesGraph(region);
+                sendPhoto(f,chatId);
+                FileUtils.forceDelete(f);
+            } catch (IOException | ParseException throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 
-    private void tamponsJob(String region,long chatId){
+    private void tamponsJob(String region,String province,long chatId){
+        if(province != null) {
+            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            return;
+        }
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.tamponsGraph(region);

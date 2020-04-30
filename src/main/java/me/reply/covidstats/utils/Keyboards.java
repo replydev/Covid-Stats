@@ -44,7 +44,7 @@ public class Keyboards {
                 .addText(EmojiParser.parseToUnicode(":syringe: Tamponi"))
                 .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona regione"))
                 .row()
-                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
+                .addText(EmojiParser.parseToUnicode(":office: Seleziona provincia"))
                 .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
                 .build();
@@ -52,7 +52,7 @@ public class Keyboards {
         mainKeyboardProvince = ReplyKeyboardBuilder.createReply()
                 .row()
                 .addText(EmojiParser.parseToUnicode(":bangbang: Casi"))
-                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
+                .addText(EmojiParser.parseToUnicode(":office: Seleziona provincia"))
                 .row()
                 .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))

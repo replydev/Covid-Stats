@@ -50,7 +50,7 @@ public class CommandHandler {
             case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
                 break;
-            case ":mount_fuji: Seleziona provincia":
+            case ":office: Seleziona provincia":
                 switchToProvinceKeyboard(userId,chatId);
                 break;
             case ":page_facing_up: Codice sorgente":

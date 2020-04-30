@@ -16,7 +16,7 @@ public class Main {
         try {
             logger.info("Scarico i file contenenti i dati...");
             DataFetcher.downloadFiles();
-            logger.info(" ...fatto");
+            logger.info("Download completato");
         } catch (IOException e) {
             e.printStackTrace();
         }

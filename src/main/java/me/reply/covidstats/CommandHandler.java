@@ -53,6 +53,9 @@ public class CommandHandler {
             case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
                 break;
+            case ":mount_fuji: Seleziona provincia":
+                switchToProvinceKeyboard(userId,chatId);
+                break;
             case ":page_facing_up: Codice sorgente":
                 threads.submit(() -> sendMessage(EmojiParser.parseToUnicode(":smile_cat: Sviluppato da @zreply.\n:page_facing_up: Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta!\n:link: https://github.com/replydev/Covid-Stats"),chatId));
                 break;
@@ -87,6 +90,7 @@ public class CommandHandler {
                     }
                 });
                 break;
+            case "Nessuna provincia":
             case "Agrigento":
             case "Alessandria":
             case "Ancona":
@@ -270,6 +274,7 @@ public class CommandHandler {
                 .addText(EmojiParser.parseToUnicode(":syringe: Tamponi"))
                 .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona regione"))
                 .row()
+                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
                 .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
                 .build();
@@ -448,6 +453,8 @@ public class CommandHandler {
                 .addText("Vibo Valentia")
                 .addText("Vicenza")
                 .addText("Viterbo")
+                .addText("Nessuna provincia")
+                .row()
                 .addText("Torna indietro")
                 .build();
 
@@ -481,7 +488,7 @@ public class CommandHandler {
         if(region == null)
             keyboard.setText("Non hai alcuna regione selezionata");
         else
-            keyboard.setText("Attualmente hai selezionato la regione \"" + Bot.getInstance().getRegionFromUser(userid) + "\", selezionane un'altra:");
+            keyboard.setText("Attualmente hai selezionato la regione \"" + region + "\", selezionane un'altra:");
 
         try {
             Bot.getInstance().execute(keyboard);
@@ -490,6 +497,23 @@ public class CommandHandler {
         }
     }
 
+    private void switchToProvinceKeyboard(String userid,long chatId){
+        SendMessage keyboard = new SendMessage()
+                .setReplyMarkup(provinceKeyboard)
+                .setChatId(chatId);
+
+        String province = Bot.getInstance().getProvinceFromUser(userid);
+        if(province == null)
+            keyboard.setText("Non hai alcuna provincia selezionata");
+        else
+            keyboard.setText("Attualmente hai selezionato la provincia \"" + province + "\", selezionane un'altra:");
+
+        try {
+            Bot.getInstance().execute(keyboard);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
     private void switchToSettingsKeyboard(long chatid){
         SendMessage keyboard = new SendMessage()
                 .setText("Impostazioni:")
@@ -582,10 +606,10 @@ public class CommandHandler {
         if(province != null){
             try{
                 ProvinceCovidData data = DataFetcher.fetchProvinceData(province);
-                File f = data.totalCasesGraph(region);
+                File f = data.totalCasesGraph(province);
                 sendPhoto(f,chatId);
                 FileUtils.forceDelete(f);
-                f = data.newTotalCasesGraph(region);
+                f = data.newTotalCasesGraph(province);
                 sendPhoto(f,chatId);
                 FileUtils.forceDelete(f);
             }catch (IOException | ParseException e){

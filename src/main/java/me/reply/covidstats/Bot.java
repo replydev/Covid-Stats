@@ -30,7 +30,6 @@ public class Bot extends TelegramLongPollingBot {
     private Config config;
     private List<User> users;
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
-    private final static List<String> regions = Arrays.asList("Italia","Abruzzo","Basilicata","P.A. Bolzano","Calabria","Campania","Emilia-Romagna","Friuli Venezia Giulia","Lazio","Liguria","Lombardia","Marche","Molise","Piemonte","Puglia","Sardegna","Sicilia","Toscana","P.A. Trento","Umbria","Valle d'Aosta","Veneto");
 
     public boolean isInUserList(String userid){
         for(User u : users){
@@ -79,19 +78,16 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public boolean setRegion(String userid,String region){
-        if(!regions.contains(region)){
-            return false;
-        }
+    public void setRegion(String userid,String region){
         if(region.equalsIgnoreCase("Italia"))
             region = null;
         for(User user : users){
             if(user.getUserid().equals(userid)){
                 user.setRegion(region);
-                return true;
+                user.setProvince(null);
+                return;
             }
         }
-        return true;
     }
 
     public void setProvince(String userId,String province){
@@ -103,16 +99,6 @@ public class Bot extends TelegramLongPollingBot {
                 return;
             }
         }
-    }
-
-    public String getRegions(){
-        StringBuilder builder = new StringBuilder();
-        int n = 1;
-        for(String s : regions){
-            builder.append(n).append(": ").append(s).append("\n");
-            n++;
-        }
-        return builder.toString();
     }
 
     public static Bot getInstance(){

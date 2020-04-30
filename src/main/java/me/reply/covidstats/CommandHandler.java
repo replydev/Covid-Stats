@@ -79,12 +79,9 @@ public class CommandHandler {
             case "Valle d'Aosta":
             case "Veneto":
                 threads.submit(() -> {
-                    if(!Bot.getInstance().setRegion(userId,command))
-                        sendMessage("\"" + command + "\" non è una regione valida!\nInserisci una tra queste: \n" + Bot.getInstance().getRegions(),chatId);
-                    else{
-                        sendMessage("Hai selezionato una nuova regione: " + command,chatId);
-                        sendMainKeyboard(userId,chatId);
-                    }
+                    Bot.getInstance().setRegion(userId,command);
+                    sendMessage("Hai selezionato una nuova regione: " + command,chatId);
+                    sendMainKeyboard(userId,chatId);
                 });
                 break;
             case "Nessuna provincia":

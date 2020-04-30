@@ -14,21 +14,21 @@ import java.net.URL;
 
 public class DataFetcher {
 
-    private static File dataFile;
+    private static File italyFile;
     private static File regionFile;
     private static File provinceFile;
 
-    private static JsonObject[] italyMemory;
+    private static JsonObject[] italyJsonObjects;
     private static RegionJsonObject[] regionsJsonObjects;
     private static ProvinceJsonObject[] provinceJsonObjects;
 
     private final static Logger logger = LoggerFactory.getLogger(DataFetcher.class);
 
     public static void downloadFiles() throws IOException {
-        if(dataFile == null)
-            dataFile = new File("data.json");
-        else if(dataFile.exists())
-            FileUtils.forceDelete(dataFile);
+        if(italyFile == null)
+            italyFile = new File("data.json");
+        else if(italyFile.exists())
+            FileUtils.forceDelete(italyFile);
 
         if(regionFile == null)
             regionFile = new File("region.json");
@@ -41,7 +41,7 @@ public class DataFetcher {
             FileUtils.forceDelete(provinceFile);
 
         final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
-        FileUtils.copyURLToFile(new URL(ITALY_URL),dataFile);
+        FileUtils.copyURLToFile(new URL(ITALY_URL), italyFile);
 
         final String REGIONS_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json";
         FileUtils.copyURLToFile(new URL(REGIONS_URL),regionFile);
@@ -52,11 +52,11 @@ public class DataFetcher {
     }
 
     public static boolean updateFiles() throws IOException {
-        if(dataFile == null){
+        if(italyFile == null){
             downloadFiles();
             return true;
         }
-        else if(!dataFile.exists()){
+        else if(!italyFile.exists()){
             downloadFiles();
             return true;
         }
@@ -92,7 +92,7 @@ public class DataFetcher {
         final String PROVINCE_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json";
         FileUtils.copyURLToFile(new URL(PROVINCE_URL), tempProvinceFile);
 
-        long datafileCRC32 = FileUtils.checksumCRC32(dataFile);
+        long datafileCRC32 = FileUtils.checksumCRC32(italyFile);
         long regionFileCRC32 = FileUtils.checksumCRC32(regionFile);
         long provinceFileCRC32 = FileUtils.checksumCRC32(provinceFile);
         long tempDataFileCRC32 = FileUtils.checksumCRC32(tempDataFile);
@@ -100,10 +100,10 @@ public class DataFetcher {
         long tempProvinceFileCRC32 = FileUtils.checksumCRC32(tempProvinceFile);
 
         if(datafileCRC32 != tempDataFileCRC32 || regionFileCRC32 != tempRegionFileCRC32 || provinceFileCRC32 != tempProvinceFileCRC32){  //files are different, ministero della sanità has updated the data
-            FileUtils.forceDelete(dataFile);
+            FileUtils.forceDelete(italyFile);
             FileUtils.forceDelete(regionFile);
             FileUtils.forceDelete(provinceFile);
-            FileUtils.moveFile(tempDataFile,dataFile);
+            FileUtils.moveFile(tempDataFile, italyFile);
             FileUtils.moveFile(tempRegionFile,regionFile);
             FileUtils.moveFile(tempProvinceFile,provinceFile);
             parseFiles();
@@ -118,7 +118,7 @@ public class DataFetcher {
     private static void parseFiles() throws IOException {
         Gson g = new Gson();
         logger.info("Leggo i file json.");
-        italyMemory = g.fromJson(FileUtils.readFileToString(dataFile,"UTF-8"),JsonObject[].class);
+        italyJsonObjects = g.fromJson(FileUtils.readFileToString(italyFile,"UTF-8"),JsonObject[].class);
         regionsJsonObjects = g.fromJson(FileUtils.readFileToString(regionFile,"UTF-8"),RegionJsonObject[].class);
         provinceJsonObjects = g.fromJson(FileUtils.readFileToString(provinceFile,"UTF-8"),ProvinceJsonObject[].class);
         logger.info("Fatto");
@@ -127,7 +127,7 @@ public class DataFetcher {
 
     public static CovidData fetchData() {
         CovidData covidData = new CovidData();
-        for(JsonObject jsonObject : italyMemory){
+        for(JsonObject jsonObject : italyJsonObjects){
             DayData dayData = new DayData(
                     jsonObject.getTotale_positivi(),
                     jsonObject.getDimessi_guariti(),

@@ -1,4 +1,4 @@
-package me.reply.covidstats.data;
+package me.reply.covidstats.data.province;
 
 public class ProvinceDayData {
 

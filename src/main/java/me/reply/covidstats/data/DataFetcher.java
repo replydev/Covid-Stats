@@ -1,6 +1,9 @@
 package me.reply.covidstats.data;
 
 import com.google.gson.Gson;
+import me.reply.covidstats.data.province.ProvinceCovidData;
+import me.reply.covidstats.data.province.ProvinceDayData;
+import me.reply.covidstats.data.province.ProvinceJsonObject;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -15,6 +15,8 @@ public class Config {
     public String BOT_TOKEN;
     public String BOT_USERNAME;
     public String UPDATE_TIME;
+    public int CHART_WIDTH;
+    public int CHART_HEIGHT;
 
     private final static Logger logger = LoggerFactory.getLogger(Config.class);
     public List<String> admins;
@@ -32,7 +34,9 @@ public class Config {
         }
         String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
                 "BOT_USERNAME: 'botUsername'\n" +
-                "UPDATE_TIME: 'time'";
+                "UPDATE_TIME: 'time'\n" +
+                "CHART_WIDTH: 1536\n" +
+                "CHART_HEIGHT: 864";
         FileUtils.write(new File("config.yml"),defaultConfig,"UTF-8");
     }
 

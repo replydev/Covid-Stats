@@ -1,5 +1,6 @@
 package me.reply.covidstats.data;
 
+import me.reply.covidstats.Bot;
 import me.reply.covidstats.Utils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -13,7 +14,6 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.Vector;
 
 public class CovidData {
@@ -172,7 +172,7 @@ public class CovidData {
                 false
         );
 
-        BufferedImage bufferedImage = chart.createBufferedImage(1536 	,	864); //TODO take this in the config
+        BufferedImage bufferedImage = chart.createBufferedImage(Bot.getInstance().getConfig().CHART_WIDTH,Bot.getInstance().getConfig().CHART_HEIGHT);
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         try {
             ImageIO.write(bufferedImage, "png", bas);

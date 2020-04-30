@@ -4,13 +4,12 @@ import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.CovidData;
 import me.reply.covidstats.data.DataFetcher;
 import me.reply.covidstats.data.province.ProvinceCovidData;
-import me.reply.covidstats.utils.ReplyKeyboardBuilder;
+import me.reply.covidstats.utils.Keyboards;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
@@ -23,12 +22,8 @@ public class CommandHandler {
     private final ExecutorService threads;
 
     private final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
+    private final Keyboards keyboards;
 
-    private final ReplyKeyboardMarkup mainKeyboard;
-    private final ReplyKeyboardMarkup regionsKeyboard;
-    private final ReplyKeyboardMarkup settingsKeyboard;
-    private final ReplyKeyboardMarkup provinceKeyboard;
-    private final ReplyKeyboardMarkup mainKeyboardProvince;
 
     public void handle(String command, long chatId, String userId){
 
@@ -265,227 +260,17 @@ public class CommandHandler {
 
     public CommandHandler(int threadsNum){
         threads = Executors.newFixedThreadPool(threadsNum);
-
-        mainKeyboard = ReplyKeyboardBuilder.createReply()
-                .row()
-                .addText(EmojiParser.parseToUnicode(":warning: Attualmente contagiati"))
-                .addText(EmojiParser.parseToUnicode(":diamond_shape_with_a_dot_inside: Guariti"))
-                .addText(EmojiParser.parseToUnicode(":angel: Decessi"))
-                .row()
-                .addText(EmojiParser.parseToUnicode(":bangbang: Casi"))
-                .addText(EmojiParser.parseToUnicode(":syringe: Tamponi"))
-                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona regione"))
-                .row()
-                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
-                .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
-                .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
-                .build();
-
-        mainKeyboardProvince = ReplyKeyboardBuilder.createReply()
-                .row()
-                .addText(EmojiParser.parseToUnicode(":bangbang: Casi"))
-                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
-                .row()
-                .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
-                .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
-                .build();
-
-        regionsKeyboard = ReplyKeyboardBuilder.createReply()
-                .row()
-                .addText("Abruzzo")
-                .addText("Basilicata")
-                .addText("P.A. Bolzano")
-                .row()
-                .addText("Calabria")
-                .addText("Campania")
-                .addText("Emilia-Romagna")
-                .row()
-                .addText("Friuli Venezia Giulia")
-                .addText("Italia")
-                .addText("Lazio")
-                .row()
-                .addText("Liguria")
-                .addText("Lombardia")
-                .addText("Marche")
-                .row()
-                .addText("Molise")
-                .addText("Piemonte")
-                .addText("Puglia")
-                .row()
-                .addText("Sardegna")
-                .addText("Sicilia")
-                .addText("Toscana")
-                .row()
-                .addText("P.A. Trento")
-                .addText("Umbria")
-                .addText("Valle d'Aosta")
-                .row()
-                .addText("Veneto")
-                .addText("Torna indietro")
-                .build();
-
-        provinceKeyboard = ReplyKeyboardBuilder.createReply()
-                .row()
-                .addText("Agrigento")
-                .addText("Alessandria")
-                .addText("Ancona")
-                .addText("Aosta")
-                .row()
-                .addText("Arezzo")
-                .addText("Ascoli Piceno")
-                .addText("Asti")
-                .addText("Avellino")
-                .row()
-                .addText("Bari")
-                .addText("Barletta-Andria-Trani")
-                .addText("Belluno")
-                .addText("Benevento")
-                .row()
-                .addText("Bergamo")
-                .addText("Biella")
-                .addText("Bologna")
-                .addText("Bolzano")
-                .row()
-                .addText("Brescia")
-                .addText("Brindisi")
-                .addText("Cagliari")
-                .addText("Caltanissetta")
-                .row()
-                .addText("Campobasso")
-                .addText("Carbonia-Iglesias")
-                .addText("Caserta")
-                .addText("Catania")
-                .row()
-                .addText("Catanzaro")
-                .addText("Chieti")
-                .addText("Como")
-                .addText("Cosenza")
-                .row()
-                .addText("Cremona")
-                .addText("Crotone")
-                .addText("Cuneo")
-                .addText("Enna")
-                .row()
-                .addText("Fermo")
-                .addText("Ferrara")
-                .addText("Firenze")
-                .addText("Foggia")
-                .row()
-                .addText("Forlì-Cesena")
-                .addText("Friuli Venezia Giulia")
-                .addText("Frosinone")
-                .addText("Genova")
-                .row()
-                .addText("Gorizia")
-                .addText("Grosseto")
-                .addText("Imperia")
-                .addText("Isernia")
-                .row()
-                .addText("L'Aquila")
-                .addText("La Spezia")
-                .addText("Latina")
-                .addText("Lecce")
-                .row()
-                .addText("Lecco")
-                .addText("Livorno")
-                .addText("Lodi")
-                .addText("Lucca")
-                .row()
-                .addText("Macerata")
-                .addText("Mantova")
-                .addText("Massa-Carrara")
-                .addText("Matera")
-                .row()
-                .addText("Medio Campidano")
-                .addText("Messina")
-                .addText("Milano")
-                .addText("Modena")
-                .row()
-                .addText("Monza e della Brianza")
-                .addText("Napoli")
-                .addText("Novara")
-                .addText("Nuoro")
-                .row()
-                .addText("Ogliastra")
-                .addText("Olbia-Tempio")
-                .addText("Oristano")
-                .addText("Padova")
-                .row()
-                .addText("Palermo")
-                .addText("Parma")
-                .addText("Pavia")
-                .addText("Perugia")
-                .row()
-                .addText("Pesaro e Urbino")
-                .addText("Pescara")
-                .addText("Piacenza")
-                .addText("Pisa")
-                .row()
-                .addText("Pistoia")
-                .addText("Pordenone")
-                .addText("Potenza")
-                .addText("Prato")
-                .row()
-                .addText("Ragusa")
-                .addText("Ravenna")
-                .addText("Reggio di Calabria")
-                .addText("Reggio nell'Emilia")
-                .row()
-                .addText("Rieti")
-                .addText("Rimini")
-                .addText("Roma")
-                .addText("Rovigo")
-                .row()
-                .addText("Salerno")
-                .addText("Sassari")
-                .addText("Savona")
-                .addText("Siena")
-                .row()
-                .addText("Siracusa")
-                .addText("Sondrio")
-                .addText("Taranto")
-                .addText("Teramo")
-                .row()
-                .addText("Terni")
-                .addText("Torino")
-                .addText("Trapani")
-                .addText("Trento")
-                .row()
-                .addText("Treviso")
-                .addText("Trieste")
-                .addText("Udine")
-                .addText("Varese")
-                .row()
-                .addText("Venezia")
-                .addText("Verbano-Cusio-Ossola")
-                .addText("Vercelli")
-                .addText("Verona")
-                .row()
-                .addText("Vibo Valentia")
-                .addText("Vicenza")
-                .addText("Viterbo")
-                .row()
-                .addText("Nessuna provincia")
-                .addText("Torna indietro")
-                .build();
-
-        settingsKeyboard = ReplyKeyboardBuilder.createReply()
-                .row()
-                .addText(EmojiParser.parseToUnicode(":bell: Notifiche abilitate"))
-                .addText(EmojiParser.parseToUnicode(":no_bell: Notifiche disabilitate"))
-                .row()
-                .addText("Torna indietro")
-                .build();
+        this.keyboards = new Keyboards();
     }
 
     private void sendMainKeyboard(String userid,long chatId){
         SendMessage keyboard = Bot.getInstance().getProvinceFromUser(userid) == null ? new SendMessage()
                 .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
-                .setReplyMarkup(mainKeyboard)
+                .setReplyMarkup(keyboards.getMainKeyboard())
                 .setChatId(chatId) :
                 new SendMessage()
                         .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
-                        .setReplyMarkup(mainKeyboardProvince)
+                        .setReplyMarkup(keyboards.getMainKeyboardProvince())
                         .setChatId(chatId);
         try {
             Bot.getInstance().execute(keyboard);
@@ -496,7 +281,7 @@ public class CommandHandler {
 
     private void switchToRegionsKeyboard(String userid,long chatId){
         SendMessage keyboard = new SendMessage()
-                .setReplyMarkup(regionsKeyboard)
+                .setReplyMarkup(keyboards.getRegionsKeyboard())
                 .setChatId(chatId);
 
         String region = Bot.getInstance().getRegionFromUser(userid);
@@ -514,8 +299,81 @@ public class CommandHandler {
 
     private void switchToProvinceKeyboard(String userid,long chatId){
         SendMessage keyboard = new SendMessage()
-                .setReplyMarkup(provinceKeyboard)
                 .setChatId(chatId);
+        String region = Bot.getInstance().getRegionFromUser(userid);
+        if(region == null){
+            sendMessage(EmojiParser.parseToUnicode(":x: Seleziona prima una regione"),chatId);
+            return;
+        }
+        switch (region){
+            case "Abruzzo":
+                keyboard = keyboard.setReplyMarkup(keyboards.getAbruzzo());
+                break;
+            case "Basilicata":
+                keyboard = keyboard.setReplyMarkup(keyboards.getBasilicata());
+                break;
+            case "P.A. Bolzano":
+                keyboard = keyboard.setReplyMarkup(keyboards.getBolzano());
+                break;
+            case "Calabria":
+                keyboard = keyboard.setReplyMarkup(keyboards.getCalabria());
+                break;
+            case "Campania":
+                keyboard = keyboard.setReplyMarkup(keyboards.getCampania());
+                break;
+            case "Emilia-Romagna":
+                keyboard = keyboard.setReplyMarkup(keyboards.getEmilia_romagna());
+                break;
+            case "Friuli Venezia Giulia":
+                keyboard = keyboard.setReplyMarkup(keyboards.getFriuli_venezia_giulia());
+                break;
+            case "Lazio":
+                keyboard = keyboard.setReplyMarkup(keyboards.getLazio());
+                break;
+            case "Liguria":
+                keyboard = keyboard.setReplyMarkup(keyboards.getLiguria());
+                break;
+            case "Lombardia":
+                keyboard = keyboard.setReplyMarkup(keyboards.getLombardia());
+                break;
+            case "Marche":
+                keyboard = keyboard.setReplyMarkup(keyboards.getMarche());
+                break;
+            case "Molise":
+                keyboard = keyboard.setReplyMarkup(keyboards.getMolise());
+                break;
+            case "Piemonte":
+                keyboard = keyboard.setReplyMarkup(keyboards.getPiemonte());
+                break;
+            case "Puglia":
+                keyboard = keyboard.setReplyMarkup(keyboards.getPuglia());
+                break;
+            case "Sardegna":
+                keyboard = keyboard.setReplyMarkup(keyboards.getSardegna());
+                break;
+            case "Sicilia":
+                keyboard = keyboard.setReplyMarkup(keyboards.getSicilia());
+                break;
+            case "Toscana":
+                keyboard = keyboard.setReplyMarkup(keyboards.getToscana());
+                break;
+            case "P.A. Trento":
+                keyboard = keyboard.setReplyMarkup(keyboards.getTrento());
+                break;
+            case "Umbria":
+                keyboard = keyboard.setReplyMarkup(keyboards.getUmbria());
+                break;
+            case "Valle d'Aosta":
+                keyboard = keyboard.setReplyMarkup(keyboards.getValle_d_aosta());
+                break;
+            case "Veneto":
+                keyboard = keyboard.setReplyMarkup(keyboards.getVeneto());
+                break;
+            default:
+                sendMessage(EmojiParser.parseToUnicode(":x: Errore: regione non valida (" + region + ")"),chatId);
+                break;
+        }
+
 
         String province = Bot.getInstance().getProvinceFromUser(userid);
         if(province == null)
@@ -532,7 +390,7 @@ public class CommandHandler {
     private void switchToSettingsKeyboard(long chatid){
         SendMessage keyboard = new SendMessage()
                 .setText("Impostazioni:")
-                .setReplyMarkup(settingsKeyboard)
+                .setReplyMarkup(keyboards.getSettingsKeyboard())
                 .setChatId(chatid);
         try {
             Bot.getInstance().execute(keyboard);

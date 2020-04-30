@@ -27,13 +27,14 @@ public class CommandHandler {
     private final ReplyKeyboardMarkup regionsKeyboard;
     private final ReplyKeyboardMarkup settingsKeyboard;
     private final ReplyKeyboardMarkup provinceKeyboard;
+    private final ReplyKeyboardMarkup mainKeyboardProvince;
 
     public void handle(String command, long chatId, String userId){
 
         String commandAliases = EmojiParser.parseToAliases(command);
         switch(commandAliases){
             case "/start":
-                threads.submit(() -> sendMainKeyboard(chatId));
+                threads.submit(() -> sendMainKeyboard(userId,chatId));
                 break;
             case ":warning: Attualmente contagiati":
                 threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
@@ -86,7 +87,7 @@ public class CommandHandler {
                         sendMessage("\"" + command + "\" non è una regione valida!\nInserisci una tra queste: \n" + Bot.getInstance().getRegions(),chatId);
                     else{
                         sendMessage("Hai selezionato una nuova regione: " + command,chatId);
-                        sendMainKeyboard(chatId);
+                        sendMainKeyboard(userId,chatId);
                     }
                 });
                 break;
@@ -204,12 +205,12 @@ public class CommandHandler {
                 threads.submit(() -> {
                     Bot.getInstance().setProvince(userId,command);
                     sendMessage("Hai selezionato una nuova provincia: " + command,chatId);
-                    sendMainKeyboard(chatId);
+                    sendMainKeyboard(userId,chatId);
 
                 });
                 break;
             case "Torna indietro":
-                sendMainKeyboard(chatId);
+                sendMainKeyboard(userId,chatId);
                 break;
             case ":wrench: Impostazioni":
                 switchToSettingsKeyboard(chatId);
@@ -275,6 +276,15 @@ public class CommandHandler {
                 .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona regione"))
                 .row()
                 .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
+                .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
+                .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
+                .build();
+
+        mainKeyboardProvince = ReplyKeyboardBuilder.createReply()
+                .row()
+                .addText(EmojiParser.parseToUnicode(":bangbang: Casi"))
+                .addText(EmojiParser.parseToUnicode(":mount_fuji: Seleziona provincia"))
+                .row()
                 .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Codice sorgente"))
                 .build();
@@ -453,8 +463,8 @@ public class CommandHandler {
                 .addText("Vibo Valentia")
                 .addText("Vicenza")
                 .addText("Viterbo")
-                .addText("Nessuna provincia")
                 .row()
+                .addText("Nessuna provincia")
                 .addText("Torna indietro")
                 .build();
 
@@ -467,11 +477,15 @@ public class CommandHandler {
                 .build();
     }
 
-    private void sendMainKeyboard(long chatId){
-        SendMessage keyboard = new SendMessage()
+    private void sendMainKeyboard(String userid,long chatId){
+        SendMessage keyboard = Bot.getInstance().getProvinceFromUser(userid) == null ? new SendMessage()
                 .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
                 .setReplyMarkup(mainKeyboard)
-                .setChatId(chatId);
+                .setChatId(chatId) :
+                new SendMessage()
+                        .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
+                        .setReplyMarkup(mainKeyboardProvince)
+                        .setChatId(chatId);
         try {
             Bot.getInstance().execute(keyboard);
         } catch (TelegramApiException e) {

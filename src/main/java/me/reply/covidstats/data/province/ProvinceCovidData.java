@@ -1,7 +1,7 @@
 package me.reply.covidstats.data.province;
 
 import me.reply.covidstats.Bot;
-import me.reply.covidstats.Utils;
+import me.reply.covidstats.utils.Utils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.Day;

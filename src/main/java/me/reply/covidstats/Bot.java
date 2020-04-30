@@ -3,6 +3,7 @@ package me.reply.covidstats;
 import com.google.gson.Gson;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.DataFetcher;
+import me.reply.covidstats.utils.Config;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

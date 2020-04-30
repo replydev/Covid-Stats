@@ -1,4 +1,4 @@
-package me.reply.covidstats;
+package me.reply.covidstats.utils;
 
 import org.telegram.telegrambots.meta.api.objects.LoginUrl;
 import org.telegram.telegrambots.meta.api.objects.games.CallbackGame;

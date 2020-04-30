@@ -1,4 +1,4 @@
-package me.reply.covidstats;
+package me.reply.covidstats.utils;
 
 import java.util.Random;
 

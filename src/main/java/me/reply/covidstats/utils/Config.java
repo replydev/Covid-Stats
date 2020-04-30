@@ -1,4 +1,4 @@
-package me.reply.covidstats;
+package me.reply.covidstats.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

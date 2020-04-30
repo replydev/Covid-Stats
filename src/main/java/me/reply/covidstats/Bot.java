@@ -119,7 +119,7 @@ public class Bot extends TelegramLongPollingBot {
             if(backupFile.exists()){
                 logger.info("Carico gli utenti dal backup");
                 User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);
-                users = Arrays.asList(temp);
+                users.addAll(Arrays.asList(temp));
                 logger.info("Fatto");
             }
         } catch (IOException e) {

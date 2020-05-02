@@ -28,7 +28,7 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
     private final CommandHandler commandHandler;
     private Config config;
-    private List<User> users;
+    private final List<User> users;
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
 
     public boolean isInUserList(String userid){
@@ -176,7 +176,12 @@ public class Bot extends TelegramLongPollingBot {
                         execute(message);
                         count++;
                     } catch (TelegramApiException e) {
-                        e.printStackTrace();
+                        if(e.getMessage().contains("bot was blocked by the user")){
+                            logger.info(user.getUserid() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
+                            users.remove(user);
+                        }
+                        else
+                            e.printStackTrace();
                     }
                 }
                 logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");

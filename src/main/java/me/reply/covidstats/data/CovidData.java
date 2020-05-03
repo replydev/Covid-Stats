@@ -2,11 +2,9 @@ package me.reply.covidstats.data;
 
 import me.reply.covidstats.Bot;
 import me.reply.covidstats.utils.Utils;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -39,153 +37,184 @@ public class CovidData {
     public File currentlyInfectedGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Attualmente contagiati - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
         for(DayData d: covidData){
-            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
-            TimeSeries.add(new Day(date) ,d.getCurrently_infected());
+            y.add(d.getCurrently_infected());
+            x.add(new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate()));
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File newCurrentlyInfectedGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Differenza attualmente contagiati - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
-        TimeSeries.add(new Day(startDate),0);  //first element of graph
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
+        //first element of graph
+        x.add(startDate);
+        y.add(0);
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getCurrently_infected() - covidData.get(i - 1).getCurrently_infected();
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
-            TimeSeries.add(new Day(d),difference);
+            x.add(d);
+            y.add(difference);
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File recoveredGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Guariti - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
-            TimeSeries.add(new Day(date) ,d.getRecovered());
+            x.add(date);
+            y.add(d.getRecovered());
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File newRecoveredGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Guariti per giorno - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
-        TimeSeries.add(new Day(startDate),0);  //first element of graph
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
+        x.add(startDate);
+        y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getRecovered() - covidData.get(i - 1).getRecovered();
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
-            TimeSeries.add(new Day(d),difference);
+            x.add(d);
+            y.add(difference);
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File deathGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Decessi - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
-            TimeSeries.add(new Day(date) ,d.getDeath());
+            x.add(date);
+            y.add(d.getDeath());
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File newDeathGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Decessi per giorno - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
-        TimeSeries.add(new Day(startDate),0);  //first element of graph
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
+        x.add(startDate);
+        y.add(0);//first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getDeath() - covidData.get(i - 1).getDeath();
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
-            TimeSeries.add(new Day(d),difference);
+            x.add(d);
+            y.add(difference);
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File totalCasesGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Casi totali - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
         for (DayData covidDatum : covidData) {
             int totalCases = covidDatum.getCurrently_infected() + covidDatum.getRecovered() + covidDatum.getDeath();
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidDatum.getDayDate());
-            TimeSeries.add(new Day(d), totalCases);
+            x.add(d);
+            y.add(totalCases);
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File newTotalCasesGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Nuovi contagi - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
-        TimeSeries.add(new Day(startDate),0);  //first element of graph
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
+        x.add(startDate);
+        y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int totalCasesToday = covidData.get(i).getCurrently_infected() + covidData.get(i).getRecovered() + covidData.get(i).getDeath();
             int totalCasesYesterday = covidData.get(i - 1).getCurrently_infected() + covidData.get(i - 1).getRecovered() + covidData.get(i - 1).getDeath();
             int difference = totalCasesToday - totalCasesYesterday;
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
-            TimeSeries.add(new Day(d),difference);
+            x.add(d);
+            y.add(difference);
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File tamponsGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Tamponi - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
-            TimeSeries.add(new Day(date) ,d.getTampons());
+            x.add(date);
+            y.add(d.getTampons());
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
     public File newTamponsGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Tamponi giornalieri - " + regionName;
-        TimeSeries TimeSeries = new TimeSeries(plotTitle);
-        TimeSeries.add(new Day(startDate),0);  //first element of graph
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
+        chart.getStyler().setLegendVisible(false);
+        x.add(startDate);
+        y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
             int difference = covidData.get(i).getTampons() - covidData.get(i - 1).getTampons();
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
-            TimeSeries.add(new Day(d),difference);
+            x.add(d);
+            y.add(difference);
         }
-        return generateImage(TimeSeries,plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        return generateImage(chart);
     }
 
-    private File generateImage(TimeSeries timeSeries, String title) throws IOException {
-        TimeSeriesCollection data = new TimeSeriesCollection();
-        data.addSeries(timeSeries);
-        JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                title,
-                "Giorno",
-                "Valore",
-                data,
-                false,
-                false,
-                false
-        );
-
-        BufferedImage bufferedImage = chart.createBufferedImage(Bot.getInstance().getConfig().CHART_WIDTH,Bot.getInstance().getConfig().CHART_HEIGHT);
-        ByteArrayOutputStream bas = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(bufferedImage, "png", bas);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        byte[] byteArray=bas.toByteArray();
-
-        String filename = Utils.randomFilename(".png");
-        InputStream in = new ByteArrayInputStream(byteArray);
-        BufferedImage image = ImageIO.read(in);
-        File outputfile = new File(filename);
-        ImageIO.write(image, "png", outputfile);
-        return outputfile;
+    private File generateImage(XYChart chart) throws IOException {
+        String filename = Utils.randomFilename("");
+        BitmapEncoder.saveBitmapWithDPI(chart, filename, BitmapEncoder.BitmapFormat.PNG, 300);
+        return new File(filename + ".png");
     }
 }

@@ -22,6 +22,8 @@ public class DataFetcher {
     private static RegionJsonObject[] regionsJsonObjects;
     private static ProvinceJsonObject[] provinceJsonObjects;
 
+    private static JsonObject lastItaly;
+
     private final static Logger logger = LoggerFactory.getLogger(DataFetcher.class);
 
     public static void downloadFiles() throws IOException {
@@ -121,6 +123,7 @@ public class DataFetcher {
         italyJsonObjects = g.fromJson(FileUtils.readFileToString(italyFile,"UTF-8"),JsonObject[].class);
         regionsJsonObjects = g.fromJson(FileUtils.readFileToString(regionFile,"UTF-8"),RegionJsonObject[].class);
         provinceJsonObjects = g.fromJson(FileUtils.readFileToString(provinceFile,"UTF-8"),ProvinceJsonObject[].class);
+        lastItaly = italyJsonObjects[italyJsonObjects.length - 1];
         logger.info("Fatto");
     }
 
@@ -176,5 +179,193 @@ public class DataFetcher {
         String [] split = jsonDate.split("-");
         assert split.length == 3;
         return split[2] + "-" + split[1] + "-" + split[0];
+    }
+
+    public static int getItalyCurrentlyInfected(){
+        return lastItaly.getTotale_positivi();
+    }
+
+    public static int getItalyNewCurrentlyInfected(){
+        return lastItaly.getVariazione_totale_positivi();
+    }
+
+    public static int getItalyRecovered(){
+        return lastItaly.getDimessi_guariti();
+    }
+
+    public static int getItalyNewRecovered(){
+        return lastItaly.getDimessi_guariti() - italyJsonObjects[italyJsonObjects.length - 2].getDimessi_guariti();
+    }
+
+    public static int getItalyDeaths(){
+        return lastItaly.getDeceduti();
+    }
+
+    public static int getItalyNewDeaths(){
+        return lastItaly.getDeceduti() - italyJsonObjects[italyJsonObjects.length - 2].getDeceduti();
+    }
+    
+    public static int getItalyTotalCases(){
+        return lastItaly.getTotale_casi();
+    }
+    
+    public static int getItalyNewCases(){
+        return lastItaly.getNuovi_positivi();
+    }
+    
+    public static int getItalyTampons(){
+        return lastItaly.getTamponi();
+    }
+    
+    public static int getItalyNewTampons(){
+        return lastItaly.getTamponi() - italyJsonObjects[italyJsonObjects.length - 2].getTamponi();
+    }
+
+    public static int getRegionsCurrentlyInfected(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getTotale_positivi();
+        }
+        return -1;
+    }
+
+    public static int getRegionsNewCurrentlyInfected(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getVariazione_totale_positivi();
+        }
+        return -1;
+    }
+
+    public static int getRegionsRecovered(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getDimessi_guariti();
+        }
+        return -1;
+    }
+
+    public static int getRegionsNewRecovered(String region){
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getDimessi_guariti();
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(provinceJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getDimessi_guariti();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+    public static int getRegionsDeaths(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getDeceduti();
+        }
+        return -1;
+    }
+
+    public static int getRegionsNewDeaths(String region){
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getDeceduti();
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(provinceJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getDeceduti();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+    public static int getRegionsTotalCases(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getTotale_casi();
+        }
+        return -1;
+    }
+
+    public static int getRegionsNewCases(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getNuovi_positivi();
+        }
+        return -1;
+    }
+
+    public static int getRegionsTampons(String region){
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getTamponi();
+        }
+        return -1;
+    }
+
+    public static int getRegionsNewTampons(String region){
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getTamponi();
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(provinceJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getTamponi();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+    public static int getprovinceTotalCases(String province){
+        for(int i = provinceJsonObjects.length - 1; i >= 0; i--){
+            if(provinceJsonObjects[i].getDenominazione_provincia().equalsIgnoreCase(province))
+                return provinceJsonObjects[i].getTotale_casi();
+        }
+        return -1;
+    }
+
+    public static int getprovinceNewCases(String province){
+        int val1 = 0,val2 = 0;
+        int i = provinceJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(provinceJsonObjects[i].getDenominazione_provincia().equalsIgnoreCase(province)){
+                val1 = provinceJsonObjects[i].getTotale_casi();
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(provinceJsonObjects[i].getDenominazione_provincia().equalsIgnoreCase(province)){
+                val2 = provinceJsonObjects[i].getTotale_casi();
+                break;
+            }
+        }
+
+        return val1-val2;
     }
 }

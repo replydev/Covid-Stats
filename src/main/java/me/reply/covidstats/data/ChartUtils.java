@@ -21,6 +21,7 @@ public class ChartUtils {
         chart.getStyler().setLegendVisible(false);
         chart.getStyler().setDatePattern("dd-MM");
         chart.getStyler().setDecimalPattern("0");
+        chart.getStyler().setMarkerSize(0);
         return chart;
     }
 }

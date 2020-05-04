@@ -589,16 +589,20 @@ public class CommandHandler {
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.currentlyInfectedGraph(region);
-            String text;
-            if(region == null)
-                text = "Ultimi dati: " + DataFetcher.getItalyCurrentlyInfected() + " (" + DataFetcher.getItalyNewCurrentlyInfected() + ")";
-            else
-                text = "Ultimi dati: " + DataFetcher.getRegionsCurrentlyInfected(region) + " (" + DataFetcher.getRegionsNewCurrentlyInfected(region) + ")";
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyCurrentlyInfected();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewCurrentlyInfected();
+            }
 
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionsCurrentlyInfected(region);
+                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewCurrentlyInfected(region);
+            }
             sendPhoto(f,chatId,text);
             FileUtils.forceDelete(f);
             f = data.newCurrentlyInfectedGraph(region);
-            sendPhoto(f,chatId, text);
+            sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
         } catch ( IOException | ParseException throwable) {
             throwable.printStackTrace();
@@ -613,15 +617,20 @@ public class CommandHandler {
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.recoveredGraph(region);
-            String text;
-            if(region == null)
-                text = "Ultimi dati: " + DataFetcher.getItalyRecovered() + " (" + DataFetcher.getItalyNewRecovered() + ")";
-            else
-                text = "Ultimi dati: " + DataFetcher.getRegionsRecovered(region) + " (" + DataFetcher.getRegionsNewRecovered(region) + ")";
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyRecovered();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewRecovered();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionsRecovered(region);
+                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewRecovered(region);
+            }
             sendPhoto(f,chatId, text);
             FileUtils.forceDelete(f);
             f = data.newRecoveredGraph(region);
-            sendPhoto(f,chatId, text);
+            sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
@@ -636,15 +645,20 @@ public class CommandHandler {
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.deathGraph(region);
-            String text;
-            if(region == null)
-                text = "Ultimi dati: " + DataFetcher.getItalyDeaths() + " (" + DataFetcher.getItalyNewDeaths() + ")";
-            else
-                text = "Ultimi dati: " + DataFetcher.getRegionsDeaths(region) + " (" + DataFetcher.getRegionsNewDeaths(region) + ")";
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyDeaths();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewDeaths();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionsDeaths(region);
+                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewDeaths(region);
+            }
             sendPhoto(f,chatId, text);
             FileUtils.forceDelete(f);
             f = data.newDeathGraph(region);
-            sendPhoto(f,chatId, text);
+            sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();
@@ -656,11 +670,13 @@ public class CommandHandler {
             try{
                 ProvinceCovidData data = DataFetcher.fetchProvinceData(province);
                 File f = data.totalCasesGraph(province);
-                String text = "Ultimi dati: " + DataFetcher.getprovinceTotalCases(province) + " (" + DataFetcher.getprovinceNewCases(province) + ")";
+                String text,text1;
+                text = "Ultimi dati: " + DataFetcher.getprovinceTotalCases(province);
+                text1 = "Ultimi dati: " + DataFetcher.getprovinceNewCases(province) + ")";
                 sendPhoto(f,chatId, text);
                 FileUtils.forceDelete(f);
                 f = data.newTotalCasesGraph(province);
-                sendPhoto(f,chatId, text);
+                sendPhoto(f,chatId, text1);
                 FileUtils.forceDelete(f);
             }catch (IOException | ParseException e){
                 e.printStackTrace();
@@ -670,15 +686,20 @@ public class CommandHandler {
             try {
                 CovidData data = DataFetcher.fetchData(region);
                 File f = data.totalCasesGraph(region);
-                String text;
-                if(region == null)
-                    text = "Ultimi dati: " + DataFetcher.getItalyTotalCases() + " (" + DataFetcher.getItalyNewCases() + ")";
-                else
-                    text = "Ultimi dati: " + DataFetcher.getRegionsTotalCases(region) + " (" + DataFetcher.getRegionsNewCases(region) + ")";
+                String text,text1;
+                if(region == null){
+                    text = "Ultimi dati: " + DataFetcher.getItalyTotalCases();
+                    text1 = "Ultimi dati: " + DataFetcher.getItalyNewCases();
+                }
+
+                else{
+                    text = "Ultimi dati: " + DataFetcher.getRegionsTotalCases(region);
+                    text1 = "Ultimi dati:" + DataFetcher.getRegionsNewCases(region);
+                }
                 sendPhoto(f,chatId, text);
                 FileUtils.forceDelete(f);
                 f = data.newTotalCasesGraph(region);
-                sendPhoto(f,chatId, text);
+                sendPhoto(f,chatId, text1);
                 FileUtils.forceDelete(f);
             } catch (IOException | ParseException throwable) {
                 throwable.printStackTrace();
@@ -694,15 +715,20 @@ public class CommandHandler {
         try {
             CovidData data = DataFetcher.fetchData(region);
             File f = data.tamponsGraph(region);
-            String text;
-            if(region == null)
-                text = "Ultimi dati: " + DataFetcher.getItalyTampons() + " (" + DataFetcher.getItalyNewTampons() + ")";
-            else
-                text = "Ultimi dati: " + DataFetcher.getRegionsTampons(region) + " (" + DataFetcher.getRegionsNewTampons(region) + ")";
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyTampons();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewTampons();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionsTampons(region);
+                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewTampons(region);
+            }
             sendPhoto(f,chatId, text);
             FileUtils.forceDelete(f);
             f = data.newTamponsGraph(region);
-            sendPhoto(f,chatId, text);
+            sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
         } catch (IOException | ParseException throwable) {
             throwable.printStackTrace();

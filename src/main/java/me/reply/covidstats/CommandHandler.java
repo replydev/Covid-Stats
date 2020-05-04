@@ -8,6 +8,7 @@ import me.reply.covidstats.utils.Keyboards;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -53,7 +54,13 @@ public class CommandHandler {
             case ":office: Seleziona provincia":
                 switchToProvinceKeyboard(userId,chatId);
                 break;
-            case ":page_facing_up: Codice sorgente":
+            case ":page_facing_up: Autocertificazione":
+                sendAutocertificazione(chatId);
+                break;
+            case ":ok: Consigli per l'epidemia":
+                //TODO do this
+                break;
+            case ":computer: Codice sorgente":
                 threads.submit(() -> sendMessage(EmojiParser.parseToUnicode(":smile_cat: Sviluppato da @zreply.\n:page_facing_up: Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta!\n:link: https://github.com/replydev/Covid-Stats"),chatId));
                 break;
             case "Abruzzo":
@@ -258,6 +265,17 @@ public class CommandHandler {
                 });
                 break;
             default:
+        }
+    }
+
+    private void sendAutocertificazione(long chatId) {
+        SendDocument document = new SendDocument()
+                .setChatId(chatId)
+                .setDocument("BQACAgEAAxkBAAIF4V6v_Qc4WYbn4JsBb5Gkej3HyHokAAJuAAOQP4BFsSEHUp2uCmYZBA"); //autocertificazione file id
+        try {
+            Bot.getInstance().execute(document);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 

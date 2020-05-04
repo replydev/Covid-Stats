@@ -1,5 +1,6 @@
 package me.reply.covidstats.data.province;
 
+import me.reply.covidstats.data.ChartUtils;
 import me.reply.covidstats.utils.Utils;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
@@ -34,15 +35,14 @@ public class ProvinceCovidData {
         String plotTitle = "Casi totali - Provincia di " + provinceName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         for (ProvinceDayData covidDatum : covidData) {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidDatum.getDate());
             x.add(d);
             y.add(covidDatum.getTotal_cases());
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File newTotalCasesGraph(String regionName) throws IOException, ParseException {
@@ -50,8 +50,7 @@ public class ProvinceCovidData {
         String plotTitle = "Nuovi contagi - Provincia di " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         x.add(startDate);
         y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -61,12 +60,6 @@ public class ProvinceCovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
-    }
-
-    private File generateImage(XYChart chart) throws IOException {
-        String filename = Utils.randomFilename("");
-        BitmapEncoder.saveBitmapWithDPI(chart, filename, BitmapEncoder.BitmapFormat.PNG, 300);
-        return new File(filename + ".png");
+        return ChartUtils.generateImage(chart);
     }
 }

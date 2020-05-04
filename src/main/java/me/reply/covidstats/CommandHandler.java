@@ -196,10 +196,16 @@ public class CommandHandler {
             case "Vicenza":
             case "Viterbo":
                 threads.submit(() -> {
-                    Bot.getInstance().setProvince(userId,command);
+                    String regionToSet = getRegionFromProvince(command); //Milano -> Lombardia
+                    if(regionToSet != null){
+                        Bot.getInstance().setRegion(userId,regionToSet);
+                        Bot.getInstance().setProvince(userId,command);
+                    }
+                    else{
+                        Bot.getInstance().setProvince(userId,"Nessuna provincia");
+                    }
                     sendMessage("Hai selezionato una nuova provincia: " + command,chatId);
                     sendMainKeyboard(userId,chatId);
-
                 });
                 break;
             case "Torna indietro":
@@ -252,6 +258,144 @@ public class CommandHandler {
                 });
                 break;
             default:
+        }
+    }
+
+    private String getRegionFromProvince(String province) {
+        switch (province){
+            case "Chieti":
+            case "L'Aquila":
+            case "Pescara":
+            case "Teramo":
+                return "Abruzzo";
+            case "Matera":
+            case "Potenza":
+                return "Basilicata";
+            case "Bolzano":
+                return "P.A. Bolzano";
+            case "Catanzaro":
+            case "Cosenza":
+            case "Crotone":
+            case "Reggio di Calabria":
+            case "Vibo Valentia":
+                return "Calabria";
+            case "Avellino":
+            case "Benevento":
+            case "Caserta":
+            case "Napoli":
+            case "Salerno":
+                return "Campania";
+            case "Bologna":
+            case "Ferrara":
+            case "Forlì-Cesena":
+            case "Cesena":
+            case "Modena":
+            case "Parma":
+            case "Piacenza":
+            case "Reggio nell'Emilia":
+            case "Rimini":
+                return "Emilia-Romagna";
+            case "Gorizia":
+            case "Pordenone":
+            case "Trieste":
+            case "Udine":
+                return "Friuli Venezia Giulia";
+            case "Frosinone":
+            case "Latina":
+            case "Rieti":
+            case "Roma":
+            case "Viterbo":
+                return "Lazio";
+            case "Genova":
+            case "Imperia":
+            case "La Spezia":
+            case "Savona":
+                return "Liguria";
+            case "Bergamo":
+            case "Brescia":
+            case "Como":
+            case "Cremona":
+            case "Lecco":
+            case "Lodi":
+            case "Mantova":
+            case "Milano":
+            case "Monza e della Brianza":
+            case "Pavia":
+            case "Sondrio":
+            case "Varese":
+                return "Lombardia";
+            case "Ancona":
+            case "Ascoli Piceno":
+            case "Fermo":
+            case "Macerata":
+            case "Pesaro e Urbino":
+                return "Marche";
+            case "Campobasso":
+            case "Isernia":
+                return "Molise";
+            case "Alessandria":
+            case "Asti":
+            case "Biella":
+            case "Cuneo":
+            case "Novara":
+            case "Torino":
+            case "Verbano-Cusio-Ossola":
+            case "Vercelli":
+                return "Piemonte";
+            case "Bari":
+            case "Barletta-Andria-Trani":
+            case "Brindisi":
+            case "Foggia":
+            case "Lecce":
+            case "Taranto":
+                return "Puglia";
+            case "Cagliari":
+            case "Carbonia-Iglesias":
+            case "Medio Campidano":
+            case "Nuoro":
+            case "Ogliastra":
+            case "Olbia-Tempio":
+            case "Oristano":
+            case "Sassari":
+                return "Sardegna";
+            case "Agrigento":
+            case "Caltanissetta":
+            case "Catania":
+            case "Enna":
+            case "Messina":
+            case "Palermo":
+            case "Ragusa":
+            case "Siracusa":
+            case "Trapani":
+                return "Sicilia";
+            case "Arezzo":
+            case "Firenze":
+            case "Grosseto":
+            case "Livorno":
+            case "Lucca":
+            case "Massa-Carrara":
+            case "Pisa":
+            case "Pistoia":
+            case "Prato":
+            case "Siena":
+                return "Toscana";
+            case "Trento":
+                return "P.A. Trento";
+            case "Perugia":
+            case "Terni":
+                return "Umbria";
+            case "Aosta":
+                return "Valle d'Aosta";
+            case "Belluno":
+            case "Padova":
+            case "Rovigo":
+            case "Treviso":
+            case "Venezia":
+            case "Verona":
+            case "Vicenza":
+                return "Veneto";
+            case "Nessuna provincia":
+            default: return null;
         }
     }
 

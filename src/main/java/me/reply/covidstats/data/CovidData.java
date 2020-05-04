@@ -1,13 +1,7 @@
 package me.reply.covidstats.data;
 
-import me.reply.covidstats.Bot;
-import me.reply.covidstats.utils.Utils;
-import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,14 +33,13 @@ public class CovidData {
         String plotTitle = "Attualmente contagiati - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         for(DayData d: covidData){
             y.add(d.getCurrently_infected());
             x.add(new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate()));
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File newCurrentlyInfectedGraph(String regionName) throws IOException, ParseException {
@@ -54,8 +47,7 @@ public class CovidData {
         String plotTitle = "Differenza attualmente contagiati - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         //first element of graph
         x.add(startDate);
         y.add(0);
@@ -66,7 +58,7 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File recoveredGraph(String regionName) throws IOException, ParseException {
@@ -74,15 +66,14 @@ public class CovidData {
         String plotTitle = "Guariti - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             x.add(date);
             y.add(d.getRecovered());
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File newRecoveredGraph(String regionName) throws IOException, ParseException {
@@ -90,8 +81,7 @@ public class CovidData {
         String plotTitle = "Guariti per giorno - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         x.add(startDate);
         y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -101,7 +91,7 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File deathGraph(String regionName) throws IOException, ParseException {
@@ -109,15 +99,14 @@ public class CovidData {
         String plotTitle = "Decessi - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             x.add(date);
             y.add(d.getDeath());
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File newDeathGraph(String regionName) throws IOException, ParseException {
@@ -125,8 +114,7 @@ public class CovidData {
         String plotTitle = "Decessi per giorno - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         x.add(startDate);
         y.add(0);//first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -136,7 +124,7 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File totalCasesGraph(String regionName) throws IOException, ParseException {
@@ -144,8 +132,7 @@ public class CovidData {
         String plotTitle = "Casi totali - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         for (DayData covidDatum : covidData) {
             int totalCases = covidDatum.getCurrently_infected() + covidDatum.getRecovered() + covidDatum.getDeath();
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidDatum.getDayDate());
@@ -153,7 +140,7 @@ public class CovidData {
             y.add(totalCases);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File newTotalCasesGraph(String regionName) throws IOException, ParseException {
@@ -161,8 +148,7 @@ public class CovidData {
         String plotTitle = "Nuovi contagi - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         x.add(startDate);
         y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -174,7 +160,7 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File tamponsGraph(String regionName) throws IOException, ParseException {
@@ -182,15 +168,14 @@ public class CovidData {
         String plotTitle = "Tamponi - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         for(DayData d: covidData){
             Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
             x.add(date);
             y.add(d.getTampons());
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
+        return ChartUtils.generateImage(chart);
     }
 
     public File newTamponsGraph(String regionName) throws IOException, ParseException {
@@ -198,8 +183,7 @@ public class CovidData {
         String plotTitle = "Tamponi giornalieri - " + regionName;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
-        chart.getStyler().setLegendVisible(false);
+        XYChart chart = ChartUtils.createChart(plotTitle);
         x.add(startDate);
         y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -209,12 +193,6 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return generateImage(chart);
-    }
-
-    private File generateImage(XYChart chart) throws IOException {
-        String filename = Utils.randomFilename("");
-        BitmapEncoder.saveBitmapWithDPI(chart, filename, BitmapEncoder.BitmapFormat.PNG, 300);
-        return new File(filename + ".png");
+        return ChartUtils.generateImage(chart);
     }
 }

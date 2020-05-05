@@ -678,7 +678,7 @@ public class CommandHandler {
                 File f = data.totalCasesGraph(province);
                 String text,text1;
                 text = "Ultimi dati: " + DataFetcher.getprovinceTotalCases(province);
-                text1 = "Ultimi dati: " + DataFetcher.getprovinceNewCases(province) + ")";
+                text1 = "Ultimi dati: " + DataFetcher.getprovinceNewCases(province);
                 sendPhoto(f,chatId, text);
                 FileUtils.forceDelete(f);
                 f = data.newTotalCasesGraph(province);

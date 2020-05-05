@@ -1,10 +1,8 @@
 package me.reply.covidstats.data.province;
 
 public class ProvinceDayData {
-
-    private int total_cases;
-    private String date;
-
+    private final int total_cases;
+    private final String date;
 
     public ProvinceDayData(int total_cases, String date) {
         this.total_cases = total_cases;
@@ -14,7 +12,6 @@ public class ProvinceDayData {
     public int getTotal_cases() {
         return total_cases;
     }
-
     public String getDate() {
         return date;
     }

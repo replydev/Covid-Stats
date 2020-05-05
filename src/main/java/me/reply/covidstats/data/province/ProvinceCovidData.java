@@ -1,10 +1,7 @@
 package me.reply.covidstats.data.province;
 
 import me.reply.covidstats.data.ChartUtils;
-import me.reply.covidstats.utils.Utils;
-import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
 
 import java.io.*;
 import java.text.ParseException;

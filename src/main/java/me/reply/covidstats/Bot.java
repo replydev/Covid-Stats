@@ -104,7 +104,6 @@ public class Bot extends TelegramLongPollingBot {
     public static Bot getInstance(){
         return instance;
     }
-
     public Config getConfig(){
         return config;
     }

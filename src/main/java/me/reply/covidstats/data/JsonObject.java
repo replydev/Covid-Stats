@@ -21,59 +21,45 @@ public class JsonObject{
     public String getData() {
         return data;
     }
-
     public String getStato() {
         return stato;
     }
-
     public int getRicoverati_con_sintomi() {
         return ricoverati_con_sintomi;
     }
-
     public int getTerapia_intensiva() {
         return terapia_intensiva;
     }
-
     public int getTotale_ospedalizzati() {
         return totale_ospedalizzati;
     }
-
     public int getTotale_positivi() {
         return totale_positivi;
     }
-
     public int getVariazione_totale_positivi() {
         return variazione_totale_positivi;
     }
-
     public int getNuovi_positivi() {
         return nuovi_positivi;
     }
-
     public int getDimessi_guariti() {
         return dimessi_guariti;
     }
-
     public int getDeceduti() {
         return deceduti;
     }
-
     public int getTotale_casi() {
         return totale_casi;
     }
-
     public int getTamponi() {
         return tamponi;
     }
-
     public int getCasi_testati() {
         return casi_testati;
     }
-
     public String getNote_it() {
         return note_it;
     }
-
     public String getNote_end() {
         return note_end;
     }

@@ -99,15 +99,12 @@ public class Config {
     public int getUpdateHour(){
         return hour;
     }
-
     public int getUpdateMinute(){
         return minutes;
     }
-
     public void setUpdateHour(int hour){
         this.hour = hour;
     }
-
     public void setUpdateMinutes(int minutes){
         this.minutes = minutes;
     }

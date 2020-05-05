@@ -19,12 +19,9 @@ import java.text.ParseException;
 import java.util.concurrent.*;
 
 public class CommandHandler {
-
     private final ExecutorService threads;
-
     private final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
     private final Keyboards keyboards;
-
 
     public void handle(String command, long chatId, String userId){
 
@@ -533,7 +530,6 @@ public class CommandHandler {
                 break;
         }
 
-
         String province = Bot.getInstance().getProvinceFromUser(userid);
         if(province == null)
             keyboard.setText("Non hai alcuna provincia selezionata");
@@ -546,6 +542,7 @@ public class CommandHandler {
             e.printStackTrace();
         }
     }
+
     private void switchToSettingsKeyboard(long chatid){
         SendMessage keyboard = new SendMessage()
                 .setText("Impostazioni:")
@@ -558,7 +555,6 @@ public class CommandHandler {
         }
     }
 
-
     private void sendMessage(String text, long chatId){
         SendMessage message = new SendMessage()
                 .setChatId(chatId)
@@ -569,6 +565,7 @@ public class CommandHandler {
             e.printStackTrace();
         }
     }
+
     private void sendPhoto(File f, long chatId, String text){
         SendPhoto photo = new SendPhoto()
                 .setPhoto(f)

@@ -32,7 +32,6 @@ public class Keyboards {
     private final ReplyKeyboardMarkup valle_d_aosta;
     private final ReplyKeyboardMarkup veneto;
 
-
     public Keyboards(){
         mainKeyboard = ReplyKeyboardBuilder.createReply()
                 .row()
@@ -375,106 +374,79 @@ public class Keyboards {
                 .build();
     }
 
-
     public ReplyKeyboardMarkup getMainKeyboard() {
         return mainKeyboard;
     }
-
     public ReplyKeyboardMarkup getRegionsKeyboard() {
         return regionsKeyboard;
     }
-
     public ReplyKeyboardMarkup getSettingsKeyboard() {
         return settingsKeyboard;
     }
-
     public ReplyKeyboardMarkup getMainKeyboardProvince() {
         return mainKeyboardProvince;
     }
-
     public ReplyKeyboardMarkup getAbruzzo() {
         return abruzzo;
     }
-
     public ReplyKeyboardMarkup getBasilicata() {
         return basilicata;
     }
-
     public ReplyKeyboardMarkup getBolzano() {
         return bolzano;
     }
-
     public ReplyKeyboardMarkup getCalabria() {
         return calabria;
     }
-
     public ReplyKeyboardMarkup getCampania() {
         return campania;
     }
-
     public ReplyKeyboardMarkup getEmilia_romagna() {
         return emilia_romagna;
     }
-
     public ReplyKeyboardMarkup getFriuli_venezia_giulia() {
         return friuli_venezia_giulia;
     }
-
     public ReplyKeyboardMarkup getLazio() {
         return lazio;
     }
-
     public ReplyKeyboardMarkup getLiguria() {
         return liguria;
     }
-
     public ReplyKeyboardMarkup getLombardia() {
         return lombardia;
     }
-
     public ReplyKeyboardMarkup getMarche() {
         return marche;
     }
-
     public ReplyKeyboardMarkup getMolise() {
         return molise;
     }
-
     public ReplyKeyboardMarkup getPiemonte() {
         return piemonte;
     }
-
     public ReplyKeyboardMarkup getPuglia() {
         return puglia;
     }
-
     public ReplyKeyboardMarkup getSardegna() {
         return sardegna;
     }
-
     public ReplyKeyboardMarkup getSicilia() {
         return sicilia;
     }
-
     public ReplyKeyboardMarkup getToscana() {
         return toscana;
     }
-
     public ReplyKeyboardMarkup getTrento() {
         return trento;
     }
-
     public ReplyKeyboardMarkup getUmbria() {
         return umbria;
     }
-
     public ReplyKeyboardMarkup getValle_d_aosta() {
         return valle_d_aosta;
     }
-
     public ReplyKeyboardMarkup getVeneto() {
         return veneto;
     }
-
-
 }

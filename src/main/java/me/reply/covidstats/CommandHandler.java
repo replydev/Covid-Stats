@@ -221,7 +221,7 @@ public class CommandHandler {
                     sendMessage(EmojiParser.parseToUnicode(":white_check_mark: Hai abilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
-            case ":bell: Notifiche disabilitate":
+            case ":no_bell: Notifiche disabilitate":
                 threads.submit(() -> {
                     Bot.getInstance().setNotification(userId,false);
                     sendMessage(EmojiParser.parseToUnicode(":x: Hai disabilitato nel notifiche giornaliere"),chatId);
@@ -600,7 +600,7 @@ public class CommandHandler {
 
             else{
                 text = "Ultimi dati: " + DataFetcher.getRegionsCurrentlyInfected(region);
-                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewCurrentlyInfected(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionsNewCurrentlyInfected(region);
             }
             sendPhoto(f,chatId,text);
             FileUtils.forceDelete(f);
@@ -629,7 +629,7 @@ public class CommandHandler {
 
             else{
                 text = "Ultimi dati: " + DataFetcher.getRegionsRecovered(region);
-                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewRecovered(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionsNewRecovered(region);
             }
             sendPhoto(f,chatId, text);
             FileUtils.forceDelete(f);
@@ -658,7 +658,7 @@ public class CommandHandler {
 
             else{
                 text = "Ultimi dati: " + DataFetcher.getRegionsDeaths(region);
-                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewDeaths(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionsNewDeaths(region);
             }
             sendPhoto(f,chatId, text);
             FileUtils.forceDelete(f);
@@ -701,7 +701,7 @@ public class CommandHandler {
 
                 else{
                     text = "Ultimi dati: " + DataFetcher.getRegionsTotalCases(region);
-                    text1 = "Ultimi dati:" + DataFetcher.getRegionsNewCases(region);
+                    text1 = "Ultimi dati: " + DataFetcher.getRegionsNewCases(region);
                 }
                 sendPhoto(f,chatId, text);
                 FileUtils.forceDelete(f);
@@ -731,7 +731,7 @@ public class CommandHandler {
 
             else{
                 text = "Ultimi dati: " + DataFetcher.getRegionsTampons(region);
-                text1 = "Ultimi dati:" + DataFetcher.getRegionsNewTampons(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionsNewTampons(region);
             }
             sendPhoto(f,chatId, text);
             FileUtils.forceDelete(f);

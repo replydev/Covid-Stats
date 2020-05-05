@@ -1,12 +1,14 @@
 package me.reply.covidstats;
 
 import me.reply.covidstats.data.DataFetcher;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
@@ -14,6 +16,8 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            FileUtils.forceMkdir(new File("data/"));
+            FileUtils.forceMkdir(new File("config/"));
             logger.info("Scarico i file contenenti i dati...");
             DataFetcher.downloadFiles();
             logger.info("Download completato");

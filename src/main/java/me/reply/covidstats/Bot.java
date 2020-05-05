@@ -58,8 +58,9 @@ public class Bot extends TelegramLongPollingBot {
     public void backupUserList(long chatId) throws IOException {
         Gson g = new Gson();
         String json = g.toJson(users);
-        File f = new File("users_backup.json");
+        File f = new File("config/users_backup.json");
         FileUtils.write(f,json,"UTF-8");
+        logger.info("Ho salvato le impostazioni utente, le invio all'amministratore");
         SendDocument document = new SendDocument()
                 .setDocument(f)
                 .setChatId(chatId);
@@ -113,9 +114,9 @@ public class Bot extends TelegramLongPollingBot {
         users = new Vector<>();
         try {
             Gson g = new Gson();
-            config = Config.load("config.yml");
-            config.loadAdminsFromFile("admins.list");
-            File backupFile = new File("users_backup.json");
+            config = Config.load("config/config.yml");
+            config.loadAdminsFromFile("config/admins.list");
+            File backupFile = new File("config/users_backup.json");
             if(backupFile.exists()){
                 logger.info("Carico gli utenti dal backup");
                 User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);

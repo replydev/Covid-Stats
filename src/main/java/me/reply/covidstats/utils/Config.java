@@ -37,7 +37,7 @@ public class Config {
                 "UPDATE_TIME: 'time'\n" +
                 "CHART_WIDTH: 1536\n" +
                 "CHART_HEIGHT: 864";
-        FileUtils.write(new File("config.yml"),defaultConfig,"UTF-8");
+        FileUtils.write(new File("config/config.yml"),defaultConfig,"UTF-8");
     }
 
     public void loadAdminsFromFile(String filename) throws IOException {

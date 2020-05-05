@@ -28,17 +28,17 @@ public class DataFetcher {
 
     public static void downloadFiles() throws IOException {
         if(italyFile == null)
-            italyFile = new File("data.json");
+            italyFile = new File("data/italy.json");
         else if(italyFile.exists())
             FileUtils.forceDelete(italyFile);
 
         if(regionFile == null)
-            regionFile = new File("region.json");
+            regionFile = new File("data/region.json");
         else if(regionFile.exists())
             FileUtils.forceDelete(regionFile);
 
         if(provinceFile == null)
-            provinceFile = new File("provice.json");
+            provinceFile = new File("data/province.json");
         else if(provinceFile.exists())
             FileUtils.forceDelete(provinceFile);
 

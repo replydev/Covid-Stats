@@ -66,7 +66,8 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(document);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
         FileUtils.forceDelete(f);
     }
@@ -122,7 +123,8 @@ public class Bot extends TelegramLongPollingBot {
                 logger.info("Fatto");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
         instance = this;
         commandHandler = new CommandHandler(50);
@@ -179,13 +181,16 @@ public class Bot extends TelegramLongPollingBot {
                             logger.info(user.getUserid() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
                             users.remove(user);
                         }
-                        else
-                            e.printStackTrace();
+                        else{
+                            System.err.println("Si è verificato un errore, verifica nel file di log");
+                            logger.error(e.toString());
+                        }
                     }
                 }
                 logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                System.err.println("Si è verificato un errore, verifica nel file di log");
+                logger.error(e.toString());
             }
                 },
                 initalDelay,

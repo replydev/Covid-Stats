@@ -18,14 +18,16 @@ public class Main {
             DataFetcher.downloadFiles();
             logger.info("Download completato");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
             telegramBotsApi.registerBot(new Bot());
         } catch (TelegramApiRequestException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 }

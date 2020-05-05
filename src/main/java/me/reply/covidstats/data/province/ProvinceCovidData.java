@@ -2,6 +2,8 @@ package me.reply.covidstats.data.province;
 
 import me.reply.covidstats.data.ChartUtils;
 import org.knowm.xchart.XYChart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.ParseException;
@@ -10,6 +12,8 @@ import java.util.Date;
 import java.util.Vector;
 
 public class ProvinceCovidData {
+    Logger logger = LoggerFactory.getLogger(ProvinceCovidData.class);
+
     private final Vector<ProvinceDayData> covidData;
     private Date startDate;
 
@@ -22,7 +26,8 @@ public class ProvinceCovidData {
             try {
                 startDate = new SimpleDateFormat("dd-MM-yyyy").parse(provinceDayData.getDate());
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.err.println("Si è verificato un errore, verifica nel file di log");
+                logger.error(e.toString());
             }
         }
         covidData.add(provinceDayData);

@@ -242,7 +242,8 @@ public class CommandHandler {
                         else
                             sendMessage("Non ho trovato aggiornamenti.", chatId);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.err.println("Si è verificato un errore, verifica nel file di log");
+                        logger.error(e.toString());
                     }
                 });
                 break;
@@ -257,7 +258,8 @@ public class CommandHandler {
                         Bot.getInstance().backupUserList(chatId);
                         System.exit(0);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.err.println("Si è verificato un errore, verifica nel file di log");
+                        logger.error(e.toString());
                     }
                 });
                 break;
@@ -272,7 +274,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(document);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -431,7 +434,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(keyboard);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -449,7 +453,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(keyboard);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -539,7 +544,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(keyboard);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -551,7 +557,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(keyboard);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -562,7 +569,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -574,7 +582,8 @@ public class CommandHandler {
         try {
             Bot.getInstance().execute(photo);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -601,8 +610,9 @@ public class CommandHandler {
             f = data.newCurrentlyInfectedGraph(region);
             sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
-        } catch ( IOException | ParseException throwable) {
-            throwable.printStackTrace();
+        } catch ( IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -629,8 +639,9 @@ public class CommandHandler {
             f = data.newRecoveredGraph(region);
             sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
-        } catch (IOException | ParseException throwable) {
-            throwable.printStackTrace();
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -657,8 +668,9 @@ public class CommandHandler {
             f = data.newDeathGraph(region);
             sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
-        } catch (IOException | ParseException throwable) {
-            throwable.printStackTrace();
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 
@@ -676,7 +688,8 @@ public class CommandHandler {
                 sendPhoto(f,chatId, text1);
                 FileUtils.forceDelete(f);
             }catch (IOException | ParseException e){
-                e.printStackTrace();
+                System.err.println("Si è verificato un errore, verifica nel file di log");
+                logger.error(e.toString());
             }
         }
         else{
@@ -698,8 +711,9 @@ public class CommandHandler {
                 f = data.newTotalCasesGraph(region);
                 sendPhoto(f,chatId, text1);
                 FileUtils.forceDelete(f);
-            } catch (IOException | ParseException throwable) {
-                throwable.printStackTrace();
+            } catch (IOException | ParseException e) {
+                System.err.println("Si è verificato un errore, verifica nel file di log");
+                logger.error(e.toString());
             }
         }
     }
@@ -727,8 +741,9 @@ public class CommandHandler {
             f = data.newTamponsGraph(region);
             sendPhoto(f,chatId, text1);
             FileUtils.forceDelete(f);
-        } catch (IOException | ParseException throwable) {
-            throwable.printStackTrace();
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
     }
 

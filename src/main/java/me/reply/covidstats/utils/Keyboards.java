@@ -45,7 +45,6 @@ public class Keyboards {
                 .row()
                 .addText(EmojiParser.parseToUnicode(":office: Seleziona provincia"))
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Autocertificazione"))
-                .addText(EmojiParser.parseToUnicode(":ok: Consigli per l'epidemia"))
                 .row()
                 .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
                 .addText(EmojiParser.parseToUnicode(":computer: Codice sorgente"))
@@ -57,9 +56,8 @@ public class Keyboards {
                 .addText(EmojiParser.parseToUnicode(":office: Seleziona provincia"))
                 .row()
                 .addText(EmojiParser.parseToUnicode(":page_facing_up: Autocertificazione"))
-                .addText(EmojiParser.parseToUnicode(":ok: Consigli per l'epidemia"))
-                .row()
                 .addText(EmojiParser.parseToUnicode(":wrench: Impostazioni"))
+                .row()
                 .addText(EmojiParser.parseToUnicode(":computer: Codice sorgente"))
                 .build();
 

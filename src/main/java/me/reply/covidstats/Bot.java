@@ -31,6 +31,21 @@ public class Bot extends TelegramLongPollingBot {
     private final List<User> users;
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
 
+    public String getNotificationTextFromUser(String userid){
+        for(User user : users){
+            if(user.getUserid().equals(userid))
+                return user.getNotificationText();
+        }
+        return null;
+    }
+
+    public void setNotificationText(String userid,String text){
+        for(User user : users){
+            if(user.getUserid().equals(userid))
+                user.setNotificationText(text);
+        }
+    }
+
     public boolean isInUserList(String userid){
         for(User u : users){
             if(u.getUserid().equals(userid))
@@ -166,29 +181,7 @@ public class Bot extends TelegramLongPollingBot {
                     Thread.sleep(5 * 60 * 1000);
                 }
                 logger.info("Fatto");
-                logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
-                int count = 0;
-                for(User user : users){
-                    if(!user.isShowNotification())
-                        continue;
-                    SendMessage message = new SendMessage()
-                            .setText(EmojiParser.parseToUnicode("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:"))
-                            .setChatId(user.getUserid());
-                    try {
-                        execute(message);
-                        count++;
-                    } catch (TelegramApiException e) {
-                        if(e.getMessage().contains("bot was blocked by the user")){
-                            logger.info(user.getUserid() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
-                            users.remove(user);
-                        }
-                        else{
-                            System.err.println("Si è verificato un errore, verifica nel file di log");
-                            logger.error(e.toString());
-                        }
-                    }
-                }
-                logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
+                messageToAllUsers("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:");
             } catch (IOException | InterruptedException e) {
                 System.err.println("Si è verificato un errore, verifica nel file di log");
                 logger.error(e.toString());
@@ -197,5 +190,31 @@ public class Bot extends TelegramLongPollingBot {
                 initalDelay,
                 TimeUnit.DAYS.toSeconds(1),
                 TimeUnit.SECONDS);
+    }
+
+    public void messageToAllUsers(String text){
+        logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
+        int count = 0;
+        for(User user : users){
+            if(!user.isShowNotification())
+                continue;
+            SendMessage message = new SendMessage()
+                    .setText(EmojiParser.parseToUnicode(text))
+                    .setChatId(user.getUserid());
+            try {
+                execute(message);
+                count++;
+            } catch (TelegramApiException e) {
+                if(e.getMessage().contains("bot was blocked by the user")){
+                    logger.info(user.getUserid() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
+                    users.remove(user);
+                }
+                else{
+                    System.err.println("Si è verificato un errore, verifica nel file di log");
+                    logger.error(e.toString());
+                }
+            }
+        }
+        logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
     }
 }

@@ -5,6 +5,7 @@ public class User {
     private String region;
     private String province;
     private boolean showNotification;
+    private String notificationText;
 
     public User(String userid,boolean showNotification) {
         this.userid = userid;
@@ -33,5 +34,11 @@ public class User {
     }
     public void setProvince(String province){
         this.province = province;
+    }
+    public void setNotificationText(String notificationText) {
+        this.notificationText = notificationText;
+    }
+    public String getNotificationText() {
+        return notificationText;
     }
 }

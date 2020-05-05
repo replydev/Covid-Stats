@@ -230,7 +230,7 @@ public class CommandHandler {
             case "/update":
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){
-                        sendMessage("Comando riservato agli admin!",chatId);
+                        sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
                         return;
                     }
                     try {
@@ -247,7 +247,7 @@ public class CommandHandler {
             case "/stop":
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){
-                        sendMessage("Comando riservato agli admin!",chatId);
+                        sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
                         return;
                     }
                     try {
@@ -260,7 +260,24 @@ public class CommandHandler {
                     }
                 });
                 break;
+            case "/confirm":
+                threads.submit(() -> {
+                    if(isNotAdmin(userId)){
+                        sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
+                        return;
+                    }
+                    sendMessage("Sto inviando la tua notifica a tutti gli utenti...",chatId);
+                    Bot.getInstance().messageToAllUsers(Bot.getInstance().getNotificationTextFromUser(userId));
+                });
+                break;
             default:
+                threads.submit(() -> {
+                    if(isNotAdmin(userId)){
+                        return;
+                    }
+                    Bot.getInstance().setNotificationText(userId,EmojiParser.parseToUnicode(command));
+                    sendMessage("Ok, digita /confirm per inviare \"" + Bot.getInstance().getNotificationTextFromUser(userId) + "\" a tutti gli utenti",chatId);
+                });
         }
     }
 

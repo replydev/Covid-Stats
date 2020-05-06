@@ -252,12 +252,13 @@ public class DataFetcher {
         for(; i >= 0; i--){
             if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
                 val1 = regionsJsonObjects[i].getDimessi_guariti();
+                i--;
                 break;
             }
         }
 
         for(; i >= 0; i--){
-            if(provinceJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
                 val2 = regionsJsonObjects[i].getDimessi_guariti();
                 break;
             }
@@ -281,12 +282,13 @@ public class DataFetcher {
         for(; i >= 0; i--){
             if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
                 val1 = regionsJsonObjects[i].getDeceduti();
+                i--;
                 break;
             }
         }
 
         for(; i >= 0; i--){
-            if(provinceJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
                 val2 = regionsJsonObjects[i].getDeceduti();
                 break;
             }
@@ -326,12 +328,13 @@ public class DataFetcher {
         for(; i >= 0; i--){
             if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
                 val1 = regionsJsonObjects[i].getTamponi();
+                i--;
                 break;
             }
         }
 
         for(; i >= 0; i--){
-            if(provinceJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
                 val2 = regionsJsonObjects[i].getTamponi();
                 break;
             }
@@ -355,6 +358,7 @@ public class DataFetcher {
         for(; i >= 0; i--){
             if(provinceJsonObjects[i].getDenominazione_provincia().equalsIgnoreCase(province)){
                 val1 = provinceJsonObjects[i].getTotale_casi();
+                i--;
                 break;
             }
         }

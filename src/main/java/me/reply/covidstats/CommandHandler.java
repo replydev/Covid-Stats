@@ -266,8 +266,14 @@ public class CommandHandler {
                         sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
                         return;
                     }
+                    String text = Bot.getInstance().getNotificationTextFromUser(userId);
+                    if(text == null){
+                        sendMessage(EmojiParser.parseToUnicode(":x: Nessun messaggio da inviare!"),chatId);
+                        return;
+                    }
                     sendMessage("Sto inviando la tua notifica a tutti gli utenti...",chatId);
-                    Bot.getInstance().messageToAllUsers(Bot.getInstance().getNotificationTextFromUser(userId));
+                    Bot.getInstance().messageToAllUsers(text);
+                    Bot.getInstance().setNotificationText(userId,null);
                 });
                 break;
             default:

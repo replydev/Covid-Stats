@@ -137,7 +137,7 @@ public class Bot extends TelegramLongPollingBot {
                 logger.info("Carico gli utenti dal backup");
                 User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);
                 users.addAll(Arrays.asList(temp));
-                logger.info("Fatto");
+                logger.info("Caricamento completato");
             }
         } catch (IOException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
@@ -181,12 +181,10 @@ public class Bot extends TelegramLongPollingBot {
                     logger.info("Non ho ancora trovato aggiornamenti, attendo 5 minuti...");
                     Thread.sleep(5 * 60 * 1000);
                 }
-                logger.info("Fatto");
-                logger.info("Pulisco la cartella charts/");
+                logger.info("Aggiornamento completato. Pulisco la cache..");
                 File charts_folder = new File(ChartUtils.CHARTS_FOLDER);
                 FileUtils.deleteDirectory(charts_folder);
                 FileUtils.forceMkdir(charts_folder);
-                logger.info("Fatto");
                 messageToAllUsers("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:");
             } catch (IOException | InterruptedException e) {
                 System.err.println("Si è verificato un errore, verifica nel file di log");

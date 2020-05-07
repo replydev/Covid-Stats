@@ -119,12 +119,11 @@ public class DataFetcher {
 
     private static void parseFiles() throws IOException {
         Gson g = new Gson();
-        logger.info("Leggo i file json.");
+        logger.info("Traduco il testo json e aggiorno la memoria.");
         italyJsonObjects = g.fromJson(FileUtils.readFileToString(italyFile,"UTF-8"),JsonObject[].class);
         regionsJsonObjects = g.fromJson(FileUtils.readFileToString(regionFile,"UTF-8"),RegionJsonObject[].class);
         provinceJsonObjects = g.fromJson(FileUtils.readFileToString(provinceFile,"UTF-8"),ProvinceJsonObject[].class);
         lastItaly = italyJsonObjects[italyJsonObjects.length - 1];
-        logger.info("Fatto");
     }
 
 

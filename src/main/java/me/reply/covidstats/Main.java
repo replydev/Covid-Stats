@@ -13,18 +13,20 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
-    private final static Logger logger = LoggerFactory.getLogger(Main.class);
+    private static Logger logger;
 
     public static void main(String[] args) {
         try {
-            FileUtils.forceMkdir(new File("data/"));
-            FileUtils.forceMkdir(new File("config/"));
-            FileUtils.forceMkdir(new File(ChartUtils.CHARTS_FOLDER));
-            logger.info("Scarico i file contenenti i dati...");
-            DataFetcher.downloadFiles();
-            logger.info("Download completato");
+            clearLogFile();
         } catch (IOException e) {
-            System.err.println("Si è verificato un errore, verifica nel file di log");
+            System.err.println("Errore durante l'eliminazione del file log.txt");
+            System.exit(-1);
+        }
+        logger = LoggerFactory.getLogger(Main.class);
+        try {
+            initialize();
+        } catch (IOException e) {
+            System.err.println("Si è verificato un errore di inizializzazione, verifica nel file di log");
             logger.error(e.toString());
         }
         ApiContextInitializer.init();
@@ -35,5 +37,20 @@ public class Main {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
+    }
+
+    private static void initialize() throws IOException {
+        logger.info("Genero le cartelle");
+        FileUtils.forceMkdir(new File("data/"));
+        FileUtils.forceMkdir(new File("config/"));
+        FileUtils.forceMkdir(new File(ChartUtils.CHARTS_FOLDER));
+        logger.info("Scarico i file contenenti i dati...");
+        DataFetcher.downloadFiles();
+    }
+
+    private static void clearLogFile() throws IOException {
+        File logFile = new File("log.txt");
+        if(logFile.exists())
+            FileUtils.forceDelete(logFile);
     }
 }

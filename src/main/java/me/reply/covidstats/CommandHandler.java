@@ -251,7 +251,7 @@ public class CommandHandler {
                         return;
                     }
                     try {
-                        logger.info("Called /stop command by admin, exiting...");
+                        logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
                         Bot.getInstance().backupUserList(chatId);
                         System.exit(0);
                     } catch (IOException e) {

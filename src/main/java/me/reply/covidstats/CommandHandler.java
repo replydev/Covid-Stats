@@ -626,10 +626,8 @@ public class CommandHandler {
                 text1 = "Ultimi dati: " + DataFetcher.getRegionsNewCurrentlyInfected(region);
             }
             sendPhoto(f,chatId,text);
-            FileUtils.forceDelete(f);
             f = data.newCurrentlyInfectedGraph(region);
             sendPhoto(f,chatId, text1);
-            FileUtils.forceDelete(f);
         } catch ( IOException | ParseException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
@@ -655,10 +653,8 @@ public class CommandHandler {
                 text1 = "Ultimi dati: " + DataFetcher.getRegionsNewRecovered(region);
             }
             sendPhoto(f,chatId, text);
-            FileUtils.forceDelete(f);
             f = data.newRecoveredGraph(region);
             sendPhoto(f,chatId, text1);
-            FileUtils.forceDelete(f);
         } catch (IOException | ParseException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
@@ -684,10 +680,8 @@ public class CommandHandler {
                 text1 = "Ultimi dati: " + DataFetcher.getRegionsNewDeaths(region);
             }
             sendPhoto(f,chatId, text);
-            FileUtils.forceDelete(f);
             f = data.newDeathGraph(region);
             sendPhoto(f,chatId, text1);
-            FileUtils.forceDelete(f);
         } catch (IOException | ParseException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
@@ -703,10 +697,8 @@ public class CommandHandler {
                 text = "Ultimi dati: " + DataFetcher.getprovinceTotalCases(province);
                 text1 = "Ultimi dati: " + DataFetcher.getprovinceNewCases(province);
                 sendPhoto(f,chatId, text);
-                FileUtils.forceDelete(f);
                 f = data.newTotalCasesGraph(province);
                 sendPhoto(f,chatId, text1);
-                FileUtils.forceDelete(f);
             }catch (IOException | ParseException e){
                 System.err.println("Si è verificato un errore, verifica nel file di log");
                 logger.error(e.toString());
@@ -727,10 +719,8 @@ public class CommandHandler {
                     text1 = "Ultimi dati: " + DataFetcher.getRegionsNewCases(region);
                 }
                 sendPhoto(f,chatId, text);
-                FileUtils.forceDelete(f);
                 f = data.newTotalCasesGraph(region);
                 sendPhoto(f,chatId, text1);
-                FileUtils.forceDelete(f);
             } catch (IOException | ParseException e) {
                 System.err.println("Si è verificato un errore, verifica nel file di log");
                 logger.error(e.toString());
@@ -757,10 +747,8 @@ public class CommandHandler {
                 text1 = "Ultimi dati: " + DataFetcher.getRegionsNewTampons(region);
             }
             sendPhoto(f,chatId, text);
-            FileUtils.forceDelete(f);
             f = data.newTamponsGraph(region);
             sendPhoto(f,chatId, text1);
-            FileUtils.forceDelete(f);
         } catch (IOException | ParseException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());

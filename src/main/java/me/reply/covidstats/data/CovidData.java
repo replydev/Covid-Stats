@@ -35,6 +35,10 @@ public class CovidData {
     public File currentlyInfectedGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Attualmente contagiati - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -43,12 +47,16 @@ public class CovidData {
             x.add(new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate()));
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart,rawFilename);
     }
 
     public File newCurrentlyInfectedGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Differenza attualmente contagiati - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -62,12 +70,16 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File recoveredGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Guariti - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -77,12 +89,16 @@ public class CovidData {
             y.add(d.getRecovered());
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File newRecoveredGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Guariti per giorno - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -95,12 +111,16 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File deathGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Decessi - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -110,12 +130,16 @@ public class CovidData {
             y.add(d.getDeath());
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File newDeathGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Decessi per giorno - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -128,12 +152,16 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File totalCasesGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Casi totali - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -144,12 +172,16 @@ public class CovidData {
             y.add(totalCases);
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File newTotalCasesGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Nuovi contagi - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -164,12 +196,16 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File tamponsGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Tamponi - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -179,12 +215,16 @@ public class CovidData {
             y.add(d.getTampons());
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 
     public File newTamponsGraph(String regionName) throws IOException, ParseException {
         if(regionName == null) regionName = "Italia";
         String plotTitle = "Tamponi giornalieri - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
         XYChart chart = ChartUtils.createChart(plotTitle);
@@ -197,6 +237,6 @@ public class CovidData {
             y.add(difference);
         }
         chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart);
+        return ChartUtils.generateImage(chart, rawFilename);
     }
 }

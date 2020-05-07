@@ -2,6 +2,7 @@ package me.reply.covidstats;
 
 import com.google.gson.Gson;
 import com.vdurmont.emoji.EmojiParser;
+import me.reply.covidstats.data.ChartUtils;
 import me.reply.covidstats.data.DataFetcher;
 import me.reply.covidstats.utils.Config;
 import org.apache.commons.io.FileUtils;
@@ -180,6 +181,11 @@ public class Bot extends TelegramLongPollingBot {
                     logger.info("Non ho ancora trovato aggiornamenti, attendo 5 minuti...");
                     Thread.sleep(5 * 60 * 1000);
                 }
+                logger.info("Fatto");
+                logger.info("Pulisco la cartella charts/");
+                File charts_folder = new File(ChartUtils.CHARTS_FOLDER);
+                FileUtils.deleteDirectory(charts_folder);
+                FileUtils.forceMkdir(charts_folder);
                 logger.info("Fatto");
                 messageToAllUsers("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:");
             } catch (IOException | InterruptedException e) {

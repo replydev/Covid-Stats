@@ -1,6 +1,7 @@
 package me.reply.covidstats.data;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -10,6 +11,17 @@ import java.io.IOException;
 import java.util.Vector;
 
 public class ChartUtils {
+
+    public static void clearCache() throws IOException {
+        File cache_dir = new File(CHARTS_FOLDER);
+        if(cache_dir.exists()){
+            if(cache_dir.isDirectory())
+                FileUtils.deleteDirectory(cache_dir);
+            else
+                FileUtils.forceDelete(cache_dir);
+        }
+        FileUtils.forceMkdir(cache_dir);
+    }
 
     public static File generateImage(XYChart chart, String rawFilename) throws IOException {
         String path = CHARTS_FOLDER + rawFilename;
@@ -30,7 +42,7 @@ public class ChartUtils {
 
     private static final Vector<File> charts = new Vector<>();
 
-    public static final String CHARTS_FOLDER = "charts/";
+    public static final String CHARTS_FOLDER = "charts_cache/";
 
     public static String computeFilename(String plotTitle){
         return DigestUtils.md5Hex(plotTitle);

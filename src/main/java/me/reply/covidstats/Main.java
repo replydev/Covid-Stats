@@ -43,7 +43,7 @@ public class Main {
         logger.info("Genero le cartelle");
         FileUtils.forceMkdir(new File("data/"));
         FileUtils.forceMkdir(new File("config/"));
-        FileUtils.forceMkdir(new File(ChartUtils.CHARTS_FOLDER));
+        ChartUtils.clearCache();
         logger.info("Scarico i file contenenti i dati...");
         DataFetcher.downloadFiles();
     }

@@ -182,9 +182,7 @@ public class Bot extends TelegramLongPollingBot {
                     Thread.sleep(5 * 60 * 1000);
                 }
                 logger.info("Aggiornamento completato. Pulisco la cache..");
-                File charts_folder = new File(ChartUtils.CHARTS_FOLDER);
-                FileUtils.deleteDirectory(charts_folder);
-                FileUtils.forceMkdir(charts_folder);
+                ChartUtils.clearCache();
                 messageToAllUsers("Ciao! :smile: Ho appena aggiornato i dati :chart_with_downwards_trend: relativi all'epidemia, perché non dai un'occhiata? :mag:");
             } catch (IOException | InterruptedException e) {
                 System.err.println("Si è verificato un errore, verifica nel file di log");

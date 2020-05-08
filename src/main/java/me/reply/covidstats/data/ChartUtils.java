@@ -7,9 +7,6 @@ import org.knowm.xchart.XYChartBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 
 public class ChartUtils {
@@ -36,8 +33,7 @@ public class ChartUtils {
     public static final String CHARTS_FOLDER = "charts/";
 
     public static String computeFilename(String plotTitle){
-        String data = plotTitle + ZonedDateTime.now(ZoneId.of("America/Montreal")).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return DigestUtils.md5Hex(data);
+        return DigestUtils.md5Hex(plotTitle);
     }
 
     public static File getFileChart(String filename){

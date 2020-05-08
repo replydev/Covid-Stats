@@ -44,6 +44,7 @@ public class Main {
         FileUtils.forceMkdir(new File("data/"));
         FileUtils.forceMkdir(new File("config/"));
         FileUtils.forceMkdir(new File(ChartUtils.CHARTS_FOLDER));
+        ChartUtils.loadCache();
         logger.info("Scarico i file contenenti i dati...");
         DataFetcher.downloadFiles();
     }

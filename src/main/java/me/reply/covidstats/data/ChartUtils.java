@@ -7,9 +7,17 @@ import org.knowm.xchart.XYChartBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class ChartUtils {
+
+    public static void loadCache(){
+        File[] files = new File(CHARTS_FOLDER).listFiles();
+        if(files == null)
+            return;
+        charts.addAll(Arrays.asList(files));
+    }
 
     public static File generateImage(XYChart chart, String rawFilename) throws IOException {
         String path = CHARTS_FOLDER + rawFilename;
@@ -30,7 +38,7 @@ public class ChartUtils {
 
     private static Vector<File> charts = new Vector<>();
 
-    public static final String CHARTS_FOLDER = "charts/";
+    public static final String CHARTS_FOLDER = "charts_cache/";
 
     public static String computeFilename(String plotTitle){
         return DigestUtils.md5Hex(plotTitle);

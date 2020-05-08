@@ -5,7 +5,6 @@ import me.reply.covidstats.data.CovidData;
 import me.reply.covidstats.data.DataFetcher;
 import me.reply.covidstats.data.province.ProvinceCovidData;
 import me.reply.covidstats.utils.Keyboards;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;

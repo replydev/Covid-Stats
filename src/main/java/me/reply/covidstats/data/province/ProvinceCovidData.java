@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Vector;
 
 public class ProvinceCovidData {
-    Logger logger = LoggerFactory.getLogger(ProvinceCovidData.class);
+    final Logger logger = LoggerFactory.getLogger(ProvinceCovidData.class);
 
     private final Vector<ProvinceDayData> covidData;
     private Date startDate;

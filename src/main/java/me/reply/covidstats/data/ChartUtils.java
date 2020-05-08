@@ -36,7 +36,7 @@ public class ChartUtils {
         return chart;
     }
 
-    private static Vector<File> charts = new Vector<>();
+    private static final Vector<File> charts = new Vector<>();
 
     public static final String CHARTS_FOLDER = "charts_cache/";
 

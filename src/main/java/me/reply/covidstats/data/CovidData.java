@@ -1,6 +1,5 @@
 package me.reply.covidstats.data;
 
-import org.knowm.xchart.XYChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

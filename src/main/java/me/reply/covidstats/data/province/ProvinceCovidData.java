@@ -41,14 +41,12 @@ public class ProvinceCovidData {
             return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = ChartUtils.createChart(plotTitle);
         for (ProvinceDayData covidDatum : covidData) {
             Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidDatum.getDate());
             x.add(d);
             y.add(covidDatum.getTotal_cases());
         }
-        chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart, rawFilename);
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
     }
 
     public File newTotalCasesGraph(String provinceName) throws IOException, ParseException {
@@ -59,7 +57,6 @@ public class ProvinceCovidData {
             return output;
         Vector<Integer> y = new Vector<>();
         Vector<Date> x = new Vector<>();
-        XYChart chart = ChartUtils.createChart(plotTitle);
         x.add(startDate);
         y.add(0); //first element of graph
         for(int i = 1; i < covidData.size(); i++){
@@ -68,7 +65,6 @@ public class ProvinceCovidData {
             x.add(d);
             y.add(difference);
         }
-        chart.addSeries(plotTitle,x,y);
-        return ChartUtils.generateImage(chart, rawFilename);
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
     }
 }

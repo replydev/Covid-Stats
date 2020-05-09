@@ -8,6 +8,7 @@ import org.knowm.xchart.XYChartBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Vector;
 
 public class ChartUtils {
@@ -23,15 +24,7 @@ public class ChartUtils {
         FileUtils.forceMkdir(cache_dir);
     }
 
-    public static File generateImage(XYChart chart, String rawFilename) throws IOException {
-        String path = CHARTS_FOLDER + rawFilename;
-        BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 300);
-        File f = new File(path + ".png");
-        addChart(f);
-        return f;
-    }
-
-    public static XYChart createChart(String plotTitle){
+    private static XYChart createChart(String plotTitle){
         XYChart chart = new XYChartBuilder().title(plotTitle).xAxisTitle("Data").yAxisTitle("Valore").build();
         chart.getStyler().setLegendVisible(false);
         chart.getStyler().setDatePattern("dd-MM");
@@ -58,5 +51,15 @@ public class ChartUtils {
 
     public static void addChart(File f){
         charts.add(f);
+    }
+
+    public static File generateImage(String plotTitle, Vector<Date> x, Vector<Integer> y, String rawFilename) throws IOException {
+        XYChart chart = createChart(plotTitle);
+        chart.addSeries(plotTitle,x,y);
+        String path = CHARTS_FOLDER + rawFilename;
+        BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 300);
+        File f = new File(path + ".png");
+        addChart(f);
+        return f;
     }
 }

@@ -47,12 +47,6 @@
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.14</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>

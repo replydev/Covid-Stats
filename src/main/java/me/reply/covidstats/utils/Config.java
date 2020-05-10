@@ -27,7 +27,7 @@ public class Config {
             FileUtils.forceDelete(f);
         }
         if(!f.createNewFile()){
-            logger.error("Error while creating default config file, createNewFile() has returned false. System directory?");
+            logger.error("Errore durante la creazione del file di configurazione, stai avviando il bot in una cartella di sistema?");
             System.exit(-1);
         }
         String defaultConfig = "BOT_TOKEN: 'botToken'\n" +

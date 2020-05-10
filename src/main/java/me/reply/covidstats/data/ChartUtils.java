@@ -22,6 +22,7 @@ public class ChartUtils {
                 FileUtils.forceDelete(cache_dir);
         }
         FileUtils.forceMkdir(cache_dir);
+        charts.clear();
     }
 
     private static XYChart createChart(String plotTitle){

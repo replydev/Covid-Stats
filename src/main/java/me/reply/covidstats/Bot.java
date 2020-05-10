@@ -154,7 +154,8 @@ public class Bot extends TelegramLongPollingBot {
             logger.info("Aggiungo un nuovo utente: " + userid);
             users.add(new User(userid,true));
         }
-        commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
+        if(update.getMessage().hasText())
+            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
     }
 
     public String getBotUsername() {

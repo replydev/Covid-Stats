@@ -2,6 +2,7 @@ package me.reply.covidstats;
 
 import me.reply.covidstats.data.ChartUtils;
 import me.reply.covidstats.data.DataFetcher;
+import me.reply.covidstats.utils.SIGINT_Thread;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ public class Main {
         ChartUtils.clearCache();
         logger.info("Scarico i file contenenti i dati...");
         DataFetcher.downloadFiles();
+        Runtime.getRuntime().addShutdownHook(new Thread(new SIGINT_Thread()));
     }
 
     private static void clearLogFile() throws IOException {

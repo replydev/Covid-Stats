@@ -75,18 +75,25 @@ public class Bot extends TelegramLongPollingBot {
         Gson g = new Gson();
         String json = g.toJson(users);
         File f = new File("config/users_backup.json");
+        if(f.exists())
+            FileUtils.forceDelete(f);
         FileUtils.write(f,json,"UTF-8");
-        logger.info("Ho salvato le impostazioni utente, le invio all'amministratore");
-        SendDocument document = new SendDocument()
-                .setDocument(f)
-                .setChatId(chatId);
-        try {
-            execute(document);
-        } catch (TelegramApiException e) {
-            System.err.println("Si è verificato un errore, verifica nel file di log");
-            logger.error(e.toString());
+        logger.info("Ho salvato le impostazioni degli utenti");
+        if(chatId != -1){
+            SendDocument document = new SendDocument()
+                    .setDocument(f)
+                    .setChatId(chatId);
+            try {
+                execute(document);
+            } catch (TelegramApiException e) {
+                System.err.println("Si è verificato un errore, verifica nel file di log");
+                logger.error(e.toString());
+            }
         }
-        FileUtils.forceDelete(f);
+    }
+
+    public void backupUserList() throws IOException {
+        backupUserList(-1);
     }
 
     public void setNotification(String userid,boolean value){

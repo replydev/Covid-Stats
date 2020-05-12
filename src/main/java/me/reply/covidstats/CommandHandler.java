@@ -249,14 +249,8 @@ public class CommandHandler {
                         sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
                         return;
                     }
-                    try {
-                        logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
-                        Bot.getInstance().backupUserList(chatId);
-                        System.exit(0);
-                    } catch (IOException e) {
-                        System.err.println("Si è verificato un errore, verifica nel file di log");
-                        logger.error(e.toString());
-                    }
+                    logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
+                    System.exit(0); //when i shutdown i call sigint runnable
                 });
                 break;
             case "/confirm":

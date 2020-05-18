@@ -283,7 +283,7 @@ public class CommandHandler {
     private void sendAutocertificazione(long chatId) {
         SendDocument document = new SendDocument()
                 .setChatId(chatId)
-                .setDocument("BQACAgEAAxkBAAIF4V6v_Qc4WYbn4JsBb5Gkej3HyHokAAJuAAOQP4BFsSEHUp2uCmYZBA"); //autocertificazione file id
+                .setDocument("BQACAgEAAxkBAAILl17C5WML-sxczBepmus5zxQ4e2CZAAK3AAMo_xhGM4pm1SnR5z8ZBA"); //autocertificazione file id
         try {
             Bot.getInstance().execute(document);
         } catch (TelegramApiException e) {

@@ -1,6 +1,7 @@
 package me.reply.covidstats;
 
 import com.vdurmont.emoji.EmojiParser;
+import me.reply.covidstats.data.ChartUtils;
 import me.reply.covidstats.data.CovidData;
 import me.reply.covidstats.data.DataFetcher;
 import me.reply.covidstats.data.province.ProvinceCovidData;
@@ -233,8 +234,10 @@ public class CommandHandler {
                         return;
                     }
                     try {
-                        if(DataFetcher.updateFiles())
+                        if(DataFetcher.updateFiles()){
+                            ChartUtils.clearCache();
                             sendMessage("Operazione completata con successo.", chatId);
+                        }
                         else
                             sendMessage("Non ho trovato aggiornamenti.", chatId);
                     } catch (IOException e) {

@@ -215,7 +215,7 @@ public class Bot extends TelegramLongPollingBot {
                 execute(message);
                 count++;
             } catch (TelegramApiException e) {
-                if(e.getMessage().contains("bot was blocked by the user")){
+                if(e.toString().contains("bot was blocked by the user")){
                     logger.info(user.getUserid() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
                     users.remove(user);
                 }

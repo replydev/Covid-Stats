@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 public class DataFetcher {
 
@@ -108,8 +109,7 @@ public class DataFetcher {
             FileUtils.moveFile(tempDataFile, italyFile);
             FileUtils.moveFile(tempRegionFile,regionFile);
             FileUtils.moveFile(tempProvinceFile,provinceFile);
-            parseFiles();
-            return true;
+            return parseFiles();
         }
         FileUtils.forceDelete(tempDataFile);
         FileUtils.forceDelete(tempRegionFile);
@@ -117,13 +117,22 @@ public class DataFetcher {
         return false;
     }
 
-    private static void parseFiles() throws IOException {
+    private static boolean parseFiles() throws IOException {
         Gson g = new Gson();
         logger.info("Traduco il testo json e aggiorno la memoria.");
-        italyJsonObjects = g.fromJson(FileUtils.readFileToString(italyFile,"UTF-8"),JsonObject[].class);
-        regionsJsonObjects = g.fromJson(FileUtils.readFileToString(regionFile,"UTF-8"),RegionJsonObject[].class);
-        provinceJsonObjects = g.fromJson(FileUtils.readFileToString(provinceFile,"UTF-8"),ProvinceJsonObject[].class);
-        lastItaly = italyJsonObjects[italyJsonObjects.length - 1];
+
+        JsonObject[] italyJsonObjects_tmp = g.fromJson(FileUtils.readFileToString(italyFile,"UTF-8"),JsonObject[].class);
+        RegionJsonObject[] regionsJsonObjects_tmp = g.fromJson(FileUtils.readFileToString(regionFile,"UTF-8"),RegionJsonObject[].class);
+        ProvinceJsonObject[] provinceJsonObjects_tmp = g.fromJson(FileUtils.readFileToString(provinceFile,"UTF-8"),ProvinceJsonObject[].class);
+
+        if(!Arrays.equals(italyJsonObjects_tmp,italyJsonObjects) || !Arrays.equals(regionsJsonObjects_tmp,regionsJsonObjects) || !Arrays.equals(provinceJsonObjects_tmp,provinceJsonObjects)){
+            italyJsonObjects = italyJsonObjects_tmp;
+            regionsJsonObjects = regionsJsonObjects_tmp;
+            provinceJsonObjects = provinceJsonObjects_tmp;
+            lastItaly = italyJsonObjects[italyJsonObjects.length - 1];
+            return true;
+        }
+        else return false;
     }
 
 

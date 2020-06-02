@@ -253,6 +253,7 @@ public class CommandHandler {
                         return;
                     }
                     logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
+                    sendMessage("Sto terminando il bot",chatId);
                     System.exit(0); //when i shutdown i call sigint runnable
                 });
                 break;

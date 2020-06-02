@@ -25,6 +25,10 @@ public class DataFetcher {
 
     private static JsonObject lastItaly;
 
+    private static final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
+    private static final String REGIONS_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json";
+    private static final String PROVINCE_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json";
+
     private final static Logger logger = LoggerFactory.getLogger(DataFetcher.class);
 
     public static void downloadFiles() throws IOException {
@@ -43,13 +47,8 @@ public class DataFetcher {
         else if(provinceFile.exists())
             FileUtils.forceDelete(provinceFile);
 
-        final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
         FileUtils.copyURLToFile(new URL(ITALY_URL), italyFile);
-
-        final String REGIONS_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json";
         FileUtils.copyURLToFile(new URL(REGIONS_URL),regionFile);
-
-        final String PROVINCE_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json";
         FileUtils.copyURLToFile(new URL(PROVINCE_URL), provinceFile);
         parseFiles();
     }
@@ -86,13 +85,8 @@ public class DataFetcher {
         File tempRegionFile = new File("tempRegionFile.json");
         File tempProvinceFile = new File("tempProvinceFile.json");
 
-        final String ITALY_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json";
         FileUtils.copyURLToFile(new URL(ITALY_URL),tempDataFile);
-
-        final String REGIONS_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json";
         FileUtils.copyURLToFile(new URL(REGIONS_URL),tempRegionFile);
-
-        final String PROVINCE_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json";
         FileUtils.copyURLToFile(new URL(PROVINCE_URL), tempProvinceFile);
 
         long datafileCRC32 = FileUtils.checksumCRC32(italyFile);

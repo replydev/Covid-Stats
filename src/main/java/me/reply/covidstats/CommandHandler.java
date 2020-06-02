@@ -51,9 +51,6 @@ public class CommandHandler {
             case ":office: Seleziona provincia":
                 switchToProvinceKeyboard(userId,chatId);
                 break;
-            case ":page_facing_up: Autocertificazione":
-                sendAutocertificazione(chatId);
-                break;
             case ":computer: Codice sorgente":
                 threads.submit(() -> sendMessage(EmojiParser.parseToUnicode(":smile_cat: Sviluppato da @zreply.\n:page_facing_up: Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta!\n:link: https://github.com/replydev/Covid-Stats"),chatId));
                 break;

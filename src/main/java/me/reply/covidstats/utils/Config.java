@@ -63,7 +63,7 @@ public class Config {
             saveDefaultConfig(filename);
         }
         Yaml yaml = new Yaml(new Constructor(Config.class));
-        Config c = yaml.load(readFile(filename));
+        Config c = yaml.load(FileUtils.readFileToString(f,"UTF-8"));
 
         //heroku support
         if(c.BOT_TOKEN.equals("botToken"))
@@ -79,17 +79,6 @@ public class Config {
         c.setUpdateMinutes(Integer.parseInt(split[1]));
 
         return c;
-    }
-
-    private static String readFile(String filename) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(new File(filename)));
-        String s;
-        StringBuilder builder = new StringBuilder();
-        while((s = reader.readLine()) != null){
-            builder.append(s).append("\n");
-        }
-        reader.close();
-        return builder.toString();
     }
 
     public int getUpdateHour(){

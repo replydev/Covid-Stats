@@ -71,7 +71,7 @@ public class Bot extends TelegramLongPollingBot {
         return null;
     }
 
-    public void backupUserList(long chatId) throws IOException {
+    public File backupUserList() throws IOException {
         Gson g = new Gson();
         String json = g.toJson(users);
         File f = new File("config/users_backup.json");
@@ -79,21 +79,19 @@ public class Bot extends TelegramLongPollingBot {
             FileUtils.forceDelete(f);
         FileUtils.write(f,json,"UTF-8");
         logger.info("Ho salvato le impostazioni degli utenti");
-        if(chatId != -1){
-            SendDocument document = new SendDocument()
-                    .setDocument(f)
-                    .setChatId(chatId);
-            try {
-                execute(document);
-            } catch (TelegramApiException e) {
-                System.err.println("Si è verificato un errore, verifica nel file di log");
-                logger.error(e.toString());
-            }
-        }
+        return f;
     }
 
-    public void backupUserList() throws IOException {
-        backupUserList(-1);
+    public void backupUserList(long chatId) throws IOException {
+        SendDocument document = new SendDocument()
+                .setDocument(backupUserList()) //get the file from the no args method
+                .setChatId(chatId);
+        try {
+            execute(document);
+        } catch (TelegramApiException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
+        }
     }
 
     public void setNotification(String userid,boolean value){

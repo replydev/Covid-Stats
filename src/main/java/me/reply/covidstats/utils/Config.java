@@ -94,7 +94,7 @@ public class Config {
         this.minutes = minutes;
     }
 
-    public boolean isInUserlist(String id){
+    public boolean isInAdminsList(String id){
         for(String i : admins){
             if(i.equals(id))
                 return true;

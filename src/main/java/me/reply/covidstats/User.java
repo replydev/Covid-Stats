@@ -1,21 +1,21 @@
 package me.reply.covidstats;
 
 public class User {
-    private final String userid;
+    private final String userId;
     private String region;
     private String province;
     private boolean showNotification;
     private String notificationText;
 
-    public User(String userid,boolean showNotification) {
-        this.userid = userid;
+    public User(String userId) {
+        this.userId = userId;
         this.region = null; //italy
         this.province = null; //no province selected
-        this.showNotification = showNotification;
+        this.showNotification = true;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
     public String getRegion() {
         return region;

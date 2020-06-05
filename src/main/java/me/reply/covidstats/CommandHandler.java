@@ -8,7 +8,6 @@ import me.reply.covidstats.data.province.ProvinceCovidData;
 import me.reply.covidstats.utils.Keyboards;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -31,19 +30,19 @@ public class CommandHandler {
                 threads.submit(() -> sendMainKeyboard(userId,chatId));
                 break;
             case ":warning: Attualmente contagiati":
-                threads.submit(() -> infectedJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> infectedJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
                 break;
             case ":diamond_shape_with_a_dot_inside: Guariti":
-                threads.submit(() -> recoveredJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> recoveredJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
                 break;
             case ":angel: Decessi":
-                threads.submit(() -> deathsJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> deathsJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
                 break;
             case ":bangbang: Casi":
-                threads.submit(() -> casesJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> casesJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
                 break;
             case ":syringe: Tamponi":
-                threads.submit(() -> tamponsJob(Bot.getInstance().getRegionFromUser(userId),Bot.getInstance().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> tamponsJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
                 break;
             case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
@@ -77,7 +76,7 @@ public class CommandHandler {
             case "Valle d'Aosta":
             case "Veneto":
                 threads.submit(() -> {
-                    Bot.getInstance().setRegion(userId,command);
+                    Bot.getInstance().getUsersManager().setRegion(userId,command);
                     sendMessage("Hai selezionato una nuova regione: " + command,chatId);
                     sendMainKeyboard(userId,chatId);
                 });
@@ -196,11 +195,11 @@ public class CommandHandler {
                 threads.submit(() -> {
                     String regionToSet = getRegionFromProvince(command); //Milano -> Lombardia
                     if(regionToSet != null){
-                        Bot.getInstance().setRegion(userId,regionToSet);
-                        Bot.getInstance().setProvince(userId,command);
+                        Bot.getInstance().getUsersManager().setRegion(userId,regionToSet);
+                        Bot.getInstance().getUsersManager().setProvince(userId,command);
                     }
                     else{
-                        Bot.getInstance().setProvince(userId,"Nessuna provincia");
+                        Bot.getInstance().getUsersManager().setProvince(userId,"Nessuna provincia");
                     }
                     sendMessage("Hai selezionato una nuova provincia: " + command,chatId);
                     sendMainKeyboard(userId,chatId);
@@ -214,13 +213,13 @@ public class CommandHandler {
                 break;
             case ":bell: Notifiche abilitate":
                 threads.submit(() -> {
-                    Bot.getInstance().setNotification(userId,true);
+                    Bot.getInstance().getUsersManager().setNotification(userId,true);
                     sendMessage(EmojiParser.parseToUnicode(":white_check_mark: Hai abilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
             case ":no_bell: Notifiche disabilitate":
                 threads.submit(() -> {
-                    Bot.getInstance().setNotification(userId,false);
+                    Bot.getInstance().getUsersManager().setNotification(userId,false);
                     sendMessage(EmojiParser.parseToUnicode(":x: Hai disabilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
@@ -260,14 +259,14 @@ public class CommandHandler {
                         sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
                         return;
                     }
-                    String text = Bot.getInstance().getNotificationTextFromUser(userId);
+                    String text = Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId);
                     if(text == null){
                         sendMessage(EmojiParser.parseToUnicode(":x: Nessun messaggio da inviare!"),chatId);
                         return;
                     }
                     sendMessage("Sto inviando la tua notifica a tutti gli utenti...",chatId);
                     Bot.getInstance().messageToAllUsers(text);
-                    Bot.getInstance().setNotificationText(userId,null);
+                    Bot.getInstance().getUsersManager().setNotificationText(userId,null);
                 });
                 break;
             default:
@@ -275,8 +274,8 @@ public class CommandHandler {
                     if(isNotAdmin(userId)){
                         return;
                     }
-                    Bot.getInstance().setNotificationText(userId,EmojiParser.parseToUnicode(command));
-                    sendMessage("Ok, digita /confirm per inviare \"" + Bot.getInstance().getNotificationTextFromUser(userId) + "\" a tutti gli utenti",chatId);
+                    Bot.getInstance().getUsersManager().setNotificationText(userId,EmojiParser.parseToUnicode(command));
+                    sendMessage("Ok, digita /confirm per inviare \"" + Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId) + "\" a tutti gli utenti",chatId);
                 });
         }
     }
@@ -425,7 +424,7 @@ public class CommandHandler {
     }
 
     private void sendMainKeyboard(String userid,long chatId){
-        SendMessage keyboard = Bot.getInstance().getProvinceFromUser(userid) == null ? new SendMessage()
+        SendMessage keyboard = Bot.getInstance().getUsersManager().getProvinceFromUser(userid) == null ? new SendMessage()
                 .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
                 .setReplyMarkup(keyboards.getMainKeyboard())
                 .setChatId(chatId) :
@@ -441,12 +440,12 @@ public class CommandHandler {
         }
     }
 
-    private void switchToRegionsKeyboard(String userid,long chatId){
+    private void switchToRegionsKeyboard(String userId,long chatId){
         SendMessage keyboard = new SendMessage()
                 .setReplyMarkup(keyboards.getRegionsKeyboard())
                 .setChatId(chatId);
 
-        String region = Bot.getInstance().getRegionFromUser(userid);
+        String region = Bot.getInstance().getUsersManager().getRegionFromUser(userId);
         if(region == null)
             keyboard.setText("Non hai alcuna regione selezionata");
         else
@@ -463,7 +462,7 @@ public class CommandHandler {
     private void switchToProvinceKeyboard(String userid,long chatId){
         SendMessage keyboard = new SendMessage()
                 .setChatId(chatId);
-        String region = Bot.getInstance().getRegionFromUser(userid);
+        String region = Bot.getInstance().getUsersManager().getRegionFromUser(userid);
         if(region == null){
             sendMessage(EmojiParser.parseToUnicode(":x: Seleziona prima una regione"),chatId);
             return;
@@ -537,7 +536,7 @@ public class CommandHandler {
                 break;
         }
 
-        String province = Bot.getInstance().getProvinceFromUser(userid);
+        String province = Bot.getInstance().getUsersManager().getProvinceFromUser(userid);
         if(province == null)
             keyboard.setText("Non hai alcuna provincia selezionata");
         else
@@ -738,6 +737,6 @@ public class CommandHandler {
     }
 
     private boolean isNotAdmin(String id){
-        return !Bot.getInstance().getConfig().isInUserlist(id);
+        return !Bot.getInstance().getConfig().isInAdminsList(id);
     }
 }

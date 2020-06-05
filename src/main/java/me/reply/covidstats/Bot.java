@@ -9,7 +9,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,100 +27,9 @@ public class Bot extends TelegramLongPollingBot {
     private static Bot instance;
     private final CommandHandler commandHandler;
     private Config config;
-    private final List<User> users;
+    private final UsersManager usersManager;
+
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
-
-    public String getNotificationTextFromUser(String userid){
-        for(User user : users){
-            if(user.getUserid().equals(userid))
-                return user.getNotificationText();
-        }
-        return null;
-    }
-
-    public void setNotificationText(String userid,String text){
-        for(User user : users){
-            if(user.getUserid().equals(userid))
-                user.setNotificationText(text);
-        }
-    }
-
-    public boolean isInUserList(String userid){
-        for(User u : users){
-            if(u.getUserid().equals(userid))
-                return true;
-        }
-        return false;
-    }
-
-    public String getProvinceFromUser(String userid){
-        for(User u : users){
-            if(u.getUserid().equalsIgnoreCase(userid))
-                return u.getProvince();
-        }
-        return null;
-    }
-
-    public String getRegionFromUser(String userid){
-        for(User u : users){
-            if(u.getUserid().equals(userid))
-                return u.getRegion();
-        }
-        return null;
-    }
-
-    public File backupUserList() throws IOException {
-        Gson g = new Gson();
-        String json = g.toJson(users);
-        File f = new File("config/users_backup.json");
-        if(f.exists())
-            FileUtils.forceDelete(f);
-        FileUtils.write(f,json,"UTF-8");
-        logger.info("Ho salvato le impostazioni degli utenti");
-        return f;
-    }
-
-    public void backupUserList(long chatId) throws IOException {
-        SendDocument document = new SendDocument()
-                .setDocument(backupUserList()) //get the file from the no args method
-                .setChatId(chatId);
-        try {
-            execute(document);
-        } catch (TelegramApiException e) {
-            System.err.println("Si è verificato un errore, verifica nel file di log");
-            logger.error(e.toString());
-        }
-    }
-
-    public void setNotification(String userid,boolean value){
-        for(User u : users){
-            if(u.getUserid().equals(userid))
-                u.setShowNotification(value);
-        }
-    }
-
-    public void setRegion(String userid,String region){
-        if(region.equalsIgnoreCase("Italia"))
-            region = null;
-        for(User user : users){
-            if(user.getUserid().equals(userid)){
-                user.setRegion(region);
-                user.setProvince(null);
-                return;
-            }
-        }
-    }
-
-    public void setProvince(String userId,String province){
-        if(province.equalsIgnoreCase("Nessuna provincia"))
-            province = null;
-        for(User user : users){
-            if(user.getUserid().equals(userId)){
-                user.setProvince(province);
-                return;
-            }
-        }
-    }
 
     public static Bot getInstance(){
         return instance;
@@ -130,9 +37,12 @@ public class Bot extends TelegramLongPollingBot {
     public Config getConfig(){
         return config;
     }
+    public UsersManager getUsersManager(){
+        return usersManager;
+    }
 
     public Bot(){
-        users = new Vector<>();
+        usersManager = new UsersManager();
         try {
             Gson g = new Gson();
             config = Config.load("config/config.yml");
@@ -141,7 +51,7 @@ public class Bot extends TelegramLongPollingBot {
             if(backupFile.exists()){
                 logger.info("Carico gli utenti dal backup");
                 User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);
-                users.addAll(Arrays.asList(temp));
+                usersManager.addAll(temp);
                 logger.info("Caricamento completato");
             }
         } catch (IOException e) {
@@ -155,9 +65,9 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         String userid = update.getMessage().getFrom().getId().toString();
-        if(!isInUserList(userid)){
+        if(!usersManager.isInUserList(userid)){
             logger.info("Aggiungo un nuovo utente: " + userid);
-            users.add(new User(userid,true));
+            usersManager.addUser(new User(userid));
         }
         if(update.getMessage().hasText())
             commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
@@ -203,19 +113,19 @@ public class Bot extends TelegramLongPollingBot {
     public void messageToAllUsers(String text){
         logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
         int count = 0;
-        for(User user : users){
+        for(User user : usersManager.getUsers()){
             if(!user.isShowNotification())
                 continue;
             SendMessage message = new SendMessage()
                     .setText(EmojiParser.parseToUnicode(text))
-                    .setChatId(user.getUserid());
+                    .setChatId(user.getUserId());
             try {
                 execute(message);
                 count++;
             } catch (TelegramApiException e) {
                 if(e.toString().contains("bot was blocked by the user")){
-                    logger.info(user.getUserid() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
-                    users.remove(user);
+                    logger.info(user.getUserId() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
+                    usersManager.removeUser(user);
                 }
                 else{
                     System.err.println("Si è verificato un errore, verifica nel file di log");
@@ -223,6 +133,6 @@ public class Bot extends TelegramLongPollingBot {
                 }
             }
         }
-        logger.info("Ho inviato " + count + " messaggi su " + users.size() + " utenti");
+        logger.info("Ho inviato " + count + " messaggi su " + usersManager.registeredUsers() + " utenti");
     }
 }

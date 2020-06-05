@@ -13,7 +13,7 @@ public class SIGINT_Thread implements Runnable{
         if(Bot.getInstance() == null)
             return;
         try {
-            Bot.getInstance().backupUserList();
+            Bot.getInstance().getUsersManager().backupUserList();
         } catch (IOException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());

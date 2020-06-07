@@ -6,12 +6,14 @@ public class User {
     private String province;
     private boolean showNotification;
     private String notificationText;
+    private boolean isMarkedForRemove;
 
     public User(String userId) {
         this.userId = userId;
         this.region = null; //italy
         this.province = null; //no province selected
         this.showNotification = true;
+        this.isMarkedForRemove = false;
     }
 
     public String getUserId() {
@@ -40,5 +42,11 @@ public class User {
     }
     public String getNotificationText() {
         return notificationText;
+    }
+    public boolean isMarkedForRemove() {
+        return isMarkedForRemove;
+    }
+    public void setMarkedForRemove(boolean markedForRemove) {
+        isMarkedForRemove = markedForRemove;
     }
 }

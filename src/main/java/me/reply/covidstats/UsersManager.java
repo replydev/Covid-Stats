@@ -127,11 +127,20 @@ public class UsersManager {
         this.users.add(u);
     }
 
-    public void removeUser(User u){
-        this.users.remove(u);
+    public void cleanUsers(){
+        for(int i = 0; i < users.size(); i++){
+            if(users.get(i).isMarkedForRemove()){
+                users.remove(i);
+                i--;
+            }
+        }
     }
 
     public int registeredUsers(){
         return this.users.size();
+    }
+
+    public void setMarkedForRemove(int id,boolean value){
+        users.get(id).setMarkedForRemove(value);
     }
 }

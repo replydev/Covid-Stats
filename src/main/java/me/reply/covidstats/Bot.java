@@ -113,7 +113,8 @@ public class Bot extends TelegramLongPollingBot {
     public void messageToAllUsers(String text){
         logger.info("Il servizio di invio notifiche sta svolgendo il suo lavoro...");
         int count = 0;
-        for(User user : usersManager.getUsers()){
+        for(int i = 0; i < usersManager.getUsers().size(); i++){
+            User user = usersManager.getUsers().get(i);
             if(!user.isShowNotification())
                 continue;
             SendMessage message = new SendMessage()
@@ -125,7 +126,7 @@ public class Bot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 if(e.toString().contains("bot was blocked by the user")){
                     logger.info(user.getUserId() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
-                    usersManager.removeUser(user);
+                    usersManager.setMarkedForRemove(i,true);
                 }
                 else{
                     System.err.println("Si è verificato un errore, verifica nel file di log");
@@ -133,6 +134,7 @@ public class Bot extends TelegramLongPollingBot {
                 }
             }
         }
+        usersManager.cleanUsers();
         logger.info("Ho inviato " + count + " messaggi su " + usersManager.registeredUsers() + " utenti");
     }
 }

@@ -239,19 +239,19 @@ public class CommandHandler {
             case ":bell: Notifiche abilitate":
                 threads.submit(() -> {
                     Bot.getInstance().getUsersManager().setNotification(userId,true);
-                    sendMessage(EmojiParser.parseToUnicode(":white_check_mark: Hai abilitato nel notifiche giornaliere"),chatId);
+                    sendMessage((":white_check_mark: Hai abilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
             case ":no_bell: Notifiche disabilitate":
                 threads.submit(() -> {
                     Bot.getInstance().getUsersManager().setNotification(userId,false);
-                    sendMessage(EmojiParser.parseToUnicode(":x: Hai disabilitato nel notifiche giornaliere"),chatId);
+                    sendMessage((":x: Hai disabilitato nel notifiche giornaliere"),chatId);
                 });
                 break;
             case "/update":
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){
-                        sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
+                        sendMessage((":x: Comando riservato"),chatId);
                         return;
                     }
                     try {
@@ -270,7 +270,7 @@ public class CommandHandler {
             case "/stop":
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){
-                        sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
+                        sendMessage((":x: Comando riservato"),chatId);
                         return;
                     }
                     logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
@@ -281,12 +281,12 @@ public class CommandHandler {
             case "/confirm":
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){
-                        sendMessage(EmojiParser.parseToUnicode(":x: Comando riservato"),chatId);
+                        sendMessage((":x: Comando riservato"),chatId);
                         return;
                     }
                     String text = Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId);
                     if(text == null){
-                        sendMessage(EmojiParser.parseToUnicode(":x: Nessun messaggio da inviare!"),chatId);
+                        sendMessage((":x: Nessun messaggio da inviare!"),chatId);
                         return;
                     }
                     sendMessage("Sto inviando la tua notifica a tutti gli utenti...",chatId);
@@ -489,7 +489,7 @@ public class CommandHandler {
                 .setChatId(chatId);
         String region = Bot.getInstance().getUsersManager().getRegionFromUser(userid);
         if(region == null){
-            sendMessage(EmojiParser.parseToUnicode(":x: Seleziona prima una regione"),chatId);
+            sendMessage((":x: Seleziona prima una regione"),chatId);
             return;
         }
         switch (region){
@@ -557,7 +557,7 @@ public class CommandHandler {
                 keyboard = keyboard.setReplyMarkup(keyboards.getVeneto());
                 break;
             default:
-                sendMessage(EmojiParser.parseToUnicode(":x: Errore: regione non valida (" + region + ")"),chatId);
+                sendMessage((":x: Errore: regione non valida (" + region + ")"),chatId);
                 break;
         }
 
@@ -591,7 +591,7 @@ public class CommandHandler {
     private void sendMessage(String text, long chatId){
         SendMessage message = new SendMessage()
                 .setChatId(chatId)
-                .setText(text);
+                .setText(EmojiParser.parseToUnicode(text));
         try {
             Bot.getInstance().execute(message);
         } catch (TelegramApiException e) {
@@ -615,12 +615,12 @@ public class CommandHandler {
 
     private void infectedJob(int id,String region,String province,long chatId){
         if(!canMakeRequest(id)){
-            sendMessage(EmojiParser.parseToUnicode(":x: Aspetta che la tua richiesta precedente venga terminata!"),chatId);
+            sendMessage((":x: Aspetta che la tua richiesta precedente venga terminata!"),chatId);
             return;
         }
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
-            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
             return;
         }
         try {
@@ -653,7 +653,7 @@ public class CommandHandler {
         }
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
-            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
             return;
         }
         try {
@@ -686,7 +686,7 @@ public class CommandHandler {
         }
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
-            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
             return;
         }
         try {
@@ -765,7 +765,7 @@ public class CommandHandler {
         }
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
-            sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
             return;
         }
         try {

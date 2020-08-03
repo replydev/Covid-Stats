@@ -143,4 +143,15 @@ public class UsersManager {
     public void setMarkedForRemove(int id,boolean value){
         users.get(id).setMarkedForRemove(value);
     }
+    public void setCanMakeRequest(int id,boolean value){
+        users.get(id).setCanMakeRequest(value);
+    }
+
+    public int getIdFromUser(String userId){
+        for(int i = 0; i < users.size(); i++){
+            if(users.get(i).getUserId().equalsIgnoreCase(userId))
+                return i;
+        }
+        return -1;
+    }
 }

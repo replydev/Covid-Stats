@@ -30,19 +30,44 @@ public class CommandHandler {
                 threads.submit(() -> sendMainKeyboard(userId,chatId));
                 break;
             case ":warning: Attualmente contagiati":
-                threads.submit(() -> infectedJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> infectedJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
                 break;
             case ":diamond_shape_with_a_dot_inside: Guariti":
-                threads.submit(() -> recoveredJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> recoveredJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
                 break;
             case ":angel: Decessi":
-                threads.submit(() -> deathsJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> deathsJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
                 break;
             case ":bangbang: Casi":
-                threads.submit(() -> casesJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> casesJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
                 break;
             case ":syringe: Tamponi":
-                threads.submit(() -> tamponsJob(Bot.getInstance().getUsersManager().getRegionFromUser(userId),Bot.getInstance().getUsersManager().getProvinceFromUser(userId),chatId));
+                threads.submit(() -> tamponsJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
                 break;
             case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
@@ -588,7 +613,12 @@ public class CommandHandler {
         }
     }
 
-    private void infectedJob(String region,String province,long chatId){
+    private void infectedJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(EmojiParser.parseToUnicode(":x: Aspetta che la tua richiesta precedente venga terminata!"),chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
             return;
@@ -613,9 +643,15 @@ public class CommandHandler {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void recoveredJob(String region,String province,long chatId){
+    private void recoveredJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
             return;
@@ -640,9 +676,15 @@ public class CommandHandler {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void deathsJob(String region,String province,long chatId){
+    private void deathsJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
             return;
@@ -667,9 +709,15 @@ public class CommandHandler {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void casesJob(String region,String province,long chatId){
+    private void casesJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null){
             try{
                 ProvinceCovidData data = DataFetcher.fetchProvinceData(province);
@@ -707,9 +755,15 @@ public class CommandHandler {
                 logger.error(e.toString());
             }
         }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void tamponsJob(String region,String province,long chatId){
+    private void tamponsJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage(EmojiParser.parseToUnicode(":x: Dati non disponibili per le provincie!"), chatId);
             return;
@@ -734,9 +788,13 @@ public class CommandHandler {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
     private boolean isNotAdmin(String id){
         return !Bot.getInstance().getConfig().isInAdminsList(id);
+    }
+    private boolean canMakeRequest(int id){
+        return Bot.getInstance().getUsersManager().getUsers().get(id).canMakeRequest();
     }
 }

@@ -337,6 +337,7 @@ public class CommandHandler {
             case "Parma":
             case "Piacenza":
             case "Reggio nell'Emilia":
+            case "Ravenna":
             case "Rimini":
                 return "Emilia-Romagna";
             case "Gorizia":

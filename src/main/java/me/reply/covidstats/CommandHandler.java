@@ -622,6 +622,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
             return;
         }
         try {
@@ -655,6 +656,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
             return;
         }
         try {
@@ -688,6 +690,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
             return;
         }
         try {
@@ -767,6 +770,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
         if(province != null) {
             sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
             return;
         }
         try {

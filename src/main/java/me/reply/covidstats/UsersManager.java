@@ -15,7 +15,7 @@ import java.util.Vector;
 
 public class UsersManager {
 
-    private final List<User> users;
+    private final Vector<User> users;
 
     private final static Logger logger = LoggerFactory.getLogger(UsersManager.class);
 
@@ -72,6 +72,7 @@ public class UsersManager {
 
     public File backupUserList() throws IOException {
         Gson g = new Gson();
+        unlockRequests(users);
         String json = g.toJson(users);
         File f = new File("config/users_backup.json");
         if(f.exists())
@@ -81,16 +82,9 @@ public class UsersManager {
         return f;
     }
 
-    public void backupUserList(long chatId) throws IOException {
-        SendDocument document = new SendDocument()
-                .setDocument(backupUserList()) //get the file from the no args method
-                .setChatId(chatId);
-        try {
-            Bot.getInstance().execute(document);
-        } catch (TelegramApiException e) {
-            System.err.println("Si è verificato un errore, verifica nel file di log");
-            logger.error(e.toString());
-        }
+    public void unlockRequests(Vector<User> users){
+        for (User user : users)
+            user.setCanMakeRequest(true);
     }
 
     public void setNotification(String userId,boolean value){

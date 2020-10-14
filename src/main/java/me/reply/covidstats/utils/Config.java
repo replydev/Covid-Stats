@@ -1,10 +1,10 @@
 package me.reply.covidstats.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.*;
 import java.util.List;
@@ -12,9 +12,12 @@ import java.util.Vector;
 
 @SuppressWarnings("unused")
 public class Config {
-    public String BOT_TOKEN;
-    public String BOT_USERNAME;
-    public String UPDATE_TIME;
+    @SerializedName("BOT_TOKEN")
+    private String bot_token;
+    @SerializedName("BOT_USERNAME")
+    private String bot_username;
+    @SerializedName("UPDATE_TIME")
+    private String update_time;
 
     private final static Logger logger = LoggerFactory.getLogger(Config.class);
     public List<String> admins;
@@ -27,13 +30,11 @@ public class Config {
             FileUtils.forceDelete(f);
         }
         if(!f.createNewFile()){
-            logger.error("Errore durante la creazione del file di configurazione, stai avviando il bot in una cartella di sistema?");
+            logger.error("Errore durante la creazione del file di configurazione, hai i permessi di scrittura in questa cartella?");
             System.exit(-1);
         }
-        String defaultConfig = "BOT_TOKEN: 'botToken'\n" +
-                "BOT_USERNAME: 'botUsername'\n" +
-                "UPDATE_TIME: '18:00'";
-        FileUtils.write(new File("config/config.yml"),defaultConfig,"UTF-8");
+        String defaultConfig = "{\"BOT_TOKEN\":\"bot_token_here\",\"BOT_USERNAME\":\"bot_username_here\",\"UPDATE_TIME\":\"18:00\"}";
+        FileUtils.write(new File("config/config.json"),defaultConfig,"UTF-8");
     }
 
     public void loadAdminsFromFile(String filename) throws IOException {
@@ -62,23 +63,35 @@ public class Config {
         if(!f.exists()){
             saveDefaultConfig(filename);
         }
-        Yaml yaml = new Yaml(new Constructor(Config.class));
-        Config c = yaml.load(FileUtils.readFileToString(f,"UTF-8"));
+        Gson g = new Gson();
+        Config c = g.fromJson(FileUtils.readFileToString(f,"UTF-8"),Config.class);
 
         //heroku support
-        if(c.BOT_TOKEN.equals("botToken"))
-            c.BOT_TOKEN = System.getenv("TOKEN");
-        if(c.BOT_USERNAME.equals("botUsername"))
-            c.BOT_USERNAME = System.getenv("USERNAME");
-        if(c.UPDATE_TIME.equals("time"))
-            c.UPDATE_TIME = System.getenv("UPDATE_TIME");
+        if(c.bot_token.equals("bot_token_here"))
+            c.bot_token = System.getenv("TOKEN");
+        if(c.bot_username.equals("bot_username_here"))
+            c.bot_username = System.getenv("USERNAME");
+        if(c.update_time.equals("time"))
+            c.update_time = System.getenv("UPDATE_TIME");
 
-        String[] split = c.UPDATE_TIME.split(":");
+        String[] split = c.update_time.split(":");
         assert split.length == 2;
         c.setUpdateHour(Integer.parseInt(split[0]));
         c.setUpdateMinutes(Integer.parseInt(split[1]));
 
         return c;
+    }
+
+    public String getBot_token() {
+        return bot_token;
+    }
+
+    public String getBot_username() {
+        return bot_username;
+    }
+
+    public String getUpdate_time() {
+        return update_time;
     }
 
     public int getUpdateHour(){

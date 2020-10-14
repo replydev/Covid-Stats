@@ -45,8 +45,9 @@ public class Bot extends TelegramLongPollingBot {
         usersManager = new UsersManager();
         try {
             Gson g = new Gson();
-            config = Config.load("config/config.yml");
+            config = Config.load("config/config.json");
             config.loadAdminsFromFile("config/admins.list");
+            System.out.println(g.toJson(config));
             File backupFile = new File("config/users_backup.json");
             if(backupFile.exists()){
                 logger.info("Carico gli utenti dal backup");
@@ -74,10 +75,10 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return config.BOT_USERNAME;
+        return config.getBot_username();
     }
     public String getBotToken() {
-        return config.BOT_TOKEN;
+        return config.getBot_token();
     }
 
     private void startDailyUpdateTask(){

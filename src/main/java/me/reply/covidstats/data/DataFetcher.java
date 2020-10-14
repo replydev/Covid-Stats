@@ -138,6 +138,10 @@ public class DataFetcher {
                     jsonObject.getDimessi_guariti(),
                     jsonObject.getDeceduti(),
                     jsonObject.getTamponi(),
+                    jsonObject.getRicoverati_con_sintomi(),
+                    jsonObject.getTerapia_intensiva(),
+                    jsonObject.getTotale_ospedalizzati(),
+                    jsonObject.getIsolamento_domiciliare(),
                     getGoodDate(jsonObject.getData())
             );
             covidData.add(dayData);
@@ -156,6 +160,10 @@ public class DataFetcher {
                         jsonObject.getDimessi_guariti(),
                         jsonObject.getDeceduti(),
                         jsonObject.getTamponi(),
+                        jsonObject.getRicoverati_con_sintomi(),
+                        jsonObject.getTerapia_intensiva(),
+                        jsonObject.getTotale_ospedalizzati(),
+                        jsonObject.getIsolamento_domiciliare(),
                         //dateTimeFormatter.format(jsonObject.getData())
                         getGoodDate(jsonObject.getData())
                 );
@@ -368,6 +376,159 @@ public class DataFetcher {
         for(; i >= 0; i--){
             if(provinceJsonObjects[i].getDenominazione_provincia().equalsIgnoreCase(province)){
                 val2 = provinceJsonObjects[i].getTotale_casi();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+    public static int getItalyHospitalizedWithSymptoms() {
+        return lastItaly.getRicoverati_con_sintomi();
+    }
+
+    public static int getItalyNewHospitalizedWithSymptoms() {
+        return lastItaly.getRicoverati_con_sintomi() - italyJsonObjects[italyJsonObjects.length - 2].getRicoverati_con_sintomi();
+    }
+
+    public static int getRegionHospitalizedWithSymptoms(String region) {
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getRicoverati_con_sintomi();
+        }
+        return -1;
+    }
+
+    public static int getRegionNewHospitalizedWithSymptoms(String region) {
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getRicoverati_con_sintomi();
+                i--;
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getRicoverati_con_sintomi();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+    public static int getItalyIntensiveTherapy() {
+        return lastItaly.getTerapia_intensiva();
+    }
+
+    public static int getItalyNewIntensiveTherapy() {
+        return lastItaly.getTerapia_intensiva() - italyJsonObjects[italyJsonObjects.length - 2].getTerapia_intensiva();
+    }
+
+    public static int getRegionIntensiveTherapy(String region) {
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getTerapia_intensiva();
+        }
+        return -1;
+    }
+
+    public static int getRegionNewIntensiveTherapy(String region) {
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getTerapia_intensiva();
+                i--;
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getTerapia_intensiva();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+    public static int getItalyTotalHospitalized() {
+        return lastItaly.getTotale_ospedalizzati();
+    }
+
+    public static int getItalyNewTotalHospitalized() {
+        return lastItaly.getTotale_ospedalizzati() - italyJsonObjects[italyJsonObjects.length - 2].getTotale_ospedalizzati();
+    }
+
+    public static int getRegionTotalHospitalized(String region) {
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getTotale_ospedalizzati();
+        }
+        return -1;
+    }
+
+    public static int getRegionNewTotalHospitalized(String region) {
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getTotale_ospedalizzati();
+                i--;
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getTotale_ospedalizzati();
+                break;
+            }
+        }
+
+        return val1-val2;
+    }
+
+
+    public static int getItalyHouseholdIsolation() {
+        return lastItaly.getIsolamento_domiciliare();
+    }
+
+    public static int getItalyNewHouseholdIsolation() {
+        return lastItaly.getIsolamento_domiciliare() - italyJsonObjects[italyJsonObjects.length - 2].getIsolamento_domiciliare();
+    }
+
+    public static int getRegionHouseholdIsolation(String region) {
+        for(int i = regionsJsonObjects.length - 1; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region))
+                return regionsJsonObjects[i].getIsolamento_domiciliare();
+        }
+        return -1;
+    }
+
+    public static int getRegionNewHouseholdIsolation(String region) {
+        int val1 = 0,val2 = 0;
+        int i = regionsJsonObjects.length - 1;
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val1 = regionsJsonObjects[i].getIsolamento_domiciliare();
+                i--;
+                break;
+            }
+        }
+
+        for(; i >= 0; i--){
+            if(regionsJsonObjects[i].getDenominazione_regione().equalsIgnoreCase(region)){
+                val2 = regionsJsonObjects[i].getIsolamento_domiciliare();
                 break;
             }
         }

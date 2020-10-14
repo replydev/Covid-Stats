@@ -69,6 +69,45 @@ public class CommandHandler {
                         chatId)
                 );
                 break;
+                /*
+                .addText(EmojiParser.parseToUnicode(":sick: Ricoverati con sintomi"))
+                .row()
+                .addText(EmojiParser.parseToUnicode(":microbe: Terapia intensiva"))
+                .addText(EmojiParser.parseToUnicode(":hospital: Totale ospedalizzati"))
+                .addText(EmojiParser.parseToUnicode(":house: Isolamento domiciliare"))
+                 */
+            case ":sick: Ricoverati con sintomi":
+                threads.submit(() -> hospitalizedWithSymptomsJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
+                break;
+            case ":microbe: Terapia intensiva":
+                threads.submit(() -> intensiveThreapyJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
+                break;
+                case ":hospital: Totale ospedalizzati":
+                    threads.submit(() -> totalHospitalizedJob(
+                            Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                            Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                            Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                            chatId)
+                    );
+                    break;
+            case ":house: Isolamento domiciliare":
+                threads.submit(() -> householdIsolationJob(
+                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                        chatId)
+                );
+                break;
             case ":mount_fuji: Seleziona regione":
                 switchToRegionsKeyboard(userId,chatId);
                 break;
@@ -795,6 +834,143 @@ public class CommandHandler {
         }
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
+
+    private void hospitalizedWithSymptomsJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
+        if(province != null) {
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+            return;
+        }
+        try {
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.hospitalizedWithSymptomsGraph(region);
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyHospitalizedWithSymptoms();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewHospitalizedWithSymptoms();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionHospitalizedWithSymptoms(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionNewHospitalizedWithSymptoms(region);
+            }
+            sendPhoto(f,chatId, text);
+            f = data.newHospitalizedWithSymptomsGraph(region);
+            sendPhoto(f,chatId, text1);
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+    }
+
+    private void intensiveThreapyJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
+        if(province != null) {
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+            return;
+        }
+        try {
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.intensive_therapyGraph(region);
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyIntensiveTherapy();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewIntensiveTherapy();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionIntensiveTherapy(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionNewIntensiveTherapy(region);
+            }
+            sendPhoto(f,chatId, text);
+            f = data.newIntensive_therapy(region);
+            sendPhoto(f,chatId, text1);
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+    }
+
+    private void totalHospitalizedJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
+        if(province != null) {
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+            return;
+        }
+        try {
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.totalHospitalized(region);
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyTotalHospitalized();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewTotalHospitalized();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionTotalHospitalized(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionNewTotalHospitalized(region);
+            }
+            sendPhoto(f,chatId, text);
+            f = data.newTotalHospitalized(region);
+            sendPhoto(f,chatId, text1);
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+    }
+
+    private void householdIsolationJob(int id,String region,String province,long chatId){
+        if(!canMakeRequest(id)){
+            sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
+            return;
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,false);
+        if(province != null) {
+            sendMessage((":x: Dati non disponibili per le provincie!"), chatId);
+            Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+            return;
+        }
+        try {
+            CovidData data = DataFetcher.fetchData(region);
+            File f = data.householdIsolation(region);
+            String text,text1;
+            if(region == null){
+                text = "Ultimi dati: " + DataFetcher.getItalyHouseholdIsolation();
+                text1 = "Ultimi dati: " + DataFetcher.getItalyNewHouseholdIsolation();
+            }
+
+            else{
+                text = "Ultimi dati: " + DataFetcher.getRegionHouseholdIsolation(region);
+                text1 = "Ultimi dati: " + DataFetcher.getRegionNewHouseholdIsolation(region);
+            }
+            sendPhoto(f,chatId, text);
+            f = data.newHouseholdIsolation(region);
+            sendPhoto(f,chatId, text1);
+        } catch (IOException | ParseException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
+        }
+        Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
+    }
+
 
     private boolean isNotAdmin(String id){
         return !Bot.getInstance().getConfig().isInAdminsList(id);

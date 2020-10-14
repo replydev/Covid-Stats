@@ -218,4 +218,152 @@ public class CovidData {
         }
         return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
     }
+
+    public File hospitalizedWithSymptomsGraph(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Ricoverati con sintomi - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        for(DayData d: covidData){
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
+            x.add(date);
+            y.add(d.getHospitalized_with_symptoms());
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File newHospitalizedWithSymptomsGraph(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Nuovi ricoverati con sintomi - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        x.add(startDate);
+        y.add(0); //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getHospitalized_with_symptoms() - covidData.get(i - 1).getHospitalized_with_symptoms();
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
+            x.add(d);
+            y.add(difference);
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File intensive_therapyGraph(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Terapia intensiva - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        for(DayData d: covidData){
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
+            x.add(date);
+            y.add(d.getIntensive_therapy());
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File newIntensive_therapy(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Incremento terapie intensive - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        x.add(startDate);
+        y.add(0); //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getIntensive_therapy() - covidData.get(i - 1).getIntensive_therapy();
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
+            x.add(d);
+            y.add(difference);
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File totalHospitalized(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Totale ospedalizzati - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        for(DayData d: covidData){
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
+            x.add(date);
+            y.add(d.getTotal_hospitalized());
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File newTotalHospitalized(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Incremento totale ospedalizzati - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        x.add(startDate);
+        y.add(0); //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getTotal_hospitalized() - covidData.get(i - 1).getTotal_hospitalized();
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
+            x.add(d);
+            y.add(difference);
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File householdIsolation(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Isolamento domiciliare - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        for(DayData d: covidData){
+            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDayDate());
+            x.add(date);
+            y.add(d.getHousehold_isolation());
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
+
+    public File newHouseholdIsolation(String regionName) throws IOException, ParseException {
+        if(regionName == null) regionName = "Italia";
+        String plotTitle = "Incremento isolamento domiciliare - " + regionName;
+        String rawFilename = ChartUtils.computeFilename(plotTitle);
+        File output = ChartUtils.getFileChart( rawFilename + ".png");
+        if(output != null)
+            return output;
+        Vector<Integer> y = new Vector<>();
+        Vector<Date> x = new Vector<>();
+        x.add(startDate);
+        y.add(0); //first element of graph
+        for(int i = 1; i < covidData.size(); i++){
+            int difference = covidData.get(i).getHousehold_isolation() - covidData.get(i - 1).getHousehold_isolation();
+            Date d = new SimpleDateFormat("dd-MM-yyyy").parse(covidData.get(i).getDayDate());
+            x.add(d);
+            y.add(difference);
+        }
+        return ChartUtils.generateImage(plotTitle,x,y, rawFilename);
+    }
 }

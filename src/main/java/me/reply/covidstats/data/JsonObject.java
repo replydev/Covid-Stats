@@ -7,6 +7,7 @@ public class JsonObject{
     private int ricoverati_con_sintomi;
     private int terapia_intensiva;
     private int totale_ospedalizzati;
+    private int isolamento_domiciliare;
     private int totale_positivi;
     private int variazione_totale_positivi;
     private int nuovi_positivi;
@@ -32,6 +33,9 @@ public class JsonObject{
     }
     public int getTotale_ospedalizzati() {
         return totale_ospedalizzati;
+    }
+    public int getIsolamento_domiciliare() {
+        return isolamento_domiciliare;
     }
     public int getTotale_positivi() {
         return totale_positivi;

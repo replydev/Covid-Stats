@@ -47,7 +47,6 @@ public class Bot extends TelegramLongPollingBot {
             Gson g = new Gson();
             config = Config.load("config/config.json");
             config.loadAdminsFromFile("config/admins.list");
-            System.out.println(g.toJson(config));
             File backupFile = new File("config/users_backup.json");
             if(backupFile.exists()){
                 logger.info("Carico gli utenti dal backup");

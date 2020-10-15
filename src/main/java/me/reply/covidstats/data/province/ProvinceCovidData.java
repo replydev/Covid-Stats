@@ -1,7 +1,6 @@
 package me.reply.covidstats.data.province;
 
 import me.reply.covidstats.data.ChartUtils;
-import org.knowm.xchart.XYChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

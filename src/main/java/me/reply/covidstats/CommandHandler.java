@@ -25,462 +25,172 @@ public class CommandHandler {
     public void handle(String command, long chatId, String userId){
 
         String commandAliases = EmojiParser.parseToAliases(command);
-        switch(commandAliases){
-            case "/start":
-                threads.submit(() -> sendMainKeyboard(userId,chatId));
-                break;
-            case ":warning: Attualmente contagiati":
-                threads.submit(() -> infectedJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-            case ":diamond_shape_with_a_dot_inside: Guariti":
-                threads.submit(() -> recoveredJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-            case ":angel: Decessi":
-                threads.submit(() -> deathsJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-            case ":bangbang: Casi":
-                threads.submit(() -> casesJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-            case ":syringe: Tamponi":
-                threads.submit(() -> tamponsJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-                /*
+        /*
                 .addText(EmojiParser.parseToUnicode(":sick: Ricoverati con sintomi"))
                 .row()
                 .addText(EmojiParser.parseToUnicode(":microbe: Terapia intensiva"))
                 .addText(EmojiParser.parseToUnicode(":hospital: Totale ospedalizzati"))
                 .addText(EmojiParser.parseToUnicode(":house: Isolamento domiciliare"))
                  */
-            case ":sick: Ricoverati con sintomi":
-                threads.submit(() -> hospitalizedWithSymptomsJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-            case ":microbe: Terapia intensiva":
-                threads.submit(() -> intensiveThreapyJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-                case ":hospital: Totale ospedalizzati":
-                    threads.submit(() -> totalHospitalizedJob(
-                            Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                            Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                            Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                            chatId)
-                    );
-                    break;
-            case ":house: Isolamento domiciliare":
-                threads.submit(() -> householdIsolationJob(
-                        Bot.getInstance().getUsersManager().getIdFromUser(userId),
-                        Bot.getInstance().getUsersManager().getRegionFromUser(userId),
-                        Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
-                        chatId)
-                );
-                break;
-            case ":mount_fuji: Seleziona regione":
-                switchToRegionsKeyboard(userId,chatId);
-                break;
-            case ":office: Seleziona provincia":
-                switchToProvinceKeyboard(userId,chatId);
-                break;
-            case ":computer: Codice sorgente":
-                threads.submit(() -> sendMessage(EmojiParser.parseToUnicode(":smile_cat: Sviluppato da @zreply.\n:page_facing_up: Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta!\n:link: https://github.com/replydev/Covid-Stats"),chatId));
-                break;
-            case "Abruzzo":
-            case "Basilicata":
-            case "P.A. Bolzano":
-            case "Calabria":
-            case "Campania":
-            case "Emilia-Romagna":
-            case "Friuli Venezia Giulia":
-            case "Italia":
-            case "Lazio":
-            case "Liguria":
-            case "Lombardia":
-            case "Marche":
-            case "Molise":
-            case "Piemonte":
-            case "Puglia":
-            case "Sardegna":
-            case "Sicilia":
-            case "Toscana":
-            case "P.A. Trento":
-            case "Umbria":
-            case "Valle d'Aosta":
-            case "Veneto":
-                threads.submit(() -> {
-                    Bot.getInstance().getUsersManager().setRegion(userId,command);
-                    sendMessage("Hai selezionato una nuova regione: " + command,chatId);
-                    sendMainKeyboard(userId,chatId);
-                });
-                break;
-            case "Nessuna provincia":
-            case "Agrigento":
-            case "Alessandria":
-            case "Ancona":
-            case "Aosta":
-            case "Arezzo":
-            case "Ascoli Piceno":
-            case "Asti":
-            case "Avellino":
-            case "Bari":
-            case "Barletta-Andria-Trani":
-            case "Belluno":
-            case "Benevento":
-            case "Bergamo":
-            case "Biella":
-            case "Bologna":
-            case "Bolzano":
-            case "Brescia":
-            case "Brindisi":
-            case "Cagliari":
-            case "Caltanissetta":
-            case "Campobasso":
-            case "Carbonia-Iglesias":
-            case "Caserta":
-            case "Catania":
-            case "Catanzaro":
-            case "Chieti":
-            case "Como":
-            case "Cosenza":
-            case "Cremona":
-            case "Crotone":
-            case "Cuneo":
-            case "Enna":
-            case "Fermo":
-            case "Ferrara":
-            case "Firenze":
-            case "Foggia":
-            case "Forlì-Cesena":
-            case "Frosinone":
-            case "Genova":
-            case "Gorizia":
-            case "Grosseto":
-            case "Imperia":
-            case "Isernia":
-            case "L'Aquila":
-            case "La Spezia":
-            case "Latina":
-            case "Lecce":
-            case "Lecco":
-            case "Livorno":
-            case "Lodi":
-            case "Lucca":
-            case "Macerata":
-            case "Mantova":
-            case "Massa-Carrara":
-            case "Matera":
-            case "Medio Campidano":
-            case "Messina":
-            case "Milano":
-            case "Modena":
-            case "Monza e della Brianza":
-            case "Napoli":
-            case "Novara":
-            case "Nuoro":
-            case "Ogliastra":
-            case "Olbia-Tempio":
-            case "Oristano":
-            case "Padova":
-            case "Palermo":
-            case "Parma":
-            case "Pavia":
-            case "Perugia":
-            case "Pesaro e Urbino":
-            case "Pescara":
-            case "Piacenza":
-            case "Pisa":
-            case "Pistoia":
-            case "Pordenone":
-            case "Potenza":
-            case "Prato":
-            case "Ragusa":
-            case "Ravenna":
-            case "Reggio di Calabria":
-            case "Reggio nell'Emilia":
-            case "Rieti":
-            case "Rimini":
-            case "Roma":
-            case "Rovigo":
-            case "Salerno":
-            case "Sassari":
-            case "Savona":
-            case "Siena":
-            case "Siracusa":
-            case "Sondrio":
-            case "Taranto":
-            case "Teramo":
-            case "Terni":
-            case "Torino":
-            case "Trapani":
-            case "Trento":
-            case "Treviso":
-            case "Trieste":
-            case "Udine":
-            case "Varese":
-            case "Venezia":
-            case "Verbano-Cusio-Ossola":
-            case "Vercelli":
-            case "Verona":
-            case "Vibo Valentia":
-            case "Vicenza":
-            case "Viterbo":
-                threads.submit(() -> {
-                    String regionToSet = getRegionFromProvince(command); //Milano -> Lombardia
-                    if(regionToSet != null){
-                        Bot.getInstance().getUsersManager().setRegion(userId,regionToSet);
-                        Bot.getInstance().getUsersManager().setProvince(userId,command);
-                    }
-                    else{
-                        Bot.getInstance().getUsersManager().setProvince(userId,"Nessuna provincia");
-                    }
-                    sendMessage("Hai selezionato una nuova provincia: " + command,chatId);
-                    sendMainKeyboard(userId,chatId);
-                });
-                break;
-            case "Torna indietro":
-                sendMainKeyboard(userId,chatId);
-                break;
-            case ":wrench: Impostazioni":
-                switchToSettingsKeyboard(chatId);
-                break;
-            case ":bell: Notifiche abilitate":
-                threads.submit(() -> {
-                    Bot.getInstance().getUsersManager().setNotification(userId,true);
-                    sendMessage((":white_check_mark: Hai abilitato nel notifiche giornaliere"),chatId);
-                });
-                break;
-            case ":no_bell: Notifiche disabilitate":
-                threads.submit(() -> {
-                    Bot.getInstance().getUsersManager().setNotification(userId,false);
-                    sendMessage((":x: Hai disabilitato nel notifiche giornaliere"),chatId);
-                });
-                break;
-            case "/update":
-                threads.submit(() -> {
-                    if(isNotAdmin(userId)){
-                        sendMessage((":x: Comando riservato"),chatId);
-                        return;
-                    }
-                    try {
-                        if(DataFetcher.updateFiles()){
-                            ChartUtils.clearCache();
-                            sendMessage("Operazione completata con successo.", chatId);
-                        }
-                        else
-                            sendMessage("Non ho trovato aggiornamenti.", chatId);
-                    } catch (IOException e) {
-                        System.err.println("Si è verificato un errore, verifica nel file di log");
-                        logger.error(e.toString());
-                    }
-                });
-                break;
-            case "/stop":
-                threads.submit(() -> {
-                    if(isNotAdmin(userId)){
-                        sendMessage((":x: Comando riservato"),chatId);
-                        return;
-                    }
-                    logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
-                    sendMessage("Sto terminando il bot",chatId);
-                    System.exit(0); //when i shutdown i call sigint runnable
-                });
-                break;
-            case "/confirm":
-                threads.submit(() -> {
-                    if(isNotAdmin(userId)){
-                        sendMessage((":x: Comando riservato"),chatId);
-                        return;
-                    }
-                    String text = Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId);
-                    if(text == null){
-                        sendMessage((":x: Nessun messaggio da inviare!"),chatId);
-                        return;
-                    }
-                    sendMessage("Sto inviando la tua notifica a tutti gli utenti...",chatId);
-                    Bot.getInstance().messageToAllUsers(text);
-                    Bot.getInstance().getUsersManager().setNotificationText(userId,null);
-                });
-                break;
-            default:
-                threads.submit(() -> {
-                    if(isNotAdmin(userId)){
-                        return;
-                    }
-                    Bot.getInstance().getUsersManager().setNotificationText(userId,EmojiParser.parseToUnicode(command));
-                    sendMessage("Ok, digita /confirm per inviare \"" + Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId) + "\" a tutti gli utenti",chatId);
-                });
+        switch (commandAliases) {
+            case "/start" -> threads.submit(() -> sendMainKeyboard(userId, chatId));
+            case ":warning: Attualmente contagiati" -> threads.submit(() -> infectedJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":diamond_shape_with_a_dot_inside: Guariti" -> threads.submit(() -> recoveredJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":angel: Decessi" -> threads.submit(() -> deathsJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":bangbang: Casi" -> threads.submit(() -> casesJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":syringe: Tamponi" -> threads.submit(() -> tamponsJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":sick: Ricoverati con sintomi" -> threads.submit(() -> hospitalizedWithSymptomsJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":microbe: Terapia intensiva" -> threads.submit(() -> intensiveThreapyJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":hospital: Totale ospedalizzati" -> threads.submit(() -> totalHospitalizedJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":house: Isolamento domiciliare" -> threads.submit(() -> householdIsolationJob(
+                    Bot.getInstance().getUsersManager().getIdFromUser(userId),
+                    Bot.getInstance().getUsersManager().getRegionFromUser(userId),
+                    Bot.getInstance().getUsersManager().getProvinceFromUser(userId),
+                    chatId)
+            );
+            case ":mount_fuji: Seleziona regione" -> switchToRegionsKeyboard(userId, chatId);
+            case ":office: Seleziona provincia" -> switchToProvinceKeyboard(userId, chatId);
+            case ":computer: Codice sorgente" -> threads.submit(() -> sendMessage(EmojiParser.parseToUnicode(":smile_cat: Sviluppato da @zreply.\n:page_facing_up: Il codice sorgente di questo software è open source, qualsiasi modifica utile ed appropriata è la benvenuta!\n:link: https://github.com/replydev/Covid-Stats"), chatId));
+            case "Abruzzo", "Basilicata", "P.A. Bolzano", "Calabria", "Campania", "Emilia-Romagna", "Friuli Venezia Giulia", "Italia", "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana", "P.A. Trento", "Umbria", "Valle d'Aosta", "Veneto" -> threads.submit(() -> {
+                Bot.getInstance().getUsersManager().setRegion(userId, command);
+                sendMessage("Hai selezionato una nuova regione: " + command, chatId);
+                sendMainKeyboard(userId, chatId);
+            });
+            case "Nessuna provincia", "Agrigento", "Alessandria", "Ancona", "Aosta", "Arezzo", "Ascoli Piceno", "Asti", "Avellino", "Bari", "Barletta-Andria-Trani", "Belluno", "Benevento", "Bergamo", "Biella", "Bologna", "Bolzano", "Brescia", "Brindisi", "Cagliari", "Caltanissetta", "Campobasso", "Carbonia-Iglesias", "Caserta", "Catania", "Catanzaro", "Chieti", "Como", "Cosenza", "Cremona", "Crotone", "Cuneo", "Enna", "Fermo", "Ferrara", "Firenze", "Foggia", "Forlì-Cesena", "Frosinone", "Genova", "Gorizia", "Grosseto", "Imperia", "Isernia", "L'Aquila", "La Spezia", "Latina", "Lecce", "Lecco", "Livorno", "Lodi", "Lucca", "Macerata", "Mantova", "Massa-Carrara", "Matera", "Medio Campidano", "Messina", "Milano", "Modena", "Monza e della Brianza", "Napoli", "Novara", "Nuoro", "Ogliastra", "Olbia-Tempio", "Oristano", "Padova", "Palermo", "Parma", "Pavia", "Perugia", "Pesaro e Urbino", "Pescara", "Piacenza", "Pisa", "Pistoia", "Pordenone", "Potenza", "Prato", "Ragusa", "Ravenna", "Reggio di Calabria", "Reggio nell'Emilia", "Rieti", "Rimini", "Roma", "Rovigo", "Salerno", "Sassari", "Savona", "Siena", "Siracusa", "Sondrio", "Taranto", "Teramo", "Terni", "Torino", "Trapani", "Trento", "Treviso", "Trieste", "Udine", "Varese", "Venezia", "Verbano-Cusio-Ossola", "Vercelli", "Verona", "Vibo Valentia", "Vicenza", "Viterbo" -> threads.submit(() -> {
+                String regionToSet = getRegionFromProvince(command); //Milano -> Lombardia
+                if (regionToSet != null) {
+                    Bot.getInstance().getUsersManager().setRegion(userId, regionToSet);
+                    Bot.getInstance().getUsersManager().setProvince(userId, command);
+                } else {
+                    Bot.getInstance().getUsersManager().setProvince(userId, "Nessuna provincia");
+                }
+                sendMessage("Hai selezionato una nuova provincia: " + command, chatId);
+                sendMainKeyboard(userId, chatId);
+            });
+            case "Torna indietro" -> sendMainKeyboard(userId, chatId);
+            case ":wrench: Impostazioni" -> switchToSettingsKeyboard(chatId);
+            case ":bell: Notifiche abilitate" -> threads.submit(() -> {
+                Bot.getInstance().getUsersManager().setNotification(userId, true);
+                sendMessage((":white_check_mark: Hai abilitato nel notifiche giornaliere"), chatId);
+            });
+            case ":no_bell: Notifiche disabilitate" -> threads.submit(() -> {
+                Bot.getInstance().getUsersManager().setNotification(userId, false);
+                sendMessage((":x: Hai disabilitato nel notifiche giornaliere"), chatId);
+            });
+            case "/update" -> threads.submit(() -> {
+                if (isNotAdmin(userId)) {
+                    sendMessage((":x: Comando riservato"), chatId);
+                    return;
+                }
+                try {
+                    if (DataFetcher.updateFiles()) {
+                        ChartUtils.clearCache();
+                        sendMessage("Operazione completata con successo.", chatId);
+                    } else
+                        sendMessage("Non ho trovato aggiornamenti.", chatId);
+                } catch (IOException e) {
+                    System.err.println("Si è verificato un errore, verifica nel file di log");
+                    logger.error(e.toString());
+                }
+            });
+            case "/stop" -> threads.submit(() -> {
+                if (isNotAdmin(userId)) {
+                    sendMessage((":x: Comando riservato"), chatId);
+                    return;
+                }
+                logger.info("Un username ha inviato il comando di chiusura, sto terminando il programma...");
+                sendMessage("Sto terminando il bot", chatId);
+                System.exit(0); //when i shutdown i call sigint runnable
+            });
+            case "/confirm" -> threads.submit(() -> {
+                if (isNotAdmin(userId)) {
+                    sendMessage((":x: Comando riservato"), chatId);
+                    return;
+                }
+                String text = Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId);
+                if (text == null) {
+                    sendMessage((":x: Nessun messaggio da inviare!"), chatId);
+                    return;
+                }
+                sendMessage("Sto inviando la tua notifica a tutti gli utenti...", chatId);
+                Bot.getInstance().messageToAllUsers(text);
+                Bot.getInstance().getUsersManager().setNotificationText(userId, null);
+            });
+            default -> threads.submit(() -> {
+                if (isNotAdmin(userId)) {
+                    return;
+                }
+                Bot.getInstance().getUsersManager().setNotificationText(userId, EmojiParser.parseToUnicode(command));
+                sendMessage("Ok, digita /confirm per inviare \"" + Bot.getInstance().getUsersManager().getNotificationTextFromUser(userId) + "\" a tutti gli utenti", chatId);
+            });
         }
     }
 
     private String getRegionFromProvince(String province) {
-        switch (province){
-            case "Chieti":
-            case "L'Aquila":
-            case "Pescara":
-            case "Teramo":
-                return "Abruzzo";
-            case "Matera":
-            case "Potenza":
-                return "Basilicata";
-            case "Bolzano":
-                return "P.A. Bolzano";
-            case "Catanzaro":
-            case "Cosenza":
-            case "Crotone":
-            case "Reggio di Calabria":
-            case "Vibo Valentia":
-                return "Calabria";
-            case "Avellino":
-            case "Benevento":
-            case "Caserta":
-            case "Napoli":
-            case "Salerno":
-                return "Campania";
-            case "Bologna":
-            case "Ferrara":
-            case "Forlì-Cesena":
-            case "Cesena":
-            case "Modena":
-            case "Parma":
-            case "Piacenza":
-            case "Reggio nell'Emilia":
-            case "Ravenna":
-            case "Rimini":
-                return "Emilia-Romagna";
-            case "Gorizia":
-            case "Pordenone":
-            case "Trieste":
-            case "Udine":
-                return "Friuli Venezia Giulia";
-            case "Frosinone":
-            case "Latina":
-            case "Rieti":
-            case "Roma":
-            case "Viterbo":
-                return "Lazio";
-            case "Genova":
-            case "Imperia":
-            case "La Spezia":
-            case "Savona":
-                return "Liguria";
-            case "Bergamo":
-            case "Brescia":
-            case "Como":
-            case "Cremona":
-            case "Lecco":
-            case "Lodi":
-            case "Mantova":
-            case "Milano":
-            case "Monza e della Brianza":
-            case "Pavia":
-            case "Sondrio":
-            case "Varese":
-                return "Lombardia";
-            case "Ancona":
-            case "Ascoli Piceno":
-            case "Fermo":
-            case "Macerata":
-            case "Pesaro e Urbino":
-                return "Marche";
-            case "Campobasso":
-            case "Isernia":
-                return "Molise";
-            case "Alessandria":
-            case "Asti":
-            case "Biella":
-            case "Cuneo":
-            case "Novara":
-            case "Torino":
-            case "Verbano-Cusio-Ossola":
-            case "Vercelli":
-                return "Piemonte";
-            case "Bari":
-            case "Barletta-Andria-Trani":
-            case "Brindisi":
-            case "Foggia":
-            case "Lecce":
-            case "Taranto":
-                return "Puglia";
-            case "Cagliari":
-            case "Carbonia-Iglesias":
-            case "Medio Campidano":
-            case "Nuoro":
-            case "Ogliastra":
-            case "Olbia-Tempio":
-            case "Oristano":
-            case "Sassari":
-                return "Sardegna";
-            case "Agrigento":
-            case "Caltanissetta":
-            case "Catania":
-            case "Enna":
-            case "Messina":
-            case "Palermo":
-            case "Ragusa":
-            case "Siracusa":
-            case "Trapani":
-                return "Sicilia";
-            case "Arezzo":
-            case "Firenze":
-            case "Grosseto":
-            case "Livorno":
-            case "Lucca":
-            case "Massa-Carrara":
-            case "Pisa":
-            case "Pistoia":
-            case "Prato":
-            case "Siena":
-                return "Toscana";
-            case "Trento":
-                return "P.A. Trento";
-            case "Perugia":
-            case "Terni":
-                return "Umbria";
-            case "Aosta":
-                return "Valle d'Aosta";
-            case "Belluno":
-            case "Padova":
-            case "Rovigo":
-            case "Treviso":
-            case "Venezia":
-            case "Verona":
-            case "Vicenza":
-                return "Veneto";
-            case "Nessuna provincia":
-            default: return null;
-        }
+        return switch (province) {
+            case "Chieti", "L'Aquila", "Pescara", "Teramo" -> "Abruzzo";
+            case "Matera", "Potenza" -> "Basilicata";
+            case "Bolzano" -> "P.A. Bolzano";
+            case "Catanzaro", "Cosenza", "Crotone", "Reggio di Calabria", "Vibo Valentia" -> "Calabria";
+            case "Avellino", "Benevento", "Caserta", "Napoli", "Salerno" -> "Campania";
+            case "Bologna", "Ferrara", "Forlì-Cesena", "Cesena", "Modena", "Parma", "Piacenza", "Reggio nell'Emilia", "Ravenna", "Rimini" -> "Emilia-Romagna";
+            case "Gorizia", "Pordenone", "Trieste", "Udine" -> "Friuli Venezia Giulia";
+            case "Frosinone", "Latina", "Rieti", "Roma", "Viterbo" -> "Lazio";
+            case "Genova", "Imperia", "La Spezia", "Savona" -> "Liguria";
+            case "Bergamo", "Brescia", "Como", "Cremona", "Lecco", "Lodi", "Mantova", "Milano", "Monza e della Brianza", "Pavia", "Sondrio", "Varese" -> "Lombardia";
+            case "Ancona", "Ascoli Piceno", "Fermo", "Macerata", "Pesaro e Urbino" -> "Marche";
+            case "Campobasso", "Isernia" -> "Molise";
+            case "Alessandria", "Asti", "Biella", "Cuneo", "Novara", "Torino", "Verbano-Cusio-Ossola", "Vercelli" -> "Piemonte";
+            case "Bari", "Barletta-Andria-Trani", "Brindisi", "Foggia", "Lecce", "Taranto" -> "Puglia";
+            case "Cagliari", "Carbonia-Iglesias", "Medio Campidano", "Nuoro", "Ogliastra", "Olbia-Tempio", "Oristano", "Sassari" -> "Sardegna";
+            case "Agrigento", "Caltanissetta", "Catania", "Enna", "Messina", "Palermo", "Ragusa", "Siracusa", "Trapani" -> "Sicilia";
+            case "Arezzo", "Firenze", "Grosseto", "Livorno", "Lucca", "Massa-Carrara", "Pisa", "Pistoia", "Prato", "Siena" -> "Toscana";
+            case "Trento" -> "P.A. Trento";
+            case "Perugia", "Terni" -> "Umbria";
+            case "Aosta" -> "Valle d'Aosta";
+            case "Belluno", "Padova", "Rovigo", "Treviso", "Venezia", "Verona", "Vicenza" -> "Veneto";
+            default -> null;
+        };
     }
 
     public CommandHandler(int threadsNum){
@@ -532,73 +242,29 @@ public class CommandHandler {
             sendMessage((":x: Seleziona prima una regione"),chatId);
             return;
         }
-        switch (region){
-            case "Abruzzo":
-                keyboard = keyboard.setReplyMarkup(keyboards.getAbruzzo());
-                break;
-            case "Basilicata":
-                keyboard = keyboard.setReplyMarkup(keyboards.getBasilicata());
-                break;
-            case "P.A. Bolzano":
-                keyboard = keyboard.setReplyMarkup(keyboards.getBolzano());
-                break;
-            case "Calabria":
-                keyboard = keyboard.setReplyMarkup(keyboards.getCalabria());
-                break;
-            case "Campania":
-                keyboard = keyboard.setReplyMarkup(keyboards.getCampania());
-                break;
-            case "Emilia-Romagna":
-                keyboard = keyboard.setReplyMarkup(keyboards.getEmilia_romagna());
-                break;
-            case "Friuli Venezia Giulia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getFriuli_venezia_giulia());
-                break;
-            case "Lazio":
-                keyboard = keyboard.setReplyMarkup(keyboards.getLazio());
-                break;
-            case "Liguria":
-                keyboard = keyboard.setReplyMarkup(keyboards.getLiguria());
-                break;
-            case "Lombardia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getLombardia());
-                break;
-            case "Marche":
-                keyboard = keyboard.setReplyMarkup(keyboards.getMarche());
-                break;
-            case "Molise":
-                keyboard = keyboard.setReplyMarkup(keyboards.getMolise());
-                break;
-            case "Piemonte":
-                keyboard = keyboard.setReplyMarkup(keyboards.getPiemonte());
-                break;
-            case "Puglia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getPuglia());
-                break;
-            case "Sardegna":
-                keyboard = keyboard.setReplyMarkup(keyboards.getSardegna());
-                break;
-            case "Sicilia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getSicilia());
-                break;
-            case "Toscana":
-                keyboard = keyboard.setReplyMarkup(keyboards.getToscana());
-                break;
-            case "P.A. Trento":
-                keyboard = keyboard.setReplyMarkup(keyboards.getTrento());
-                break;
-            case "Umbria":
-                keyboard = keyboard.setReplyMarkup(keyboards.getUmbria());
-                break;
-            case "Valle d'Aosta":
-                keyboard = keyboard.setReplyMarkup(keyboards.getValle_d_aosta());
-                break;
-            case "Veneto":
-                keyboard = keyboard.setReplyMarkup(keyboards.getVeneto());
-                break;
-            default:
-                sendMessage((":x: Errore: regione non valida (" + region + ")"),chatId);
-                break;
+        switch (region) {
+            case "Abruzzo" -> keyboard = keyboard.setReplyMarkup(keyboards.getAbruzzo());
+            case "Basilicata" -> keyboard = keyboard.setReplyMarkup(keyboards.getBasilicata());
+            case "P.A. Bolzano" -> keyboard = keyboard.setReplyMarkup(keyboards.getBolzano());
+            case "Calabria" -> keyboard = keyboard.setReplyMarkup(keyboards.getCalabria());
+            case "Campania" -> keyboard = keyboard.setReplyMarkup(keyboards.getCampania());
+            case "Emilia-Romagna" -> keyboard = keyboard.setReplyMarkup(keyboards.getEmilia_romagna());
+            case "Friuli Venezia Giulia" -> keyboard = keyboard.setReplyMarkup(keyboards.getFriuli_venezia_giulia());
+            case "Lazio" -> keyboard = keyboard.setReplyMarkup(keyboards.getLazio());
+            case "Liguria" -> keyboard = keyboard.setReplyMarkup(keyboards.getLiguria());
+            case "Lombardia" -> keyboard = keyboard.setReplyMarkup(keyboards.getLombardia());
+            case "Marche" -> keyboard = keyboard.setReplyMarkup(keyboards.getMarche());
+            case "Molise" -> keyboard = keyboard.setReplyMarkup(keyboards.getMolise());
+            case "Piemonte" -> keyboard = keyboard.setReplyMarkup(keyboards.getPiemonte());
+            case "Puglia" -> keyboard = keyboard.setReplyMarkup(keyboards.getPuglia());
+            case "Sardegna" -> keyboard = keyboard.setReplyMarkup(keyboards.getSardegna());
+            case "Sicilia" -> keyboard = keyboard.setReplyMarkup(keyboards.getSicilia());
+            case "Toscana" -> keyboard = keyboard.setReplyMarkup(keyboards.getToscana());
+            case "P.A. Trento" -> keyboard = keyboard.setReplyMarkup(keyboards.getTrento());
+            case "Umbria" -> keyboard = keyboard.setReplyMarkup(keyboards.getUmbria());
+            case "Valle d'Aosta" -> keyboard = keyboard.setReplyMarkup(keyboards.getValle_d_aosta());
+            case "Veneto" -> keyboard = keyboard.setReplyMarkup(keyboards.getVeneto());
+            default -> sendMessage((":x: Errore: regione non valida (" + region + ")"), chatId);
         }
 
         String province = Bot.getInstance().getUsersManager().getProvinceFromUser(userid);
@@ -654,7 +320,7 @@ public class CommandHandler {
     }
 
     private void infectedJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage((":x: Aspetta che la tua richiesta precedente venga terminata!"),chatId);
             return;
         }
@@ -688,7 +354,7 @@ public class CommandHandler {
     }
 
     private void recoveredJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -722,7 +388,7 @@ public class CommandHandler {
     }
 
     private void deathsJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -756,7 +422,7 @@ public class CommandHandler {
     }
 
     private void casesJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -802,7 +468,7 @@ public class CommandHandler {
     }
 
     private void tamponsJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -836,7 +502,7 @@ public class CommandHandler {
     }
 
     private void hospitalizedWithSymptomsJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -870,7 +536,7 @@ public class CommandHandler {
     }
 
     private void intensiveThreapyJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -904,7 +570,7 @@ public class CommandHandler {
     }
 
     private void totalHospitalizedJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -938,7 +604,7 @@ public class CommandHandler {
     }
 
     private void householdIsolationJob(int id,String region,String province,long chatId){
-        if(!canMakeRequest(id)){
+        if(canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -976,6 +642,6 @@ public class CommandHandler {
         return !Bot.getInstance().getConfig().isInAdminsList(id);
     }
     private boolean canMakeRequest(int id){
-        return Bot.getInstance().getUsersManager().getUsers().get(id).canMakeRequest();
+        return !Bot.getInstance().getUsersManager().getUsers().get(id).canMakeRequest();
     }
 }

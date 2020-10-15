@@ -23,15 +23,7 @@ public class CommandHandler {
     private final Keyboards keyboards;
 
     public void handle(String command, long chatId, String userId){
-
         String commandAliases = EmojiParser.parseToAliases(command);
-        /*
-                .addText(EmojiParser.parseToUnicode(":sick: Ricoverati con sintomi"))
-                .row()
-                .addText(EmojiParser.parseToUnicode(":microbe: Terapia intensiva"))
-                .addText(EmojiParser.parseToUnicode(":hospital: Totale ospedalizzati"))
-                .addText(EmojiParser.parseToUnicode(":house: Isolamento domiciliare"))
-                 */
         switch (commandAliases) {
             case "/start" -> threads.submit(() -> sendMainKeyboard(userId, chatId));
             case ":warning: Attualmente contagiati" -> threads.submit(() -> infectedJob(

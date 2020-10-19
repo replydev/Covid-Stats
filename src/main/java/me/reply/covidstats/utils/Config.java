@@ -33,7 +33,7 @@ public class Config {
             logger.error("Errore durante la creazione del file di configurazione, hai i permessi di scrittura in questa cartella?");
             System.exit(-1);
         }
-        String defaultConfig = "{\"BOT_TOKEN\":\"bot_token_here\",\"BOT_USERNAME\":\"bot_username_here\",\"UPDATE_TIME\":\"18:00\"}";
+        String defaultConfig = "{\"BOT_TOKEN\":\"bot_token_here\",\"BOT_USERNAME\":\"bot_username_here\",\"UPDATE_TIME\":\"time\"}";
         FileUtils.write(new File("config/config.json"),defaultConfig,"UTF-8");
     }
 

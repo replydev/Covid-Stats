@@ -59,6 +59,9 @@ public class Main {
     }
 
     private static boolean strInArray(String s, String[] array){
+        if(s.equalsIgnoreCase("-download") && System.getenv("DOWNLOAD_DATA") != null){
+            return true;
+        }
         for(String temp : array){
             if (temp.equalsIgnoreCase(s)){
                 return true;

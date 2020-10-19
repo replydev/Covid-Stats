@@ -25,7 +25,7 @@ public class Main {
         }
         logger = LoggerFactory.getLogger(Main.class);
         try {
-            initialize();
+            initialize(strInArray("-download",args));
         } catch (IOException e) {
             System.err.println("Si è verificato un errore di inizializzazione, verifica nel file di log");
             logger.error(e.toString());
@@ -40,13 +40,15 @@ public class Main {
         }
     }
 
-    private static void initialize() throws IOException {
+    private static void initialize(boolean download) throws IOException {
         logger.info("Genero le cartelle");
         FileUtils.forceMkdir(new File("data/"));
         FileUtils.forceMkdir(new File("config/"));
         ChartUtils.clearCache();
-        logger.info("Scarico i file contenenti i dati...");
-        DataFetcher.downloadFiles();
+        if(download){
+            logger.info("Scarico i file contenenti i dati...");
+            DataFetcher.downloadFiles();
+        }
         Runtime.getRuntime().addShutdownHook(new Thread(new SIGINT_Thread()));
     }
 
@@ -54,5 +56,14 @@ public class Main {
         File logFile = new File("log.txt");
         if(logFile.exists())
             FileUtils.forceDelete(logFile);
+    }
+
+    private static boolean strInArray(String s, String[] array){
+        for(String temp : array){
+            if (temp.equalsIgnoreCase(s)){
+                return true;
+            }
+        }
+        return false;
     }
 }

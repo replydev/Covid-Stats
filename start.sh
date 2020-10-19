@@ -1,1 +1,1 @@
-java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED -jar bot.jar
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED -jar "$1"

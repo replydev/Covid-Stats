@@ -17,13 +17,8 @@ public class Main {
     private static Logger logger;
 
     public static void main(String[] args) {
-        try {
-            clearLogFile();
-        } catch (IOException e) {
-            System.err.println("Errore durante l'eliminazione del file log.txt");
-            System.exit(-1);
-        }
         logger = LoggerFactory.getLogger(Main.class);
+        logger.info("---------------NEW RUN----------------");
         try {
             initialize(strInArray("-download",args));
         } catch (IOException e) {
@@ -50,12 +45,6 @@ public class Main {
             DataFetcher.downloadFiles();
         }
         Runtime.getRuntime().addShutdownHook(new Thread(new SIGINT_Thread()));
-    }
-
-    private static void clearLogFile() throws IOException {
-        File logFile = new File("log.txt");
-        if(logFile.exists())
-            FileUtils.forceDelete(logFile);
     }
 
     private static boolean strInArray(String s, String[] array){

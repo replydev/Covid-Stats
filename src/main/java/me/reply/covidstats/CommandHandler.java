@@ -350,6 +350,17 @@ public class CommandHandler {
                     }
                 });
                 break;
+            case "/sendlog":
+                threads.submit(() -> {
+                    if(isNotAdmin(userId)){
+                        sendMessage((":x: Comando riservato"),chatId);
+                        return;
+                    }
+                    sendFile(Bot.getInstance().getLogFile(),
+                            chatId,
+                            "@" + Bot.getInstance().getBotUsername() + " log file");
+                });
+                break;
             default:
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){

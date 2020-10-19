@@ -137,4 +137,8 @@ public class Bot extends TelegramLongPollingBot {
         usersManager.cleanUsers();
         logger.info("Ho inviato " + count + " messaggi su " + usersManager.registeredUsers() + " utenti");
     }
+
+    public File getLogFile(){
+        return new File("log.txt");
+    }
 }

@@ -8,6 +8,7 @@ import me.reply.covidstats.data.province.ProvinceCovidData;
 import me.reply.covidstats.utils.Keyboards;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -333,6 +334,22 @@ public class CommandHandler {
                     Bot.getInstance().getUsersManager().setNotificationText(userId,null);
                 });
                 break;
+            case "/backup":
+                threads.submit(() -> {
+                    if(isNotAdmin(userId)){
+                        sendMessage((":x: Comando riservato"),chatId);
+                        return;
+                    }
+                    try {
+                        sendFile(Bot.getInstance().getUsersManager().backupUserList(),
+                                chatId,
+                                "@" + Bot.getInstance().getBotUsername() + " userlist");
+                    } catch (IOException e) {
+                        System.err.println("Si è verificato un errore, verifica nel file di log");
+                        logger.error(e.toString());
+                    }
+                });
+                break;
             default:
                 threads.submit(() -> {
                     if(isNotAdmin(userId)){
@@ -640,13 +657,26 @@ public class CommandHandler {
         }
     }
 
-    private void sendPhoto(File f, long chatId, String text){
+    private void sendPhoto(File f, long chatId, String caption){
         SendPhoto photo = new SendPhoto()
                 .setPhoto(f)
-                .setCaption(text)
+                .setCaption(caption)
                 .setChatId(chatId);
         try {
             Bot.getInstance().execute(photo);
+        } catch (TelegramApiException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
+        }
+    }
+
+    private void sendFile(File f,long chatId, String caption){
+        SendDocument document = new SendDocument()
+                .setDocument(f)
+                .setChatId(chatId)
+                .setCaption(caption);
+        try {
+            Bot.getInstance().execute(document);
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());

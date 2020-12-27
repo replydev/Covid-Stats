@@ -15,9 +15,9 @@ import java.util.Arrays;
 
 public class DataFetcher {
 
-    private static File italyFile;
-    private static File regionFile;
-    private static File provinceFile;
+    private static final File italyFile = new File("data/italy.json");
+    private static final File regionFile = new File("data/region.json");
+    private static final File provinceFile = new File("data/province.json");
 
     private static JsonObject[] italyJsonObjects;
     private static RegionJsonObject[] regionsJsonObjects;
@@ -32,51 +32,29 @@ public class DataFetcher {
     private final static Logger logger = LoggerFactory.getLogger(DataFetcher.class);
 
     public static void downloadFiles() throws IOException {
-        if(italyFile == null)
-            italyFile = new File("data/italy.json");
-        else if(italyFile.exists())
+        if(italyFile.exists())
             FileUtils.forceDelete(italyFile);
-
-        if(regionFile == null)
-            regionFile = new File("data/region.json");
-        else if(regionFile.exists())
+        if(regionFile.exists())
             FileUtils.forceDelete(regionFile);
-
-        if(provinceFile == null)
-            provinceFile = new File("data/province.json");
-        else if(provinceFile.exists())
+        if(provinceFile.exists())
             FileUtils.forceDelete(provinceFile);
 
         FileUtils.copyURLToFile(new URL(ITALY_URL), italyFile);
         FileUtils.copyURLToFile(new URL(REGIONS_URL),regionFile);
         FileUtils.copyURLToFile(new URL(PROVINCE_URL), provinceFile);
-        parseFiles();
+        loadData();
     }
 
     public static boolean updateFiles() throws IOException {
-        if(italyFile == null){
+        if(!italyFile.exists()){
             downloadFiles();
             return true;
         }
-        else if(!italyFile.exists()){
+        if(!regionFile.exists()){
             downloadFiles();
             return true;
         }
-
-        if(regionFile == null){
-            downloadFiles();
-            return true;
-        }
-        else if(!regionFile.exists()){
-            downloadFiles();
-            return true;
-        }
-
-        if(provinceFile == null){
-            downloadFiles();
-            return true;
-        }
-        else if(!provinceFile.exists()){
+        if(!provinceFile.exists()){
             downloadFiles();
             return true;
         }
@@ -103,7 +81,7 @@ public class DataFetcher {
             FileUtils.moveFile(tempDataFile, italyFile);
             FileUtils.moveFile(tempRegionFile,regionFile);
             FileUtils.moveFile(tempProvinceFile,provinceFile);
-            return parseFiles();
+            return loadData();
         }
         FileUtils.forceDelete(tempDataFile);
         FileUtils.forceDelete(tempRegionFile);
@@ -111,10 +89,8 @@ public class DataFetcher {
         return false;
     }
 
-    private static boolean parseFiles() throws IOException {
+    public static boolean loadData() throws IOException {
         Gson g = new Gson();
-        logger.info("Traduco il testo json e aggiorno la memoria.");
-
         JsonObject[] italyJsonObjects_tmp = g.fromJson(FileUtils.readFileToString(italyFile,"UTF-8"),JsonObject[].class);
         RegionJsonObject[] regionsJsonObjects_tmp = g.fromJson(FileUtils.readFileToString(regionFile,"UTF-8"),RegionJsonObject[].class);
         ProvinceJsonObject[] provinceJsonObjects_tmp = g.fromJson(FileUtils.readFileToString(provinceFile,"UTF-8"),ProvinceJsonObject[].class);

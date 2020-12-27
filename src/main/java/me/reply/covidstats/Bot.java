@@ -26,7 +26,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private static Bot instance;
     private final CommandHandler commandHandler;
-    private Config config;
+    private final Config config;
     private final UsersManager usersManager;
 
     private final Logger logger = LoggerFactory.getLogger(Bot.class);
@@ -41,23 +41,9 @@ public class Bot extends TelegramLongPollingBot {
         return usersManager;
     }
 
-    public Bot(){
-        usersManager = new UsersManager();
-        try {
-            Gson g = new Gson();
-            config = Config.load("config/config.json");
-            config.loadAdminsFromFile("config/admins.list");
-            File backupFile = new File("config/users_backup.json");
-            if(backupFile.exists()){
-                logger.info("Carico gli utenti dal backup");
-                User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);
-                usersManager.addAll(temp);
-                logger.info("Caricamento completato");
-            }
-        } catch (IOException e) {
-            System.err.println("Si è verificato un errore, verifica nel file di log");
-            logger.error(e.toString());
-        }
+    public Bot(UsersManager usersManager,Config config){
+        this.usersManager = usersManager;
+        this.config = config;
         instance = this;
         commandHandler = new CommandHandler(50);
         startDailyUpdateTask();

@@ -1,7 +1,9 @@
 package me.reply.covidstats;
 
+import com.google.gson.Gson;
 import me.reply.covidstats.data.ChartUtils;
 import me.reply.covidstats.data.DataFetcher;
+import me.reply.covidstats.utils.Config;
 import me.reply.covidstats.utils.SIGINT_Thread;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -15,10 +17,12 @@ import java.io.IOException;
 
 public class Main {
     private static Logger logger;
+    private static Config config;
+    private static final UsersManager usersManager = new UsersManager();
 
     public static void main(String[] args) {
         logger = LoggerFactory.getLogger(Main.class);
-        logger.info("---------------NEW RUN----------------");
+        logger.info(intro());
         try {
             initialize(strInArray("-download",args));
         } catch (IOException e) {
@@ -27,7 +31,7 @@ public class Main {
         }
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(new Bot());
+            telegramBotsApi.registerBot(new Bot(usersManager,config));
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
@@ -44,19 +48,38 @@ public class Main {
         File[] files = f.listFiles();
         if(files == null)
             return true;
-        return files.length == 0;
+        return files.length != 3;
     }
 
     private static void initialize(boolean download) throws IOException {
-        logger.info("Genero le cartelle");
+        logger.info("Genero le cartelle...");
         File dataFolder = new File("data/");
         boolean noData = noData(dataFolder);
         FileUtils.forceMkdir(dataFolder);
         FileUtils.forceMkdir(new File("config/"));
         ChartUtils.clearCache();
         if(download || noData){
-            logger.info("Scarico i file contenenti i dati...");
+            logger.info("Scarico i dati e aggiorno la memoria...");
             DataFetcher.downloadFiles();
+        }
+        else{
+            logger.info("Aggiorno la memoria con dati prescaricati...");
+            DataFetcher.loadData();
+        }
+        try {
+            Gson g = new Gson();
+            logger.info("Carico i file di configurazione...");
+            config = Config.load("config/config.json");
+            config.loadAdminsFromFile("config/admins.list");
+            File backupFile = new File("config/users_backup.json");
+            if(backupFile.exists()){
+                User[] temp = g.fromJson(FileUtils.readFileToString(backupFile,"UTF-8"),User[].class);
+                usersManager.addAll(temp);
+                logger.info("Caricamento completato!");
+            }
+        } catch (IOException e) {
+            System.err.println("Si è verificato un errore, verifica nel file di log");
+            logger.error(e.toString());
         }
         Runtime.getRuntime().addShutdownHook(new Thread(new SIGINT_Thread()));
     }
@@ -71,5 +94,13 @@ public class Main {
             }
         }
         return false;
+    }
+
+    private static String intro(){
+        return " ██████  ██████  ██    ██ ██ ██████        ███████ ████████  █████  ████████ ███████ \n" +
+                "██      ██    ██ ██    ██ ██ ██   ██       ██         ██    ██   ██    ██    ██      \n" +
+                "██      ██    ██ ██    ██ ██ ██   ██ █████ ███████    ██    ███████    ██    ███████ \n" +
+                "██      ██    ██  ██  ██  ██ ██   ██            ██    ██    ██   ██    ██         ██ \n" +
+                " ██████  ██████    ████   ██ ██████        ███████    ██    ██   ██    ██    ███████";
     }
 }

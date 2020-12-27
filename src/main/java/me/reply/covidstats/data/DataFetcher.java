@@ -29,8 +29,6 @@ public class DataFetcher {
     private static final String REGIONS_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json";
     private static final String PROVINCE_URL = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json";
 
-    private final static Logger logger = LoggerFactory.getLogger(DataFetcher.class);
-
     public static void downloadFiles() throws IOException {
         if(italyFile.exists())
             FileUtils.forceDelete(italyFile);

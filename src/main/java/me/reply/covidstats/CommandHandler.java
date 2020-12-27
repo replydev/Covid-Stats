@@ -696,7 +696,7 @@ public class CommandHandler {
     }
 
     private void infectedJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage((":x: Aspetta che la tua richiesta precedente venga terminata!"),chatId);
             return;
         }
@@ -730,7 +730,7 @@ public class CommandHandler {
     }
 
     private void recoveredJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -764,7 +764,7 @@ public class CommandHandler {
     }
 
     private void deathsJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -798,7 +798,7 @@ public class CommandHandler {
     }
 
     private void casesJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -844,7 +844,7 @@ public class CommandHandler {
     }
 
     private void tamponsJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -878,7 +878,7 @@ public class CommandHandler {
     }
 
     private void hospitalizedWithSymptomsJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -912,7 +912,7 @@ public class CommandHandler {
     }
 
     private void intensiveThreapyJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -946,7 +946,7 @@ public class CommandHandler {
     }
 
     private void totalHospitalizedJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -980,7 +980,7 @@ public class CommandHandler {
     }
 
     private void householdIsolationJob(int id,String region,String province,String chatId){
-        if(!canMakeRequest(id)){
+        if(waiting(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
         }
@@ -1017,7 +1017,7 @@ public class CommandHandler {
     private boolean isNotAdmin(String id){
         return !Bot.getInstance().getConfig().isInAdminsList(id);
     }
-    private boolean canMakeRequest(int id){
-        return Bot.getInstance().getUsersManager().getUsers().get(id).canMakeRequest();
+    private boolean waiting(int id){
+        return !Bot.getInstance().getUsersManager().getUsers().get(id).canMakeRequest();
     }
 }

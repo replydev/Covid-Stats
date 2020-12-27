@@ -535,19 +535,18 @@ public class CommandHandler {
     }
 
     private void switchToRegionsKeyboard(String userId,String chatId){
-        SendMessage keyboard = SendMessage.builder()
+        SendMessage.SendMessageBuilder keyboard = SendMessage.builder()
                 .replyMarkup(keyboards.getRegionsKeyboard())
-                .chatId(chatId)
-                .build();
+                .chatId(chatId);
 
         String region = Bot.getInstance().getUsersManager().getRegionFromUser(userId);
         if(region == null)
-            keyboard.setText("Non hai alcuna regione selezionata");
+            keyboard.text("Non hai alcuna regione selezionata");
         else
-            keyboard.setText("Attualmente hai selezionato la regione \"" + region + "\", selezionane un'altra:");
+            keyboard.text("Attualmente hai selezionato la regione \"" + region + "\", selezionane un'altra:");
 
         try {
-            Bot.getInstance().execute(keyboard);
+            Bot.getInstance().execute(keyboard.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());

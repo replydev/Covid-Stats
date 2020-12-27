@@ -1,11 +1,9 @@
 package me.reply.covidstats;
 
-import com.google.gson.Gson;
 import com.vdurmont.emoji.EmojiParser;
 import me.reply.covidstats.data.ChartUtils;
 import me.reply.covidstats.data.DataFetcher;
 import me.reply.covidstats.utils.Config;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -112,7 +110,8 @@ public class Bot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 if(e.toString().contains("bot was blocked by the user")){
                     logger.info(user.getUserId() + " ha bloccato il bot, lo rimuovo dalla lista utenti");
-                    usersManager.setMarkedForRemove(i,true);
+                    usersManager.removeUser(i);
+                    i--;
                 }
                 else{
                     System.err.println("Si è verificato un errore, verifica nel file di log");
@@ -120,7 +119,6 @@ public class Bot extends TelegramLongPollingBot {
                 }
             }
         }
-        usersManager.cleanUsers();
         logger.info("Ho inviato " + count + " messaggi su " + usersManager.registeredUsers() + " utenti");
     }
 

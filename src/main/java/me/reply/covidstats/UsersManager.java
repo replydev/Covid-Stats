@@ -12,11 +12,8 @@ import java.util.List;
 import java.util.Vector;
 
 public class UsersManager {
-
     private final Vector<User> users;
-
     private final static Logger logger = LoggerFactory.getLogger(UsersManager.class);
-
     public UsersManager(){
         users = new Vector<>();
     }
@@ -119,22 +116,16 @@ public class UsersManager {
         this.users.add(u);
     }
 
-    public void cleanUsers(){
-        for(int i = 0; i < users.size(); i++){
-            if(users.get(i).isMarkedForRemove()){
-                users.remove(i);
-                i--;
-            }
-        }
+    public void removeUser(int index){
+        if(index >= users.size())
+            return;
+        users.remove(index);
     }
 
     public int registeredUsers(){
         return this.users.size();
     }
 
-    public void setMarkedForRemove(int id,boolean value){
-        users.get(id).setMarkedForRemove(value);
-    }
     public void setCanMakeRequest(int id,boolean value){
         users.get(id).setCanMakeRequest(value);
     }

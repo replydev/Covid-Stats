@@ -6,9 +6,9 @@ import me.reply.covidstats.utils.SIGINT_Thread;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,11 +25,10 @@ public class Main {
             System.err.println("Si è verificato un errore di inizializzazione, verifica nel file di log");
             logger.error(e.toString());
         }
-        ApiContextInitializer.init();
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
+            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(new Bot());
-        } catch (TelegramApiRequestException e) {
+        } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }

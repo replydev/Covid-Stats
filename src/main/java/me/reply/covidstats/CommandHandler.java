@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class CommandHandler {
     private final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
     private final Keyboards keyboards;
 
-    public void handle(String command, long chatId, String userId){
+    public void handle(String command, String chatId, String userId){
 
         String commandAliases = EmojiParser.parseToAliases(command);
         switch(commandAliases){
@@ -516,27 +517,28 @@ public class CommandHandler {
         this.keyboards = new Keyboards();
     }
 
-    private void sendMainKeyboard(String userid,long chatId){
-        SendMessage keyboard = Bot.getInstance().getUsersManager().getProvinceFromUser(userid) == null ? new SendMessage()
-                .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
-                .setReplyMarkup(keyboards.getMainKeyboard())
-                .setChatId(chatId) :
-                new SendMessage()
-                        .setText("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
-                        .setReplyMarkup(keyboards.getMainKeyboardProvince())
-                        .setChatId(chatId);
+    private void sendMainKeyboard(String userid,String chatId){
+        SendMessage.SendMessageBuilder keyboard = Bot.getInstance().getUsersManager().getProvinceFromUser(userid) == null ? SendMessage.builder()
+                .text("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
+                .replyMarkup(keyboards.getMainKeyboard())
+                .chatId(chatId) :
+                SendMessage.builder()
+                        .text("Benvenuto su Covid Italy Charts BETA, dimmi cosa fare.")
+                        .replyMarkup(keyboards.getMainKeyboardProvince())
+                        .chatId(chatId);
         try {
-            Bot.getInstance().execute(keyboard);
+            Bot.getInstance().execute(keyboard.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
     }
 
-    private void switchToRegionsKeyboard(String userId,long chatId){
-        SendMessage keyboard = new SendMessage()
-                .setReplyMarkup(keyboards.getRegionsKeyboard())
-                .setChatId(chatId);
+    private void switchToRegionsKeyboard(String userId,String chatId){
+        SendMessage keyboard = SendMessage.builder()
+                .replyMarkup(keyboards.getRegionsKeyboard())
+                .chatId(chatId)
+                .build();
 
         String region = Bot.getInstance().getUsersManager().getRegionFromUser(userId);
         if(region == null)
@@ -552,9 +554,9 @@ public class CommandHandler {
         }
     }
 
-    private void switchToProvinceKeyboard(String userid,long chatId){
-        SendMessage keyboard = new SendMessage()
-                .setChatId(chatId);
+    private void switchToProvinceKeyboard(String userid,String chatId){
+        SendMessage.SendMessageBuilder keyboard = SendMessage.builder()
+                .chatId(chatId);
         String region = Bot.getInstance().getUsersManager().getRegionFromUser(userid);
         if(region == null){
             sendMessage((":x: Seleziona prima una regione"),chatId);
@@ -562,67 +564,67 @@ public class CommandHandler {
         }
         switch (region){
             case "Abruzzo":
-                keyboard = keyboard.setReplyMarkup(keyboards.getAbruzzo());
+                keyboard = keyboard.replyMarkup(keyboards.getAbruzzo());
                 break;
             case "Basilicata":
-                keyboard = keyboard.setReplyMarkup(keyboards.getBasilicata());
+                keyboard = keyboard.replyMarkup(keyboards.getBasilicata());
                 break;
             case "P.A. Bolzano":
-                keyboard = keyboard.setReplyMarkup(keyboards.getBolzano());
+                keyboard = keyboard.replyMarkup(keyboards.getBolzano());
                 break;
             case "Calabria":
-                keyboard = keyboard.setReplyMarkup(keyboards.getCalabria());
+                keyboard = keyboard.replyMarkup(keyboards.getCalabria());
                 break;
             case "Campania":
-                keyboard = keyboard.setReplyMarkup(keyboards.getCampania());
+                keyboard = keyboard.replyMarkup(keyboards.getCampania());
                 break;
             case "Emilia-Romagna":
-                keyboard = keyboard.setReplyMarkup(keyboards.getEmilia_romagna());
+                keyboard = keyboard.replyMarkup(keyboards.getEmilia_romagna());
                 break;
             case "Friuli Venezia Giulia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getFriuli_venezia_giulia());
+                keyboard = keyboard.replyMarkup(keyboards.getFriuli_venezia_giulia());
                 break;
             case "Lazio":
-                keyboard = keyboard.setReplyMarkup(keyboards.getLazio());
+                keyboard = keyboard.replyMarkup(keyboards.getLazio());
                 break;
             case "Liguria":
-                keyboard = keyboard.setReplyMarkup(keyboards.getLiguria());
+                keyboard = keyboard.replyMarkup(keyboards.getLiguria());
                 break;
             case "Lombardia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getLombardia());
+                keyboard = keyboard.replyMarkup(keyboards.getLombardia());
                 break;
             case "Marche":
-                keyboard = keyboard.setReplyMarkup(keyboards.getMarche());
+                keyboard = keyboard.replyMarkup(keyboards.getMarche());
                 break;
             case "Molise":
-                keyboard = keyboard.setReplyMarkup(keyboards.getMolise());
+                keyboard = keyboard.replyMarkup(keyboards.getMolise());
                 break;
             case "Piemonte":
-                keyboard = keyboard.setReplyMarkup(keyboards.getPiemonte());
+                keyboard = keyboard.replyMarkup(keyboards.getPiemonte());
                 break;
             case "Puglia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getPuglia());
+                keyboard = keyboard.replyMarkup(keyboards.getPuglia());
                 break;
             case "Sardegna":
-                keyboard = keyboard.setReplyMarkup(keyboards.getSardegna());
+                keyboard = keyboard.replyMarkup(keyboards.getSardegna());
                 break;
             case "Sicilia":
-                keyboard = keyboard.setReplyMarkup(keyboards.getSicilia());
+                keyboard = keyboard.replyMarkup(keyboards.getSicilia());
                 break;
             case "Toscana":
-                keyboard = keyboard.setReplyMarkup(keyboards.getToscana());
+                keyboard = keyboard.replyMarkup(keyboards.getToscana());
                 break;
             case "P.A. Trento":
-                keyboard = keyboard.setReplyMarkup(keyboards.getTrento());
+                keyboard = keyboard.replyMarkup(keyboards.getTrento());
                 break;
             case "Umbria":
-                keyboard = keyboard.setReplyMarkup(keyboards.getUmbria());
+                keyboard = keyboard.replyMarkup(keyboards.getUmbria());
                 break;
             case "Valle d'Aosta":
-                keyboard = keyboard.setReplyMarkup(keyboards.getValle_d_aosta());
+                keyboard = keyboard.replyMarkup(keyboards.getValle_d_aosta());
                 break;
             case "Veneto":
-                keyboard = keyboard.setReplyMarkup(keyboards.getVeneto());
+                keyboard = keyboard.replyMarkup(keyboards.getVeneto());
                 break;
             default:
                 sendMessage((":x: Errore: regione non valida (" + region + ")"),chatId);
@@ -631,70 +633,70 @@ public class CommandHandler {
 
         String province = Bot.getInstance().getUsersManager().getProvinceFromUser(userid);
         if(province == null)
-            keyboard.setText("Non hai alcuna provincia selezionata");
+            keyboard.text("Non hai alcuna provincia selezionata");
         else
-            keyboard.setText("Attualmente hai selezionato la provincia \"" + province + "\", selezionane un'altra:");
+            keyboard.text("Attualmente hai selezionato la provincia \"" + province + "\", selezionane un'altra:");
 
         try {
-            Bot.getInstance().execute(keyboard);
+            Bot.getInstance().execute(keyboard.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
     }
 
-    private void switchToSettingsKeyboard(long chatid){
-        SendMessage keyboard = new SendMessage()
-                .setText("Impostazioni:")
-                .setReplyMarkup(keyboards.getSettingsKeyboard())
-                .setChatId(chatid);
+    private void switchToSettingsKeyboard(String chatId){
+        SendMessage.SendMessageBuilder keyboard = SendMessage.builder()
+                .text("Impostazioni:")
+                .replyMarkup(keyboards.getSettingsKeyboard())
+                .chatId(chatId);
         try {
-            Bot.getInstance().execute(keyboard);
+            Bot.getInstance().execute(keyboard.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
     }
 
-    private void sendMessage(String text, long chatId){
-        SendMessage message = new SendMessage()
-                .setChatId(chatId)
-                .setText(EmojiParser.parseToUnicode(text));
+    private void sendMessage(String text, String chatId){
+        SendMessage.SendMessageBuilder message = SendMessage.builder()
+                .chatId(chatId)
+                .text(EmojiParser.parseToUnicode(text));
         try {
-            Bot.getInstance().execute(message);
+            Bot.getInstance().execute(message.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
     }
 
-    private void sendPhoto(File f, long chatId, String caption){
-        SendPhoto photo = new SendPhoto()
-                .setPhoto(f)
-                .setCaption(caption)
-                .setChatId(chatId);
+    private void sendPhoto(File f, String chatId, String caption){
+        SendPhoto.SendPhotoBuilder photo = SendPhoto.builder()
+                .photo(new InputFile(f))
+                .caption(caption)
+                .chatId(chatId);
         try {
-            Bot.getInstance().execute(photo);
+            Bot.getInstance().execute(photo.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
     }
 
-    private void sendFile(File f,long chatId, String caption){
-        SendDocument document = new SendDocument()
-                .setDocument(f)
-                .setChatId(chatId)
-                .setCaption(caption);
+    private void sendFile(File f,String chatId, String caption){
+        SendDocument.SendDocumentBuilder document = SendDocument.builder()
+                .document(new InputFile(f))
+                .chatId(chatId)
+                .caption(caption);
         try {
-            Bot.getInstance().execute(document);
+            Bot.getInstance().execute(document.build());
         } catch (TelegramApiException e) {
             System.err.println("Si è verificato un errore, verifica nel file di log");
             logger.error(e.toString());
         }
     }
 
-    private void infectedJob(int id,String region,String province,long chatId){
+    private void infectedJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage((":x: Aspetta che la tua richiesta precedente venga terminata!"),chatId);
             return;
@@ -728,7 +730,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void recoveredJob(int id,String region,String province,long chatId){
+    private void recoveredJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -762,7 +764,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void deathsJob(int id,String region,String province,long chatId){
+    private void deathsJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -796,7 +798,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void casesJob(int id,String region,String province,long chatId){
+    private void casesJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -842,7 +844,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void tamponsJob(int id,String region,String province,long chatId){
+    private void tamponsJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -876,7 +878,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void hospitalizedWithSymptomsJob(int id,String region,String province,long chatId){
+    private void hospitalizedWithSymptomsJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -910,7 +912,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void intensiveThreapyJob(int id,String region,String province,long chatId){
+    private void intensiveThreapyJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -944,7 +946,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void totalHospitalizedJob(int id,String region,String province,long chatId){
+    private void totalHospitalizedJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;
@@ -978,7 +980,7 @@ public class CommandHandler {
         Bot.getInstance().getUsersManager().setCanMakeRequest(id,true);
     }
 
-    private void householdIsolationJob(int id,String region,String province,long chatId){
+    private void householdIsolationJob(int id,String region,String province,String chatId){
         if(!canMakeRequest(id)){
             sendMessage(":x: Aspetta che la tua richiesta precedente venga terminata!",chatId);
             return;

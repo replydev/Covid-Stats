@@ -70,7 +70,7 @@ public class Bot extends TelegramLongPollingBot {
             usersManager.addUser(new User(userid));
         }
         if(update.getMessage().hasText())
-            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId(),userid);
+            commandHandler.handle(update.getMessage().getText(),update.getMessage().getChatId().toString(),userid);
     }
 
     public String getBotUsername() {
@@ -87,7 +87,7 @@ public class Bot extends TelegramLongPollingBot {
             nextRun = nextRun.plusDays(1);
 
         Duration duration = Duration.between(now, nextRun);
-        long initalDelay = duration.getSeconds();
+        long initialDelay = duration.getSeconds();
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
@@ -105,7 +105,7 @@ public class Bot extends TelegramLongPollingBot {
                 logger.error(e.toString());
             }
                 },
-                initalDelay,
+                initialDelay,
                 TimeUnit.DAYS.toSeconds(1),
                 TimeUnit.SECONDS);
     }
@@ -117,11 +117,11 @@ public class Bot extends TelegramLongPollingBot {
             User user = usersManager.getUsers().get(i);
             if(!user.isShowNotification())
                 continue;
-            SendMessage message = new SendMessage()
-                    .setText(EmojiParser.parseToUnicode(text))
-                    .setChatId(user.getUserId());
+            SendMessage.SendMessageBuilder message = SendMessage.builder()
+                    .text(EmojiParser.parseToUnicode(text))
+                    .chatId(user.getUserId());
             try {
-                execute(message);
+                execute(message.build());
                 count++;
             } catch (TelegramApiException e) {
                 if(e.toString().contains("bot was blocked by the user")){

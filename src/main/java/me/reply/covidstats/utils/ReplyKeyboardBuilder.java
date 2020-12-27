@@ -49,12 +49,22 @@ public class ReplyKeyboardBuilder {
         }
 
         public ReplyKeyboardMarkupBuilder addRequestContact(String text) {
-            row.add(new KeyboardButton(text).setRequestContact(true));
+            row.add(
+                    KeyboardButton.builder()
+                            .text(text)
+                            .requestContact(true)
+                    .build()
+            );
             return this;
         }
 
         public ReplyKeyboardMarkupBuilder addRequestLocation(String text) {
-            row.add(new KeyboardButton(text).setRequestLocation(true));
+            row.add(
+                    KeyboardButton.builder()
+                    .text(text)
+                    .requestLocation(true)
+                    .build()
+            );
             return this;
         }
 
@@ -62,9 +72,10 @@ public class ReplyKeyboardBuilder {
             if (row != null) {
                 keyboard.add(row);
             }
-            return new ReplyKeyboardMarkup()
-                    .setKeyboard(keyboard)
-                    .setResizeKeyboard(true);
+            return ReplyKeyboardMarkup.builder()
+                    .keyboard(keyboard)
+                    .resizeKeyboard(true)
+                    .build();
         }
     }
 
@@ -86,48 +97,44 @@ public class ReplyKeyboardBuilder {
         }
 
         public InlineKeyboardMarkupBuilder addUrl(String text, String url) {
-            row.add(new InlineKeyboardButton(text).setUrl(url));
+            row.add(InlineKeyboardButton.builder().text(text).url(url).build());
             return this;
         }
 
         public InlineKeyboardMarkupBuilder addLoginUrl(String text, LoginUrl loginUrl) {
-            row.add(new InlineKeyboardButton(text).setLoginUrl(loginUrl));
-            return this;
-        }
-
-        public InlineKeyboardMarkupBuilder addLoginUrl(String text, String loginUrl) {
-            row.add(new InlineKeyboardButton(text).setLoginUrl(new LoginUrl(loginUrl)));
+            row.add(InlineKeyboardButton.builder().text(text).loginUrl(loginUrl).build());
             return this;
         }
 
         public InlineKeyboardMarkupBuilder addCallbackData(String text, String callbackData) {
-            row.add(new InlineKeyboardButton(text).setCallbackData(callbackData));
+            row.add(InlineKeyboardButton.builder().text(text).callbackData(callbackData).build());
             return this;
         }
 
         public InlineKeyboardMarkupBuilder addSwitchInlineQuery(String text, String switchInlineQuery) {
-            row.add(new InlineKeyboardButton(text).setSwitchInlineQuery(switchInlineQuery));
+            row.add(InlineKeyboardButton.builder().text(text).switchInlineQuery(switchInlineQuery).build());
             return this;
         }
 
         public InlineKeyboardMarkupBuilder addsetSwitchInlineQueryCurrentChat(String text, String switchInlineQueryCurrentChat) {
-            row.add(new InlineKeyboardButton(text).setSwitchInlineQueryCurrentChat(switchInlineQueryCurrentChat));
+            row.add(InlineKeyboardButton.builder().text(text).switchInlineQueryCurrentChat(switchInlineQueryCurrentChat).build());
             return this;
         }
 
         public InlineKeyboardMarkupBuilder addCallbackGame(String text, CallbackGame callbackGame) {
-            row.add(new InlineKeyboardButton(text).setCallbackGame(callbackGame));
+            row.add(InlineKeyboardButton.builder().text(text).callbackGame(callbackGame).build());
             return this;
         }
 
         public InlineKeyboardMarkupBuilder addPay(String text, boolean pay) {
-            row.add(new InlineKeyboardButton(text).setPay(pay));
+            row.add(InlineKeyboardButton.builder().text(text).pay(pay).build());
             return this;
         }
 
         public InlineKeyboardMarkup build() {
-            return new InlineKeyboardMarkup()
-                    .setKeyboard(keyboard);
+            return InlineKeyboardMarkup.builder()
+                    .keyboard(keyboard)
+                    .build();
         }
     }
 }

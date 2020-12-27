@@ -173,10 +173,10 @@ public class DataFetcher {
         return covidData;
     }
 
-    public static ProvinceCovidData fetchProvinceData(String provice) {
+    public static ProvinceCovidData fetchProvinceData(String province) {
         ProvinceCovidData provinceCovidData = new ProvinceCovidData();
         for(ProvinceJsonObject object : provinceJsonObjects){
-            if(object.getDenominazione_provincia().equalsIgnoreCase(provice)){
+            if(object.getDenominazione_provincia().equalsIgnoreCase(province)){
                 ProvinceDayData provinceDayData = new ProvinceDayData(object.getTotale_casi(),getGoodDate(object.getData()));
                 provinceCovidData.add(provinceDayData);
             }

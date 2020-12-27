@@ -34,12 +34,27 @@ public class Main {
         }
     }
 
+    private static boolean noData(File f){
+        if(f == null)
+            return true;
+        if(!f.exists())
+            return true;
+        if(!f.isDirectory())
+            return true;
+        File[] files = f.listFiles();
+        if(files == null)
+            return true;
+        return files.length == 0;
+    }
+
     private static void initialize(boolean download) throws IOException {
         logger.info("Genero le cartelle");
-        FileUtils.forceMkdir(new File("data/"));
+        File dataFolder = new File("data/");
+        boolean noData = noData(dataFolder);
+        FileUtils.forceMkdir(dataFolder);
         FileUtils.forceMkdir(new File("config/"));
         ChartUtils.clearCache();
-        if(download){
+        if(download || noData){
             logger.info("Scarico i file contenenti i dati...");
             DataFetcher.downloadFiles();
         }
